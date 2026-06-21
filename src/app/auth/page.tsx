@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,6 +19,21 @@ export default function AuthPage() {
   const [checkNim, setCheckNim] = useState("");
   const [isChecking, setIsChecking] = useState(false);
   const [checkResult, setCheckResult] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  const [waLink, setWaLink] = useState("628119429035");
+
+  useEffect(() => {
+    async function fetchWa() {
+      try {
+        const { getSetting } = await import('@/actions/settings');
+        const wa = await getSetting('contact_wa', '+62 811 9429 035');
+        setWaLink(wa.replace(/\D/g, ''));
+      } catch (error) {
+        console.error("Failed to fetch wa link", error);
+      }
+    }
+    fetchWa();
+  }, []);
 
   const router = useRouter();
 
@@ -196,7 +211,7 @@ export default function AuthPage() {
           {/* Footer Card */}
           <div className="mt-8 pt-6 border-t border-[var(--color-border)] text-center">
             <p className="text-xs text-[var(--color-text-subtle)]">
-              Mengalami kendala? <a href="https://wa.me/628119429035" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Hubungi Layanan Akademik</a>
+              Mengalami kendala? <a href={`https://wa.me/${waLink}`} className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Hubungi Layanan Akademik</a>
             </p>
           </div>
         </div>
@@ -215,22 +230,22 @@ export default function AuthPage() {
 
             <form onSubmit={handleCheckNim} className="flex flex-col gap-3">
               <label htmlFor="checkNim" className="text-sm font-medium text-[var(--color-text-muted)]">Masukkan NIM Anda:</label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   id="checkNim"
                   value={checkNim}
                   onChange={(e) => setCheckNim(e.target.value)}
-                  className="flex-1 px-4 py-2.5 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
+                  className="w-full sm:flex-1 px-4 py-2.5 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
                   placeholder="Contoh: 19010..."
                   required
                 />
                 <button
                   type="submit"
                   disabled={isChecking}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold disabled:opacity-70 flex items-center justify-center min-w-[80px]"
+                  className="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold disabled:opacity-70 flex items-center justify-center min-w-[140px]"
                 >
-                  {isChecking ? <span className="animate-spin text-xl leading-none">⟳</span> : "Cek"}
+                  {isChecking ? <span className="animate-spin text-xl leading-none">⟳</span> : "Cek Pendaftaran"}
                 </button>
               </div>
             </form>
