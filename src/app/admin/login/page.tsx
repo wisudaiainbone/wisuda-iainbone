@@ -86,7 +86,7 @@ function AdminLoginForm() {
                 priority
               />
             </div>
-            <h1 className="text-2xl font-bold font-[var(--font-outfit)] text-[var(--color-text)] mb-2">
+            <h1 className="text-lg sm:text-2xl font-bold font-[var(--font-outfit)] text-[var(--color-text)] mb-2">
               Admin Wisuda IAIN Bone
             </h1>
           </div>
@@ -139,7 +139,7 @@ function AdminLoginForm() {
                   <path fill="none" d="M1 1h22v22H1z" />
                 </svg>
               )}
-              <span>Lanjutkan dengan Google</span>
+              <span>Login dengan Google</span>
             </button>
           </div>
 
