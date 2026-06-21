@@ -253,7 +253,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
 
                                 {/* Navigation Controls */}
                                 {graduationPeriods.length > 1 && (
-                                  <div className="flex items-center gap-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1 shadow-sm">
+                                  <div className="hidden sm:flex items-center gap-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1 shadow-sm">
                                     <button
                                       onClick={() => setActivePeriodIdx(Math.max(0, activePeriodIdx - 1))}
                                       disabled={activePeriodIdx === 0}
@@ -504,6 +504,29 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                             </div>
                           </div>
                         </div>
+
+                        {/* Mobile Navigation Controls (Below Card) */}
+                        {graduationPeriods.length > 1 && (
+                          <div className="flex sm:hidden items-center justify-center gap-1 mt-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1.5 shadow-sm w-max mx-auto">
+                            <button
+                              onClick={() => setActivePeriodIdx(Math.max(0, activePeriodIdx - 1))}
+                              disabled={activePeriodIdx === 0}
+                              className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${activePeriodIdx === 0 ? 'opacity-30 cursor-not-allowed' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-400 cursor-pointer'}`}
+                            >
+                              <ChevronLeft size={18} />
+                            </button>
+                            <span className="text-[11px] font-bold text-[var(--color-text-subtle)] uppercase tracking-widest whitespace-nowrap px-4">
+                              Periode {activePeriodIdx + 1} dari {graduationPeriods.length}
+                            </span>
+                            <button
+                              onClick={() => setActivePeriodIdx(Math.min(graduationPeriods.length - 1, activePeriodIdx + 1))}
+                              disabled={activePeriodIdx === graduationPeriods.length - 1}
+                              className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${activePeriodIdx === graduationPeriods.length - 1 ? 'opacity-30 cursor-not-allowed' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-400 cursor-pointer'}`}
+                            >
+                              <ChevronRight size={18} />
+                            </button>
+                          </div>
+                        )}
                       </>
                     );
                   })()}
@@ -525,36 +548,15 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed bottom-6 left-4 right-4 p-2 sm:p-2.5 bg-[var(--color-bg)]/80 backdrop-blur-2xl border border-[var(--color-border)] rounded-2xl z-[60] flex gap-2 md:hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+            className="fixed bottom-6 left-4 right-4 p-2 sm:p-2.5 bg-[var(--color-bg)]/80 backdrop-blur-2xl border border-[var(--color-border)] rounded-2xl z-[60] flex md:hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
           >
             <a
               href="/auth"
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-surface)] text-sm font-bold transition-all shadow-sm"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-sm font-bold transition-all shadow-lg"
             >
-              <GraduationCap size={18} className="text-emerald-700 dark:text-emerald-500" />
-              <span>Login Wisuda</span>
+              <GraduationCap size={18} />
+              <span>Login Sekarang</span>
             </a>
-            {(() => {
-              const period = graduationPeriods[activePeriodIdx];
-              if (!period) return null;
-              return period.statusColor === 'rose' ? (
-                <button
-                  disabled
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-700 text-white text-sm font-bold opacity-50 cursor-not-allowed shadow-lg"
-                >
-                  <Lock size={16} />
-                  <span>Daftar</span>
-                </button>
-              ) : (
-                <a
-                  href="/auth"
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-bold shadow-lg transition-all ${period.statusColor === 'emerald' ? 'bg-emerald-800 hover:bg-emerald-900 shadow-emerald-900/20' : 'bg-slate-700 hover:bg-slate-800 shadow-slate-900/20'}`}
-                >
-                  <span>Daftar</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                </a>
-              );
-            })()}
           </motion.div>
         )}
       </AnimatePresence>
