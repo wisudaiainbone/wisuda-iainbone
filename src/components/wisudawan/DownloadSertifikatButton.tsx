@@ -22,8 +22,15 @@ export default function DownloadSertifikatButton({ w }: Props) {
       const { getSetting } = await import('@/actions/settings');
       
       // Fetch settings
-      const settingsStr = await getSetting('cert_settings', '{}', true);
-      const settings = JSON.parse(settingsStr) as CertSettings;
+      const settings: CertSettings = {
+        nomor: await getSetting('cert_akd_nomor', '', true),
+        tanggal: await getSetting('cert_akd_tanggal', '', true),
+        jabatan: await getSetting('cert_akd_jabatan', '', true),
+        nip: await getSetting('cert_akd_nip', '', true),
+        nama: await getSetting('cert_akd_nama', '', true),
+        bgUrl: await getSetting('cert_bg_url', '', true),
+        ttdUrl: await getSetting('cert_akd_ttd_url', '', true)
+      };
       const tempatWisuda = await getSetting('tempat_wisuda', 'Watampone', true);
       const tanggalWisuda = await getSetting('tanggal_wisuda', '', true);
 
