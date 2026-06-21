@@ -45,7 +45,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     async function fetchContacts() {
       const email = await getSetting('contact_email', 'wisuda@iainbone.ac.id');
       const wa = await getSetting('contact_wa', '+62 811 9429 035');
@@ -54,7 +54,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
       setContactWaLink(wa.replace(/\D/g, ''));
     }
     fetchContacts();
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -62,7 +62,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
 
   useEffect(() => {
     setIsClient(true);
-    
+
     const currentPeriod = graduationPeriods[activePeriodIdx];
     let targetDate = 0;
 
@@ -182,10 +182,10 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                 <p className="text-xs font-bold md:font-normal text-[var(--color-text-subtle)] mb-3">
                   Pusat Informasi & Bantuan
                 </p>
-                <div className="flex flex-row flex-nowrap w-full lg:justify-start gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <div className="flex flex-col sm:flex-row w-full lg:justify-start gap-2 sm:gap-3 pb-1 justify-center items-center sm:items-stretch">
                   <a
                     href={`mailto:${contactEmail}`}
-                    className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 hover:border-amber-400 dark:hover:border-amber-500 transition-all duration-200 group whitespace-nowrap"
+                    className="w-full sm:flex-1 flex items-center justify-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 hover:border-amber-400 dark:hover:border-amber-500 transition-all duration-200 group whitespace-nowrap"
                   >
                     <svg className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                     <span className="text-xs font-medium text-[var(--color-text-muted)] group-hover:text-[var(--color-text)] transition-colors">{contactEmail}</span>
@@ -194,7 +194,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                     href={`https://wa.me/${contactWaLink}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 hover:border-amber-400 dark:hover:border-amber-500 transition-all duration-200 group whitespace-nowrap"
+                    className="w-full sm:flex-1 flex items-center justify-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 hover:border-amber-400 dark:hover:border-amber-500 transition-all duration-200 group whitespace-nowrap"
                   >
                     <Phone size={16} className="shrink-0 text-amber-600 dark:text-amber-400" />
                     <span className="text-xs font-medium text-[var(--color-text-muted)] group-hover:text-[var(--color-text)] transition-colors">{contactWaLabel}</span>
@@ -218,7 +218,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                   <svg className="w-3 h-3 text-rose-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                   </svg>
-                  <span>untuk para wisudawan</span>
+                  <span>untuk para wisudawan IAIN Bone</span>
                 </span>
               </motion.p>
             </div>
@@ -548,11 +548,11 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed bottom-6 left-4 right-4 p-2 sm:p-2.5 bg-[var(--color-bg)]/80 backdrop-blur-2xl border border-[var(--color-border)] rounded-2xl z-[60] flex md:hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+            className="fixed bottom-6 left-4 right-4 z-[60] flex md:hidden"
           >
             <a
               href="/auth"
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-sm font-bold transition-all shadow-lg"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-emerald-800 hover:bg-emerald-900 text-white text-sm font-bold transition-all shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
             >
               <GraduationCap size={18} />
               <span>Login Sekarang</span>
