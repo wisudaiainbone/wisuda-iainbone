@@ -43,15 +43,15 @@ export default function DownloadSertifikatButton({ w }: Props) {
       }
 
       const certInfo: CertData = {
-        nim: w.nim,
-        namaMahasiswa: w.nama_mahasiswa,
-        namaGelar: w.nama_gelar || w.nama_mahasiswa,
-        prodi: w.prodi || "",
-        fakultas: w.fakultas || "",
-        ipk: w.ipk || "0",
-        predikat: w.predikat || "-",
-        prestasiAkd: w.prestasi_akd,
-        periode: w.periode || ""
+        nim: w["NIM"] || "",
+        namaMahasiswa: w["NAMA MAHASISWA"] || "",
+        namaGelar: w["NAMA GELAR"] || w["NAMA MAHASISWA"] || "",
+        prodi: w["PRODI"] || "",
+        fakultas: w["FAKULTAS"] || "",
+        ipk: w["IPK"] || "0",
+        predikat: w["PREDIKAT"] || "-",
+        prestasiAkd: w["PRESTASI AKD"] || "",
+        periode: w["PERIODE"] || ""
       };
 
       // Generate filename
