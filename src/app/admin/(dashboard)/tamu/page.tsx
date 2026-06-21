@@ -19,7 +19,7 @@ type PageProps = {
 
 export default async function AdminTamuPage(props: PageProps) {
   const resolvedSearchParams = await props.searchParams;
-  let tab = typeof resolvedSearchParams?.tab === 'string' ? resolvedSearchParams.tab : 'daftar';
+  let tab: string = typeof resolvedSearchParams?.tab === 'string' ? resolvedSearchParams.tab : 'daftar';
 
   const session = await getAdminSession();
   const cookieStore = await cookies();
