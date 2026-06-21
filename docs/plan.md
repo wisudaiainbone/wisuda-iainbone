@@ -1,184 +1,125 @@
 # Wisuda IAIN Bone — Web Application
 
-Membangun aplikasi web modern untuk acara wisuda **Institut Agama Islam Negeri (IAIN) Bone** menggunakan **Next.js 14 (App Router)** dan **Tailwind CSS**. Aplikasi ini akan menjadi portal resmi wisuda yang menampilkan informasi, galeri, data wisudawan, dan fitur interaktif lainnya.
+Membangun aplikasi web modern untuk acara wisuda **Institut Agama Islam Negeri (IAIN) Bone** menggunakan **Next.js 16 (App Router)** dan **Tailwind CSS v4**.
 
 ---
 
-## Open Questions
+## 🎨 Design System
 
-> [!IMPORTANT]
-> Beberapa pertanyaan di bawah ini perlu dijawab sebelum eksekusi dimulai. Namun eksekusi tetap bisa dimulai dengan asumsi default yang tertera.
+### Color Palette (Emerald & Slate)
+| Token | Deskripsi |
+|-------|-----------|
+| `primary` | Emerald gelap untuk branding dan elemen teks tegas di light mode. |
+| `accent` | Emerald cerah untuk *call-to-actions* (CTA), ikon, dan aksen nyala (glow). |
+| `bg` | *Slate/Navy* super gelap untuk Dark Mode, Mint keputihan cerah (`#f0fdf4`) untuk Light Mode. |
+| `surface` | Card background dengan efek glassmorphism transparan. |
 
-| # | Pertanyaan | Asumsi Default |
-|---|-----------|----------------|
-| 1 | Apakah ada backend/database? (misalnya Supabase, Firebase, atau API eksternal) | **Static + JSON lokal** untuk MVP |
-| 2 | Apakah ada fitur pencarian nama wisudawan? | Ya, dengan data JSON lokal |
-| 3 | Apakah perlu halaman admin untuk input data? | Tidak (fase 1) |
-| 4 | Apakah ada branding resmi IAIN Bone (logo, warna)? | Gunakan hijau tua + emas sebagai palette utama |
-| 5 | Apakah perlu login/autentikasi? | Tidak (fase 1) |
-| 6 | Versi Tailwind CSS yang digunakan? | **Tailwind CSS v3** |
+### Typography
+- **Display/Heading**: **Outfit** (modern, geometris)
+- **Body**: **Inter** (sans-serif, tingkat keterbacaan tinggi)
 
 ---
 
-## Proposed Changes
+## 🛠 Tech Stack
 
-### Tech Stack
-
-- **Framework**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS v3 + custom design tokens
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS v4 (Inline `@theme` vars di `globals.css`)
 - **Animasi**: Framer Motion
-- **UI Components**: shadcn/ui (opsional)
-- **Icons**: Lucide React + React Icons
-- **Font**: Google Fonts (Playfair Display + Inter)
-- **Deploy Target**: Vercel (recommended)
+- **Icons**: Lucide React
+- **Auth Admin**: NextAuth.js (Google Provider + JWT Session)
+- **Database**: Supabase (PostgreSQL)
 
 ---
 
-### Struktur Halaman & Fitur
-
-#### 1. Landing Page (`/`)
-- **Hero Section** — Full-screen dengan video background atau parallax image bertuliskan judul wisuda, angkatan, dan tanggal pelaksanaan
-- **Countdown Timer** — Hitung mundur menuju hari wisuda
-- **Quick Stats** — Total wisudawan, jumlah prodi, angkatan ke-X
-- **CTA Buttons** — "Cari Nama Wisudawan" & "Lihat Rundown"
-
-#### 2. Wisudawan Page (`/wisudawan`)
-- **Tabel / Grid Data Wisudawan** — Nama, NIM, Program Studi, IPK (opsional)
-- **Filter & Search** — Pencarian real-time berdasarkan nama atau NIM
-- **Filter per Prodi / Fakultas**
-- **Kartu Wisudawan Individual** — Foto (placeholder avatar), nama, gelar
-
-#### 3. Jadwal & Rundown (`/jadwal`)
-- Timeline visual alur acara wisuda
-- Informasi tempat, tanggal, dan jam pelaksanaan
-- Peta lokasi (Google Maps embed)
-
-#### 4. Galeri (`/galeri`)
-- Grid masonry foto kegiatan wisuda
-- Lightbox viewer
-- Kategori (Gladi Resik, Pelaksanaan, After Party)
-
-#### 5. Tentang (`/tentang`)
-- Profil singkat IAIN Bone
-- Sambutan Rektor
-- Sejarah wisuda
-
-#### 6. Pesan & Ucapan (`/ucapan`) *(opsional fase 2)*
-- Form kirim ucapan selamat
-- Wall ucapan publik
-
----
-
-### Komponen Utama
+## 📂 Struktur File Inti
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx          # Root layout (font, metadata)
-│   ├── page.tsx            # Landing page
-│   ├── wisudawan/
-│   │   └── page.tsx
-│   ├── jadwal/
-│   │   └── page.tsx
-│   ├── galeri/
-│   │   └── page.tsx
-│   └── tentang/
-│       └── page.tsx
+│   ├── layout.tsx                # Konfigurasi font (Inter, Outfit) & Provider
+│   ├── page.tsx                  # Root landing page
+│   ├── globals.css               # Design tokens (var CSS kustom) & Tailwind v4
+│   ├── auth/
+│   │   └── page.tsx              # Login Wisudawan (NIM + Password) + Cek Status NIM
+│   ├── admin/
+│   │   ├── login/page.tsx        # Login Admin (email + password)
+│   │   └── (dashboard)/
+│   │       ├── layout.tsx        # Sidebar & header dashboard admin
+│   │       ├── page.tsx          # Beranda dashboard
+│   │       ├── pengaturan/       # Kelola periode wisuda + password default sistem
+│   │       ├── wisudawan/        # Kelola data wisudawan (cari, filter, import)
+│   │       └── manajemen-admin/  # Kelola daftar admin (superadmin only)
+│   └── wisudawan/
+│       └── [nim]/
+│           ├── page.tsx          # Server page (fetch data)
+│           └── ClientProfile.tsx # Halaman profil dinamis wisudawan (client)
+├── actions/
+│   ├── adminAuth.ts              # getAdminSession (NextAuth)
+│   ├── adminUsers.ts             # CRUD daftar admin (invite, toggle, delete)
+│   ├── periode.ts                # Pengaturan periode wisuda
+│   ├── settings.ts               # getSetting, updateSetting (tabel app_settings)
+│   └── wisudawan.ts              # Profil wisudawan + loginWisudawan + cekStatusNim
+├── lib/
+│   ├── auth.ts                   # Konfigurasi NextAuth (Google Provider)
+│   ├── supabase.ts               # Supabase client untuk Client Components
+│   ├── supabase-server.ts        # Supabase client untuk Server Components/Actions
+│   └── redis.ts                  # Upstash Redis client
 ├── components/
 │   ├── layout/
 │   │   ├── Navbar.tsx
-│   │   └── Footer.tsx
-│   ├── home/
+│   │   ├── Footer.tsx
+│   │   └── BottomNav.tsx
+│   ├── sections/
 │   │   ├── HeroSection.tsx
-│   │   ├── CountdownTimer.tsx
-│   │   ├── StatsSection.tsx
-│   │   └── CTASection.tsx
-│   ├── wisudawan/
-│   │   ├── WisudawanGrid.tsx
-│   │   ├── WisudawanCard.tsx
-│   │   └── SearchFilter.tsx
-│   ├── galeri/
-│   │   ├── GalleryGrid.tsx
-│   │   └── LightboxViewer.tsx
+│   │   ├── DataWisudaSection.tsx
+│   │   ├── PersyaratanSection.tsx
+│   │   ├── JadwalSection.tsx
+│   │   ├── TataTertibSection.tsx
+│   │   └── FAQSection.tsx
 │   └── ui/
-│       ├── AnimatedCounter.tsx
-│       └── Timeline.tsx
-├── data/
-│   └── wisudawan.json      # Data wisudawan (mock)
-└── public/
-    ├── images/
-    └── logo-iain-bone.png
+│       └── ThemeToggle.tsx
+└── middleware.ts                 # Proteksi rute /admin via validasi JWT NextAuth
 ```
 
 ---
 
-### Design System
+## 🚀 Status Implementasi
 
-#### Color Palette
-| Token | Hex | Deskripsi |
-|-------|-----|-----------|
-| `primary` | `#1A4731` | Hijau tua (warna khas IAIN) |
-| `primary-light` | `#2D6A4F` | Hijau medium |
-| `accent` | `#C9A84C` | Emas/gold untuk highlight |
-| `accent-light` | `#F0C040` | Emas terang |
-| `dark` | `#0D1117` | Background gelap |
-| `surface` | `#161B22` | Card surface |
-| `text` | `#E6EDF3` | Teks utama |
-
-#### Typography
-- **Display/Heading**: Playfair Display (serif, elegan)
-- **Body**: Inter (sans-serif, modern)
-
-#### Visual Motif
-- Glassmorphism cards
-- Subtle gold border glow pada elemen penting
-- Particle background atau pattern batik/islami transparan
-- Smooth scroll animations (Framer Motion)
-
----
-
-### Data & Backend (Fase 1 — Static)
-
-Data wisudawan disimpan dalam file `src/data/wisudawan.json`:
-
-```json
-[
-  {
-    "id": 1,
-    "nim": "01.22.0001",
-    "nama": "Ahmad Fauzi",
-    "prodi": "Hukum Ekonomi Syariah",
-    "fakultas": "Syariah dan Hukum Islam",
-    "ipk": "3.85",
-    "gelar": "S.H."
-  }
-]
-```
-
----
-
-### Halaman & Route Summary
-
-| Route | Halaman | Prioritas |
-|-------|---------|-----------|
-| `/` | Landing Page + Hero + Countdown | 🔴 Wajib |
-| `/wisudawan` | Data & Pencarian Wisudawan | 🔴 Wajib |
-| `/jadwal` | Rundown & Jadwal Acara | 🔴 Wajib |
-| `/galeri` | Galeri Foto | 🟡 Penting |
-| `/tentang` | Profil IAIN Bone | 🟢 Tambahan |
-| `/ucapan` | Wall Ucapan Selamat | 🟢 Fase 2 |
-
----
-
-## Verification Plan
-
-### Automated
-- `npm run build` — Pastikan tidak ada build error
-- `npm run lint` — Cek code quality
-
-### Manual Verification
-- Cek responsivitas di mobile, tablet, dan desktop
-- Verifikasi countdown timer bekerja dengan benar
-- Cek search/filter wisudawan berfungsi real-time
-- Validasi semua animasi berjalan smooth
-- Uji lightbox galeri di berbagai browser
+- [x] Instalasi Next.js 16 + Tailwind CSS v4
+- [x] Setup Framer Motion & Lucide Icons
+- [x] Pembangunan Navigasi (Navbar Desktop + Bottom Nav)
+- [x] 6 Section Utama pada Landing Page
+- [x] Dark Mode / Light Mode dengan variabel kustom CSS
+- [x] **Autentikasi Admin** (Migrasi ke NextAuth.js Google Provider)
+  - Login terpusat dengan akun Gmail (SSO)
+  - Middleware validasi JWT dari `next-auth/jwt`
+  - Tabel `admin_users` sebagai sumber kebenaran otorisasi (4 Role)
+  - Halaman Manajemen Admin (tanpa password) di `/admin/manajemen-admin`
+- [x] **Manajemen Wisudawan Lanjutan (Admin)**
+  - Halaman detail wisudawan (`/admin/wisudawan/[nim]`)
+  - Form **Edit Data Wisudawan** lengkap (`/admin/wisudawan/[nim]/edit`)
+- [x] **Autentikasi Wisudawan** (NIM + Password)
+  - Menggantikan sistem NIM + Tanggal Lahir
+  - Password default `wisuda2026` (konfigurasible via Admin)
+  - Pesan error spesifik per kasus (tidak terdaftar, password salah, periode tidak aktif)
+- [x] **Fitur Cek Status NIM** di halaman `/auth`
+  - Dialog Modal tanpa perlu login
+  - Hasil instan: terdaftar / belum + nama periode aktif
+- [x] **Halaman Pengaturan Sistem** (`/admin/pengaturan`)
+  - Pengaturan periode wisuda
+  - Password Default Wisudawan — tersimpan di tabel `app_settings` Supabase
+- [x] **Tabel `app_settings`** Supabase (dedicated settings table)
+- [x] **Filter Data Wisudawan** (Fakultas + Prodi dropdown)
+- [x] **Import Batch Excel** dengan validasi, skip duplikasi, toast hasil
+- [x] **Halaman Profil Wisudawan Dinamis** (`/wisudawan/[nim]`)
+  - Foto dinamis (inisial jika belum upload foto)
+  - Judul "Wisuda Program Sarjana dan Magister [Periode] IAIN Bone"
+  - Label periode otomatis dari data wisudawan / periode aktif
+  - Nama menggunakan NAMA GELAR jika ada, fallback ke NAMA MAHASISWA
+  - Tanggal Yudisium ditampilkan sebagai teks biasa
+  - Tab: Informasi, Undangan, Toga, Pendaftaran
+  - QR Code Toga & Undangan, edit data mandiri
+  - Pemotongan dan kompresi foto *client-side* (rasio 3:4, maks 500KB, auto latar merah)
+  - Validasi *real-time* form & ikon centang kelengkapan
+- [x] Caching profil wisudawan & settings via Upstash Redis
+- [x] Dokumentasi lengkap di folder `docs/`

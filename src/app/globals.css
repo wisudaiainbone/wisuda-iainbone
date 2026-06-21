@@ -1,26 +1,262 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+/* ============================================================
+   DESIGN TOKENS — Wisuda IAIN Bone (Modern Minimal, Cold Pastel)
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ============================================================
+     BASE PALETTE
+     ============================================================ */
+
+  /* Primary */
+  --color-primary: #064e3b;
+  --color-primary-light: #065f46;
+  --color-primary-lighter: #059669;
+
+  /* Accent */
+  --color-accent: #064e3b;
+  --color-accent-light: #065f46;
+  --color-accent-dark: #059669;
+
+  /* Surface — LIGHT MODE */
+  --color-bg: #f1f5f9;
+  --color-bg-secondary: #ffffff;
+  --color-surface: #f8fafc;
+  --color-surface-hover: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+
+  /* Text */
+  --color-text: #0f172a;
+  --color-text-muted: #0f172a;
+  --color-text-subtle: #384150;
+
+  /* Shadows */
+  --shadow-card: 0 2px 16px rgba(6, 78, 59, 0.06);
+  --shadow-md: 0 4px 24px rgba(6, 78, 59, 0.1);
+  --shadow-glow: 0 0 32px rgba(6, 78, 59, 0.2);
+
+  /* Font */
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-outfit), system-ui, sans-serif;
 }
 
+.dark {
+  /* ============================================================
+     BASE TOKENS — DARK MODE
+     ============================================================ */
+  --color-bg: #0b1120;
+  --color-bg-secondary: #111827;
+  --color-surface: #1a2236;
+  --color-surface-hover: #1e2d47;
+  --color-border: #1e2d47;
+  --color-border-light: #1a2236;
+
+  --color-text: #ffffff;
+  --color-text-muted: #cbd5e1;
+  --color-text-subtle: #bababa;
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 40px rgba(6, 78, 59, 0.12);
+}
+
+/* ============================================================
+   TAILWIND v4 THEME MAPPING
+   ============================================================ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--color-primary);
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-lighter: var(--color-primary-lighter);
+  --color-accent: var(--color-accent);
+  --color-accent-light: var(--color-accent-light);
+  --color-accent-dark: var(--color-accent-dark);
+  --color-bg: var(--color-bg);
+  --color-bg-secondary: var(--color-bg-secondary);
+  --color-surface: var(--color-surface);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-subtle: var(--color-text-subtle);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-outfit);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (min-width: 1024px) {
+  .landing-page {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .landing-page main {
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+  }
+
+  .section-page {
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ============================================================
+   CUSTOM UTILITIES
+   ============================================================ */
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Section heading divider */
+.section-divider {
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #065f46, #047857);
+  border-radius: 9999px;
+  margin: 0 auto;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #059669;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #064e3b;
+}
+
+/* Hide scrollbar for specific containers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.65;
+  }
+}
+
+@keyframes scroll-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  75% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2.5s ease-in-out infinite;
+}
+
+.animate-scroll {
+  animation: scroll-down 1.8s ease-in-out infinite;
+}
+
+/* ============================================================
+   HERO MESH — Theme Aware
+   ============================================================ */
+.hero-mesh {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(at 20% 30%, rgba(6, 78, 59, 0.05) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, rgba(6, 95, 70, 0.03) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(4, 120, 87, 0.03) 0px, transparent 50%);
+}
+
+.dark .hero-mesh {
+  background-color: #0a1628;
+  background-image:
+    radial-gradient(at 20% 30%, rgba(6, 78, 59, 0.18) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, rgba(6, 95, 70, 0.1) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(4, 120, 87, 0.06) 0px, transparent 50%);
+}
+
+/* ============================================================
+   LIGHT MODE — section backgrounds with visible contrast
+   ============================================================ */
+:root .section-alt {
+  background-color: #ffffff;
+}
+
+:root .section-main {
+  background-color: #f0fdf4;
+}
+
+.dark .section-alt {
+  background-color: #111827;
+}
+
+.dark .section-main {
+  background-color: #0b1120;
 }

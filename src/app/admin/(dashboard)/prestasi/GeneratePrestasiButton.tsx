@@ -1,0 +1,56 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { Zap, Loader2, RefreshCw } from "lucide-react";
+import { generatePrestasi } from "@/actions/prestasiOverrides";
+import { useToast } from "@/components/ui/Toast";
+
+type Props = {
+  periode: string;
+  isGenerated: boolean;
+};
+
+export default function GeneratePrestasiButton({ periode, isGenerated }: Props) {
+  const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
+
+  const handleGenerate = () => {
+    startTransition(async () => {
+      const res = await generatePrestasi(periode);
+      if (res.success) {
+        showToast(
+          isGenerated
+            ? "Prestasi berhasil di-generate ulang dan disimpan ke database."
+            : "Prestasi berhasil di-generate dan disimpan ke database.",
+          "success"
+        );
+      } else {
+        showToast(res.error || "Gagal generate prestasi.", "error");
+      }
+    });
+  };
+
+  return (
+    <button
+      onClick={handleGenerate}
+      disabled={isPending || !periode}
+      title={isGenerated ? "Generate ulang peringkat prestasi ke database" : "Generate peringkat prestasi ke database"}
+      className={`flex items-center justify-center gap-2 h-[38px] px-4 rounded-lg text-sm font-bold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+        isGenerated
+          ? "bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white"
+          : "bg-violet-600 hover:bg-violet-700 active:bg-violet-800 text-white"
+      }`}
+    >
+      {isPending ? (
+        <Loader2 size={16} className="animate-spin" />
+      ) : isGenerated ? (
+        <RefreshCw size={16} />
+      ) : (
+        <Zap size={16} />
+      )}
+      <span className="hidden sm:inline">
+        {isPending ? "Memproses..." : isGenerated ? "Generate Ulang" : "Generate"}
+      </span>
+    </button>
+  );
+}
