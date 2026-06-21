@@ -98,6 +98,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
     - Format nama file: `Sertifikat-AKD_[Fakultas]_[Sebutan]_[NIM]_[Nama].pdf`.
   - **Export XLSX 2-Sheet**: Sheet *Prestasi Akademik* dan *Pengalaman Organisasi* dalam satu file Excel.
 - **Kartu Prestasi di Profil Wisudawan** *(Baru)*: Jika wisudawan memiliki data `prestasi_akd`, sebuah kartu bergaya medali akan muncul di halaman profil publik, otomatis menyesuaikan warna berdasarkan peringkat (Emas/Perak/Perunggu/Hijau). Fitur ini dapat diaktifkan/dinonaktifkan oleh Admin via toggle `show_prestasi_card` di Pengaturan → General.
+  - **Download Sertifikat PDF Mandiri**: Di dalam Kartu Prestasi, wisudawan berprestasi dapat langsung men-*generate* dan mengunduh sertifikat berformat PDF (*client-side*). Desain sertifikat ini 100% tersinkronisasi dengan pengaturan yang dikonfigurasi admin (nomor SK, tanda tangan, dan *background* bingkai).
 - **Bidang Prestasi di Form Wisudawan Disembunyikan**: Field "Prestasi Akademik" dan "Prestasi Organisasi" dihapus dari form input/edit wisudawan (publik maupun edit). Data ini kini dikelola eksklusif oleh Admin melalui modul Generate Prestasi.
 - **Pembatasan Admin Unit**: Role `admin_unit` memiliki akses read-only — tombol Generate, Print Sertifikat, Ganti Wisudawan, dan kolom Aksi di halaman Prestasi disembunyikan. Filter data Toga dan Perbaikan otomatis dibatasi sesuai unit kerja/fakultas masing-masing. Menu Tamu disembunyikan.
 - **Halaman Tamu** (`/admin/tamu`): Modul manajemen tamu undangan VIP/umum.

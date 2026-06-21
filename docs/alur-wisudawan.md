@@ -138,6 +138,11 @@ Setelah semua data wajib dan foto terisi, kartu **"Daftar Wisuda"** muncul. Saat
 - **Ubah Password**: Wisudawan bisa sewaktu-waktu mengubah sandi mereka lewat ikon kunci (🔑) di bar navigasi atas.
 - **Ubah Foto Wisuda**: Wisudawan bisa mengganti foto yang sudah diunggah sebelumnya saat menekan "Edit Data". Modul *Cropping* (dengan batas aman area kepala/bahu) akan secara otomatis muncul.
 
+### Fitur Unduh Sertifikat Peringkat Prestasi
+Bagi wisudawan yang memiliki predikat prestasi akademik (terisi pada data `PRESTASI AKD`), sebuah tombol **"Download Sertifikat PDF"** akan muncul di dalam kartu Prestasi Akademik.
+- Sertifikat di-*generate* langsung di perangkat pengguna (*client-side*).
+- Desain, tanda tangan, nomor SK, dan latar belakang (*background*) tersinkronisasi penuh dengan pengaturan sertifikat yang dibuat oleh admin.
+
 ---
 
 ## 5. Alur Penolakan NIM Tidak Aktif
