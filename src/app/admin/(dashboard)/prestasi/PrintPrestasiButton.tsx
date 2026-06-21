@@ -5,7 +5,7 @@ import { useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { CertificateDocument, CertData, CertSettings } from "./CertificateDocument";
+import { CertificateDocument, CertData, CertSettings } from "@/components/pdf/CertificateDocument";
 import { useToast } from "@/components/ui/Toast";
 
 type Props = {

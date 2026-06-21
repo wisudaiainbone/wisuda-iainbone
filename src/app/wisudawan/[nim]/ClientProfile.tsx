@@ -18,6 +18,7 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import CropModal from "@/components/ui/CropModal";
 import { getCroppedImg } from "@/lib/cropImage";
 import { useToast } from "@/components/ui/Toast";
+import DownloadSertifikatButton from "@/components/wisudawan/DownloadSertifikatButton";
 
 import { uploadFotoToGDrive, getOptimizedGDriveUrl } from "@/lib/uploadFoto";
 
@@ -1304,17 +1305,22 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                     if (s.includes("pertama") || s.includes("kesatu") || s.includes("satu") || s.includes(" 1")) color = { bg: "bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800/50", text: "text-amber-700 dark:text-amber-400", icon: "text-amber-500" };
                     else if (s.includes("kedua") || s.includes("dua") || s.includes(" 2")) color = { bg: "bg-slate-50 border-slate-300 dark:bg-slate-800/40 dark:border-slate-700", text: "text-slate-700 dark:text-slate-300", icon: "text-slate-400" };
                     else if (s.includes("ketiga") || s.includes("tiga") || s.includes(" 3")) color = { bg: "bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-800/50", text: "text-orange-800 dark:text-orange-400", icon: "text-orange-500" };
-                    
+
                     return (
                       <motion.div {...up(0.12)} className="mb-4">
                         <Card className={`${color.bg} border rounded-2xl`}>
-                          <div className="p-5 flex items-center gap-4">
-                            <div className="shrink-0 bg-white/50 dark:bg-black/20 p-3 rounded-full">
-                              <Award size={28} className={color.icon} />
+                          <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                              <div className="shrink-0 bg-white/50 dark:bg-black/20 p-3 rounded-full">
+                                <Award size={28} className={color.icon} />
+                              </div>
+                              <div>
+                                <h4 className={`text-[10px] font-bold ${color.text} mb-0.5 uppercase tracking-wider opacity-80`}>Peringkat Prestasi Akademik</h4>
+                                <p className={`text-base font-extrabold ${color.text} leading-tight`}>{w["PRESTASI AKD"]}</p>
+                              </div>
                             </div>
-                            <div>
-                              <h4 className={`text-[10px] font-bold ${color.text} mb-0.5 uppercase tracking-wider opacity-80`}>Peringkat Prestasi Akademik</h4>
-                              <p className={`text-base font-extrabold ${color.text} leading-tight`}>{w["PRESTASI AKD"]}</p>
+                            <div className="sm:shrink-0 w-full sm:w-auto">
+                              <DownloadSertifikatButton w={w} />
                             </div>
                           </div>
                         </Card>
@@ -1610,7 +1616,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
             <svg className="w-3 h-3 text-rose-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
-            <span>untuk para wisudawan</span>
+            <span>untuk para wisudawan IAIN Bone</span>
           </span>
         </p>
       </footer>
