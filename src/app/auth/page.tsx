@@ -211,7 +211,7 @@ export default function AuthPage() {
           {/* Footer Card */}
           <div className="mt-8 pt-6 border-t border-[var(--color-border)] text-center">
             <p className="text-xs text-[var(--color-text-subtle)]">
-              Mengalami kendala? <a href={`https://wa.me/${waLink}`} className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Hubungi Layanan Akademik</a>
+              Mengalami kendala? <a href={`https://wa.me/${waLink}`} className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Hubungi Admin</a>
             </p>
           </div>
         </div>
