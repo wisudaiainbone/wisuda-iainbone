@@ -56,7 +56,7 @@ Portal Wisuda IAIN Bone dilengkapi sistem Panel Admin terintegrasi di rute `/adm
 ## 4. Fitur Dashboard Admin
 
 ### Dashboard Statistik Utama (`/admin`)
-Halaman utama yang pertama kali dilihat oleh Admin, menyediakan ringkasan analitik berbasis *Interactive Drill-down* (3 Layer: Universitas → Fakultas → Prodi).
+Halaman utama yang pertama kali dilihat oleh Admin, menyediakan ringkasan analitik berbasis *Interactive Drill-down* (3 Layer: Universitas → Fakultas → Prodi). **Header halaman admin** dilengkapi tombol **Keluar** (merah) yang muncul di sebelah kiri ikon profil untuk akses logout instan tanpa membuka dropdown.
 - **Summary Cards**: Menampilkan Total Wisudawan, Jumlah Terdaftar, Calon Wisudawan, dan Persentase Pendaftaran.
 - **10 Metrik Visual**:
   - Tren Pendaftaran Harian (Grafik Garis)
@@ -177,6 +177,17 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
   - Berisi informasi wisudawan: Nomor Urut, Foto (fetch otomatis dari Google Drive via lh3.googleusercontent dengan *fallback*), Nama lengkap (Title Case 48 pt), NIM, Prodi, Fakultas, IPK, dan Predikat (Title Case di dalam label pastel).
   - Memiliki fitur desain pintar: **Badge Bundar (5 cm)** di pojok kiri atas bingkai (otomatis mengambil singkatan resmi Prodi dari DB) dan ornamen pembatas teks `◈ ━━━━━━ ◈`.
   - Mengambil setting *Warna Tema* dan *Bingkai* secara dinamis berdasarkan fakultas dari `app_settings`.
+- **Generate Buku Album Wisudawan** (tombol indigo `Album`) *(Baru)*:
+  - Membuka dialog modal dengan pilihan Fakultas (opsional) dan opsi centang "Sertakan Foto Asli".
+  - Menghasilkan dokumen format **tiga kolom**: Area Foto | Detail Data (NAMA, NIM, FAKULTAS, PRODI) | Area Tanda Tangan (nomor urut + garis).
+  - Menyediakan tiga pilihan format ekspor:
+    - 🔴 **Export PDF** — Dokumen siap cetak menggunakan `@react-pdf/renderer`.
+    - 🔵 **Export Word (DOCX)** — Dokumen yang dapat diedit ulang menggunakan library `docx`.
+    - 🟢 **Export Excel (XLSX)** — Spreadsheet dengan penyisipan foto per baris menggunakan `exceljs`.
+  - Data diurutkan sesuai: **Fakultas → Urutan Prodi (dari pengaturan) → Nomor Urut**.
+  - Jika opsi foto dimatikan, Area Foto menampilkan kotak kosong "3x4" sebagai panduan *placeholder* dan dokumen dihasilkan instan (tanpa proses unduh foto).
+  - Jika opsi foto diaktifkan, foto diunduh satu per satu dari Google Drive dengan *progress bar* yang menampilkan kemajuan secara real-time.
+  - Proses sepenuhnya *client-side* — nol beban server Vercel maupun Supabase.
 - **Cetak Label Nama Dada** (tombol indigo `Tag`):
   - Membuka **modal pemilihan Fakultas** yang menampilkan jumlah total wisudawan terdaftar untuk fakultas yang dipilih.
   - Menghasilkan file PDF berukuran **Folio (F4) Landscape** (`330mm × 215mm`) berisi **12 label** per halaman (grid 3 kolom × 4 baris), tanpa jarak antar label.

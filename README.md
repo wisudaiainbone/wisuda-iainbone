@@ -11,7 +11,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
   - *Wisudawan Terdaftar* → login pakai password kustom yang di-**hash** (SHA-256 + salt).
   - Tombol **"Cek Status Pendaftaran kamu"** di halaman login untuk cek NIM tanpa perlu login.
 - **Autentikasi Admin Aman**: Login admin terpusat via **NextAuth.js (Google Provider)** — session menggunakan JWT. Akses dibatasi ketat berdasarkan kecocokan email Google dengan database `admin_users`. Terdapat jalur alternatif khusus **Token Presensi** (`absensi_token`) untuk panitia lapangan (Role Admin Absensi) agar dapat mengakses Scanner Kehadiran dan Scanner Tamu secara instan tanpa login Google.
-- **Panel Admin Terintegrasi**: Dashboard admin (`/admin`) untuk mengelola periode wisuda, data wisudawan, pengaturan sistem, dan akun admin.
+- **Panel Admin Terintegrasi**: Dashboard admin (`/admin`) untuk mengelola periode wisuda, data wisudawan, pengaturan sistem, dan akun admin. Header admin dilengkapi **tombol Keluar cepat** di samping ikon profil untuk logout instan tanpa membuka *dropdown*.
 - **Halaman Informasi Wisuda** (`/admin/informasi`): Halaman referensi cepat yang menampilkan detail jadwal wisuda semua periode untuk semua role admin — dilengkapi **Countdown Pendaftaran real-time** yang dihitung dari `tanggal_pendaftaran` periode aktif.
 - **Dashboard Statistik Canggih (3-Layer Drill-down)**: Halaman utama Admin menyajikan statistik komprehensif (Tren Pendaftaran, Jenis Kelamin, Predikat, Partisipasi Ormawa, Status Toga, Kehadiran, Sebaran IPK, Sesi, Prestasi, dan Kepatuhan Survei).
   - Dilengkapi fitur *Interactive Drill-down* otomatis (Universitas → Fakultas → Prodi) hanya dengan mengklik baris tabel.
@@ -22,6 +22,14 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
   - **Filter Dinamis**: Tersedia filter Status Toga yang memunculkan kolom `Uk Toga`, dan filter **Sesi** yang memunculkan kolom `Sesi` di tabel secara otomatis ketika diaktifkan. Tombol reset (✕) muncul ketika ada filter aktif.
 - **Export Daftar Wisudawan (XLSX)** — Tombol teal **Daftar** mengekspor data wisudawan *terdaftar* ke file `.xlsx` dengan 3 tab (Sesi Satu, Sesi Dua, dan **Rekap**). Tab Rekap menyajikan rekapitulasi data otomatis (Total Wisudawan, Ukuran Toga, Jenis Kelamin, dan Distribusi IPK) per Fakultas & Prodi. Proses 100% *client-side*.
 - **Generate Slide PPTX** *(Diperbarui)* — Tombol violet **Slide** menghasilkan presentasi PowerPoint (`.pptx`) berukuran 1080×1920px (portrait) untuk layar LED. Slide di-generate per Fakultas, berisi foto wisudawan, nomor urut, nama (Title Case), NIM, Prodi, IPK, dan Predikat (dalam label warna pastel). Dihiasi fitur desain pintar: **Badge Bundar (5 cm)** di sudut kiri atas foto, ornamen teks pembatas `◈ ━━━━━━ ◈`, dan bingkai kustom otomatis menyesuaikan fakultas dari pengaturan *app_settings*.
+- **Generate Buku Album Wisudawan** *(Baru)* — Tombol indigo **Album** menghasilkan dokumen berformat tiga kolom (Area Foto | Data: Nama/NIM/Fakultas/Prodi | Area Tanda Tangan) dengan tiga pilihan format ekspor:
+  - **PDF** — Siap cetak via `@react-pdf/renderer`, teks dapat diseleksi.
+  - **Word (.docx)** — Format yang dapat diedit ulang, menggunakan library `docx`.
+  - **Excel (.xlsx)** — Spreadsheet dengan penyisipan foto otomatis per sel, menggunakan `exceljs`.
+  - Data diurutkan berdasarkan **Fakultas → Urutan Prodi (sesuai pengaturan) → Nomor Urut**.
+  - Opsi centang **"Sertakan Foto Asli"** untuk menyertakan foto wisudawan atau cukup kotak kosong 3×4 sebagai *placeholder*.
+  - Dilengkapi *progress bar* saat proses unduh foto berlangsung.
+  - Proses sepenuhnya *client-side* — nol beban server Vercel maupun Supabase.
 - **Generate Slide PPTX (Prestasi)** *(Baru)* — Tombol violet **Slide** di halaman Prestasi menghasilkan file slide PowerPoint khusus untuk wisudawan peraih prestasi akademik secara serentak lintas fakultas. Mem-filter otomatis wisudawan berprestasi dan mengaplikasikan desain khusus: tanpa teks Judul Penelitian, teks area bawah warna putih, dan ornamen setengah lingkaran raksasa (diameter 45 cm) di dasar slide dengan warna sesuai tema fakultas.
 - **Cetak Label Nama Dada (PDF)** — Tombol indigo **Tag** membuka modal pilihan Fakultas, lalu menghasilkan PDF **Folio (F4) Landscape** berisi **12 label per halaman** (grid 3×4) tanpa spasi antar label. Desain label dua kolom: kiri merah maroon (nomor urut 3-digit + singkatan Fakultas-Prodi), kanan putih (logo IAIN Bone + Nama + NIM + footer periode). Proses *client-side* menggunakan `@react-pdf/renderer` — nol beban server Vercel maupun Supabase.
 - **Penugasan Periode Otomatis**: Kolom `periode` wisudawan diisi **saat Admin mengimpor data**, bukan saat mahasiswa mendaftar, sehingga pengelompokan periode sudah dipatenkan sejak unggah.
@@ -114,7 +122,10 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
   - `backgrounds/` — Gambar latar belakang sertifikat (PNG/JPG/WEBP, maks 5 MB, public URL)
   - `signatures/` — Gambar tanda tangan pejabat (PNG transparan, maks 2 MB, public URL)
 - **PDF Generation**: `@react-pdf/renderer` (generate PDF asli dengan teks selectable, bundled client-side)
-- **ZIP Packaging**: `jszip` + `file-saver` (mengemas multi-PDF dan trigger download di browser)
+- **PPTX Generation**: `pptxgenjs` (generate file presentasi PowerPoint secara *client-side*)
+- **Word Generation**: `docx` (generate file Word `.docx` secara *client-side*)
+- **Excel Advanced**: `exceljs` (generate Excel dengan penyisipan gambar per sel, *client-side*)
+- **Password Hashing**: `bcryptjs` (hash password wisudawan di sisi server)
 - **Styling**: Vanilla CSS + CSS Variables (Dark Mode via `next-themes`)
 - **Icons**: [Lucide React](https://lucide.dev)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
