@@ -99,68 +99,54 @@ export default function AdminPengaturanPage() {
 
   useEffect(() => {
     async function loadData() {
-      const defaultPass = await getSetting('default_password', 'wisuda2026', true);
-      const editToga = await getSetting('allow_edit_toga', 'true', true);
-      const editProfile = await getSetting('allow_edit_profile', 'true', true);
-      const showToga = await getSetting('show_toga_info', 'true', true);
-      const showUndangan = await getSetting('show_undangan_info', 'true', true);
-      const perbaikan = await getSetting('allow_perbaikan', 'true', true);
-      const prestasiCard = await getSetting('show_prestasi_card', 'true', true);
-      const absensiLogin = await getSetting('allow_absensi_login', 'true', true);
-      const email = await getSetting('contact_email', 'wisuda@iainbone.ac.id', true);
-      const wa = await getSetting('contact_wa', '+62 811 9429 035', true);
+      try {
+        const allSettings = await getAllSettingsAdmin();
+        const settingsMap: Record<string, { value: string, description: string }> = {};
+        allSettings.forEach((s: any) => {
+          settingsMap[s.key] = { value: s.value, description: s.description };
+        });
 
-      const akdNomor = await getSetting('cert_akd_nomor', '', true);
-      const akdTanggal = await getSetting('cert_akd_tanggal', '', true);
-      const akdJabatan = await getSetting('cert_akd_jabatan', 'Rektor', true);
-      const akdNip = await getSetting('cert_akd_nip', '', true);
-      const akdNama = await getSetting('cert_akd_nama', '', true);
+        const getVal = (key: string, def: string) => settingsMap[key]?.value ?? def;
 
-      const orgNomor = await getSetting('cert_org_nomor', '', true);
-      const orgTanggal = await getSetting('cert_org_tanggal', '', true);
-      const orgJabatan = await getSetting('cert_org_jabatan', 'Rektor', true);
-      const orgNip = await getSetting('cert_org_nip', '', true);
-      const orgNama = await getSetting('cert_org_nama', '', true);
+        const descMap: Record<string, string> = {};
+        Object.keys(settingsMap).forEach(key => {
+          descMap[key] = settingsMap[key].description;
+        });
+        setDescriptions(descMap);
 
-      const bgUrl = await getSetting('cert_bg_url', '', true);
-      const ttdUrl = await getSetting('cert_akd_ttd_url', '', true);
+        setDefaultPassword(getVal('default_password', 'wisuda2026'));
+        setAllowEditToga(getVal('allow_edit_toga', 'true') === 'true');
+        setAllowEditProfile(getVal('allow_edit_profile', 'true') === 'true');
+        setShowTogaInfo(getVal('show_toga_info', 'true') === 'true');
+        setShowUndanganInfo(getVal('show_undangan_info', 'true') === 'true');
+        setAllowPerbaikan(getVal('allow_perbaikan', 'true') === 'true');
+        setShowPrestasiCard(getVal('show_prestasi_card', 'true') === 'true');
+        setAllowAbsensiLogin(getVal('allow_absensi_login', 'true') === 'true');
+        setContactEmail(getVal('contact_email', 'wisuda@iainbone.ac.id'));
+        setContactWa(getVal('contact_wa', '+62 811 9429 035'));
 
-      const allSettings = await getAllSettingsAdmin();
-      const descMap: Record<string, string> = {};
-      allSettings.forEach((s: any) => {
-        descMap[s.key] = s.description;
-      });
-      setDescriptions(descMap);
-      setDefaultPassword(defaultPass);
-      setAllowEditToga(editToga === 'true');
-      setAllowEditProfile(editProfile === 'true');
-      setShowTogaInfo(showToga === 'true');
-      setShowUndanganInfo(showUndangan === 'true');
-      setAllowPerbaikan(perbaikan === 'true');
-      setShowPrestasiCard(prestasiCard === 'true');
-      setAllowAbsensiLogin(absensiLogin === 'true');
-      setContactEmail(email);
-      setContactWa(wa);
+        setCertAkdNomor(getVal('cert_akd_nomor', ''));
+        setCertAkdTanggal(getVal('cert_akd_tanggal', ''));
+        setCertAkdJabatan(getVal('cert_akd_jabatan', 'Rektor'));
+        setCertAkdNip(getVal('cert_akd_nip', ''));
+        setCertAkdNama(getVal('cert_akd_nama', ''));
 
-      setCertAkdNomor(akdNomor);
-      setCertAkdTanggal(akdTanggal);
-      setCertAkdJabatan(akdJabatan);
-      setCertAkdNip(akdNip);
-      setCertAkdNama(akdNama);
+        setCertOrgNomor(getVal('cert_org_nomor', ''));
+        setCertOrgTanggal(getVal('cert_org_tanggal', ''));
+        setCertOrgJabatan(getVal('cert_org_jabatan', 'Rektor'));
+        setCertOrgNip(getVal('cert_org_nip', ''));
+        setCertOrgNama(getVal('cert_org_nama', ''));
 
-      setCertOrgNomor(orgNomor);
-      setCertOrgTanggal(orgTanggal);
-      setCertOrgJabatan(orgJabatan);
-      setCertOrgNip(orgNip);
-      setCertOrgNama(orgNama);
+        setCertBgUrl(getVal('cert_bg_url', ''));
+        setCertTtdUrl(getVal('cert_akd_ttd_url', ''));
 
-      const currentPeriode = await getActivePeriode();
-
-      setCertBgUrl(bgUrl);
-      setCertTtdUrl(ttdUrl);
-      setActivePeriode(currentPeriode);
-
-      setIsLoading(false);
+        const currentPeriode = await getActivePeriode();
+        setActivePeriode(currentPeriode);
+      } catch (error) {
+        console.error("Error loading settings:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
     loadData();
   }, []);
