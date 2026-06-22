@@ -17,8 +17,10 @@ export default async function ManajemenAdminPage() {
     redirect("/admin");
   }
 
-  const admins = await getAdminUsers();
-  const prodiList = await getProdiList();
+  const [admins, prodiList] = await Promise.all([
+    getAdminUsers(),
+    getProdiList()
+  ]);
   const fakultasList = Array.from(new Set(prodiList.map(p => p.fakultas))).sort();
 
   return (

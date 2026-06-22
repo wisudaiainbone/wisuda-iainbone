@@ -101,7 +101,10 @@ export default function AdminPengaturanPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const allSettings = await getAllSettingsAdmin();
+        const [allSettings, periodeAktif] = await Promise.all([
+          getAllSettingsAdmin(),
+          getActivePeriode()
+        ]);
         const settingsMap: Record<string, { value: string, description: string }> = {};
         allSettings.forEach((s: any) => {
           settingsMap[s.key] = { value: s.value, description: s.description };
@@ -144,10 +147,9 @@ export default function AdminPengaturanPage() {
         setCertBgUrl(getVal('cert_bg_url', ''));
         setCertTtdUrl(getVal('cert_akd_ttd_url', ''));
 
-        const currentPeriode = await getActivePeriode();
-        setActivePeriode(currentPeriode);
-      } catch (error) {
-        console.error("Error loading settings:", error);
+        setActivePeriode(periodeAktif);
+      } catch (err) {
+        console.error('Gagal memuat pengaturan', err);
       } finally {
         setIsLoading(false);
       }

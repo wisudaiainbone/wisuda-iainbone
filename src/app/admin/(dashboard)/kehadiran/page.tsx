@@ -7,11 +7,12 @@ import { cookies } from "next/headers";
 import { getSetting } from "@/actions/settings";
 
 export default async function AdminKehadiranPage() {
-  const session = await getServerSession(authOptions);
-  const cookieStore = await cookies();
+  const [session, cookieStore, allowAbsensiLogin] = await Promise.all([
+    getServerSession(authOptions),
+    cookies(),
+    getSetting('allow_absensi_login', 'true', true)
+  ]);
   const absensiToken = cookieStore.get('absensi_token')?.value;
-
-  const allowAbsensiLogin = await getSetting('allow_absensi_login', 'true', true);
 
   // Jika pengaturan login absensi dinonaktifkan dan user tidak memiliki NextAuth session
   if (!session && allowAbsensiLogin !== 'true') {

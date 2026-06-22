@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getTamuList } from "@/actions/tamu";
 import { getActivePeriode, getAllPeriode } from "@/actions/periode";
 import { getScanMeta } from "@/actions/scanCache";
-import { getSetting } from "@/actions/settings";
+import { getSetting, getAllSettingsAdmin } from "@/actions/settings";
 import TamuListClient from "./TamuListClient";
 import ScanTamuClient from "./ScanTamuClient";
 import TamuHeaderActions from "./TamuHeaderActions";
@@ -49,36 +49,32 @@ export default async function AdminTamuPage(props: PageProps) {
     redirect('/admin');
   }
 
-  const activePeriode = await getActivePeriode();
-  const scanMeta = await getScanMeta('tamu');
-  
-  const tamuListRes = await getTamuList();
-  const tamuList = tamuListRes.success ? (tamuListRes.data || []) : [];
+  const [activePeriode, scanMeta, tamuListRes, allPeriode, allSettings] = await Promise.all([
+    getActivePeriode(),
+    getScanMeta('tamu'),
+    getTamuList(),
+    getAllPeriode(),
+    getAllSettingsAdmin()
+  ]);
 
-  const allPeriode = await getAllPeriode();
+  const tamuList = tamuListRes.success ? (tamuListRes.data || []) : [];
   const activePeriodes = allPeriode.filter(p => p.status === 'Sedang Dibuka');
 
   // Ambil pengaturan tamu
-  const bgDepanUrl = await getSetting('tamu_bg_depan_url', '', true);
-  const bgBelakangUrl = await getSetting('tamu_bg_belakang_url', '', true);
-  const ttdUrl = await getSetting('tamu_ttd_url', '', true);
-  const nomor = await getSetting('tamu_nomor', '', true);
-  const tanggal = await getSetting('tamu_tanggal', '', true);
-  const jabatan = await getSetting('tamu_jabatan', 'Rektor', true);
-  const nama = await getSetting('tamu_nama', '', true);
-  const nip = await getSetting('tamu_nip', '', true);
-  const acara = await getSetting('tamu_acara', '', true);
+  const settingsMap: Record<string, string> = {};
+  allSettings.forEach((s: any) => { settingsMap[s.key] = s.value; });
+  const getVal = (key: string, def: string) => settingsMap[key] ?? def;
 
   const tamuSettings = {
-    bgDepanUrl,
-    bgBelakangUrl,
-    ttdUrl,
-    nomor,
-    tanggal,
-    jabatan,
-    nama,
-    nip,
-    acara
+    bgDepanUrl: getVal('tamu_bg_depan_url', ''),
+    bgBelakangUrl: getVal('tamu_bg_belakang_url', ''),
+    ttdUrl: getVal('tamu_ttd_url', ''),
+    nomor: getVal('tamu_nomor', ''),
+    tanggal: getVal('tamu_tanggal', ''),
+    jabatan: getVal('tamu_jabatan', 'Rektor'),
+    nama: getVal('tamu_nama', ''),
+    nip: getVal('tamu_nip', ''),
+    acara: getVal('tamu_acara', '')
   };
 
   return (

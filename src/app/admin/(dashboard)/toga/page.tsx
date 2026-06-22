@@ -17,16 +17,17 @@ export default async function AdminTogaPage(props: PageProps) {
   const resolvedSearchParams = await props.searchParams;
   const tab = typeof resolvedSearchParams?.tab === 'string' ? resolvedSearchParams.tab : 'rekapitulasi';
 
-  const adminSession = await getAdminSession();
-  const activePeriode = await getActivePeriode();
-  const scanMeta = await getScanMeta('toga');
-  
+  const [adminSession, activePeriode, scanMeta, allPeriode] = await Promise.all([
+    getAdminSession(),
+    getActivePeriode(),
+    getScanMeta('toga'),
+    getAllPeriode()
+  ]);
+
   const allWisudawan = await getAllWisudawan({
     role: adminSession?.role,
     unitKerja: adminSession?.unit_kerja
   });
-
-  const allPeriode = await getAllPeriode();
   const activePeriodes = allPeriode.filter(p => p.status === 'Sedang Dibuka');
 
   // Ambil semua data wisudawan untuk periode aktif, tanpa memedulikan status terdaftar
