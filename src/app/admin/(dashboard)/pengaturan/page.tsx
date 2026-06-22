@@ -25,6 +25,7 @@ export default function AdminPengaturanPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [descriptions, setDescriptions] = useState<Record<string, string>>({});
+  const [allSettingsMap, setAllSettingsMap] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState("general");
   const [activePeriode, setActivePeriode] = useState<any>(null);
 
@@ -109,10 +110,13 @@ export default function AdminPengaturanPage() {
         const getVal = (key: string, def: string) => settingsMap[key]?.value ?? def;
 
         const descMap: Record<string, string> = {};
+        const flatMap: Record<string, string> = {};
         Object.keys(settingsMap).forEach(key => {
           descMap[key] = settingsMap[key].description;
+          flatMap[key] = settingsMap[key].value;
         });
         setDescriptions(descMap);
+        setAllSettingsMap(flatMap);
 
         setDefaultPassword(getVal('default_password', 'wisuda2026'));
         setAllowEditToga(getVal('allow_edit_toga', 'true') === 'true');
@@ -248,8 +252,8 @@ export default function AdminPengaturanPage() {
 
       {/* Kolom Kanan (Konten) - 90% */}
       <div className="w-full lg:w-[90%] flex-1">
-        <div className={activeTab === 'general' ? 'block' : 'hidden'}>
-          <form onSubmit={handleSave} className="w-full space-y-8">
+        {activeTab === 'general' && (
+          <form onSubmit={handleSave} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
 
               {/* Password Default */}
@@ -524,10 +528,10 @@ export default function AdminPengaturanPage() {
               </button>
             </div>
           </form>
-        </div>
+        )}
 
-        <div className={activeTab === 'prestasi' ? 'block' : 'hidden'}>
-          <form onSubmit={handleSavePrestasi} className="w-full space-y-8">
+        {activeTab === 'prestasi' && (
+          <form onSubmit={handleSavePrestasi} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
 
               {/* === Background Upload === */}
@@ -834,10 +838,10 @@ export default function AdminPengaturanPage() {
               </button>
             </div>
           </form>
-        </div>
+        )}
 
-        <div className={activeTab === 'toga' ? 'block' : 'hidden'}>
-          <div className="w-full">
+        {activeTab === 'toga' && (
+          <div className="w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
             {activePeriode ? (
               <TogaSettingsForm activePeriode={activePeriode} />
             ) : (
@@ -847,13 +851,13 @@ export default function AdminPengaturanPage() {
               </div>
             )}
           </div>
-        </div>
-        <div className={activeTab === 'tamu' ? 'block' : 'hidden'}>
-          <TamuSettingsForm />
-        </div>
-        <div className={activeTab === 'slide' ? 'block' : 'hidden'}>
-          <SlideSettingsForm />
-        </div>
+        )}
+        {activeTab === 'tamu' && (
+          <TamuSettingsForm initialData={allSettingsMap} />
+        )}
+        {activeTab === 'slide' && (
+          <SlideSettingsForm initialData={allSettingsMap} />
+        )}
       </div>
     </div>
   );

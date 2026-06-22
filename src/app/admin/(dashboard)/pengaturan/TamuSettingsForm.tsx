@@ -6,60 +6,29 @@ import { Loader2, CheckCircle2, Upload, ImageIcon, X } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { uploadTamuBackground, uploadTamuSignature, extractSupabasePath, deleteCertAsset } from "@/lib/uploadCertBg";
 
-export default function TamuSettingsForm() {
+export default function TamuSettingsForm({ initialData }: { initialData?: Record<string, string> }) {
   const { showToast } = useToast();
 
-  const [tamuNomor, setTamuNomor] = useState("");
-  const [tamuTanggal, setTamuTanggal] = useState("");
-  const [tamuJabatan, setTamuJabatan] = useState("");
-  const [tamuNama, setTamuNama] = useState("");
-  const [tamuNip, setTamuNip] = useState("");
-  const [tamuAcara, setTamuAcara] = useState("");
+  const [tamuNomor, setTamuNomor] = useState(initialData?.tamu_nomor || "");
+  const [tamuTanggal, setTamuTanggal] = useState(initialData?.tamu_tanggal || "");
+  const [tamuJabatan, setTamuJabatan] = useState(initialData?.tamu_jabatan || "Rektor");
+  const [tamuNama, setTamuNama] = useState(initialData?.tamu_nama || "");
+  const [tamuNip, setTamuNip] = useState(initialData?.tamu_nip || "");
+  const [tamuAcara, setTamuAcara] = useState(initialData?.tamu_acara || "");
 
-  const [tamuBgDepanUrl, setTamuBgDepanUrl] = useState("");
+  const [tamuBgDepanUrl, setTamuBgDepanUrl] = useState(initialData?.tamu_bg_depan_url || "");
   const [isUploadingBgDepan, setIsUploadingBgDepan] = useState(false);
   const bgDepanFileInputRef = useRef<HTMLInputElement>(null);
 
-  const [tamuBgBelakangUrl, setTamuBgBelakangUrl] = useState("");
+  const [tamuBgBelakangUrl, setTamuBgBelakangUrl] = useState(initialData?.tamu_bg_belakang_url || "");
   const [isUploadingBgBelakang, setIsUploadingBgBelakang] = useState(false);
   const bgBelakangFileInputRef = useRef<HTMLInputElement>(null);
 
-  const [tamuTtdUrl, setTamuTtdUrl] = useState("");
+  const [tamuTtdUrl, setTamuTtdUrl] = useState(initialData?.tamu_ttd_url || "");
   const [isUploadingTtd, setIsUploadingTtd] = useState(false);
   const ttdFileInputRef = useRef<HTMLInputElement>(null);
 
-  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
-      try {
-        const allSettings = await getAllSettingsAdmin();
-        const settingsMap: Record<string, string> = {};
-        allSettings.forEach((s: any) => {
-          settingsMap[s.key] = s.value;
-        });
-
-        const getVal = (key: string, def: string) => settingsMap[key] ?? def;
-
-        setTamuNomor(getVal("tamu_nomor", ""));
-        setTamuTanggal(getVal("tamu_tanggal", ""));
-        setTamuJabatan(getVal("tamu_jabatan", "Rektor"));
-        setTamuNama(getVal("tamu_nama", ""));
-        setTamuNip(getVal("tamu_nip", ""));
-        setTamuAcara(getVal("tamu_acara", ""));
-        setTamuBgDepanUrl(getVal("tamu_bg_depan_url", ""));
-        setTamuBgBelakangUrl(getVal("tamu_bg_belakang_url", ""));
-        setTamuTtdUrl(getVal("tamu_ttd_url", ""));
-      } catch (err) {
-        console.error("Gagal memuat pengaturan tamu", err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadData();
-  }, []);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,13 +120,6 @@ export default function TamuSettingsForm() {
     showToast("Gambar tanda tangan dihapus.", "success");
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <Loader2 className="animate-spin text-emerald-600" size={32} />
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSave} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">

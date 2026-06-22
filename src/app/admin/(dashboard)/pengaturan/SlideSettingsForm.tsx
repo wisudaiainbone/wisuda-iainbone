@@ -29,54 +29,32 @@ type FrameState = {
 
 type FrameMap = Record<string, FrameState>;
 
-export default function SlideSettingsForm() {
+export default function SlideSettingsForm({ initialData }: { initialData?: Record<string, string> }) {
   const { showToast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
   const [frames, setFrames] = useState<FrameMap>(() => {
     const init: FrameMap = {};
     FRAME_SLOTS.forEach(s => {
-      init[s.key] = { url: '', warna: '#1a2744', isUploading: false };
+      init[s.key] = { 
+        url: initialData?.[`slide_frame_${s.key}_url`] || '', 
+        warna: initialData?.[`slide_frame_${s.key}_warna`] || '#1a2744', 
+        isUploading: false 
+      };
     });
     BADGE_PRESTASI_SLOTS.forEach(s => {
-      init[s.key] = { url: '', warna: '#ffffff', isUploading: false };
+      init[s.key] = { 
+        url: initialData?.[`slide_${s.key}_url`] || '', 
+        warna: '#ffffff', 
+        isUploading: false 
+      };
     });
     return init;
   });
 
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
-  useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
-      try {
-        const allSettings = await getAllSettingsAdmin();
-        const settingsMap: Record<string, string> = {};
-        allSettings.forEach((s: any) => {
-          settingsMap[s.key] = s.value;
-        });
-        const getVal = (key: string, def: string) => settingsMap[key] ?? def;
 
-        const loaded: FrameMap = {};
-        for (const slot of FRAME_SLOTS) {
-          const url = getVal(`slide_frame_${slot.key}_url`, '');
-          const warna = getVal(`slide_frame_${slot.key}_warna`, '#1a2744');
-          loaded[slot.key] = { url, warna, isUploading: false };
-        }
-        for (const slot of BADGE_PRESTASI_SLOTS) {
-          const url = getVal(`slide_${slot.key}_url`, '');
-          loaded[slot.key] = { url, warna: '#ffffff', isUploading: false };
-        }
-        setFrames(loaded);
-      } catch (err) {
-        console.error('Gagal memuat pengaturan slide', err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadData();
-  }, []);
 
   const handleUpload = async (key: string, file: File) => {
     setFrames(prev => ({ ...prev, [key]: { ...prev[key], isUploading: true } }));
@@ -125,13 +103,7 @@ export default function SlideSettingsForm() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <Loader2 className="animate-spin text-emerald-600" size={32} />
-      </div>
-    );
-  }
+
 
   return (
     <form onSubmit={handleSaveWarna} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
