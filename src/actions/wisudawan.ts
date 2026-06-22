@@ -3,6 +3,10 @@
 import { supabase } from '@/lib/supabase';
 import { redis } from '@/lib/redis';
 import { revalidatePath } from 'next/cache';
+import { getAdminSession } from '@/actions/adminAuth';
+import bcrypt from 'bcryptjs';
+import { updateWisudawanSchema, loginWisudawanSchema, daftarWisudaSchema, setupAkunSchema, changePasswordSchema } from '@/lib/validations';
+import { Ratelimit } from "@upstash/ratelimit";
 
 const CACHE_TTL = 3600; // 1 hour
 
@@ -144,6 +148,20 @@ export async function getAllWisudawan(filterOptions?: { role?: string, unitKerja
 }
 
 export async function loginWisudawan(nim: string, passwordInput: string) {
+  const validation = loginWisudawanSchema.safeParse({ nim, passwordInput });
+  if (!validation.success) return { success: false, error: validation.error.errors[0].message };
+
+  // Rate Limiting
+  const loginRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(5, "1 m"),
+    analytics: true,
+  });
+  const { success: rateLimitSuccess } = await loginRateLimit.limit(`login_attempt:${nim}`);
+  if (!rateLimitSuccess) {
+    return { success: false, error: 'Terlalu banyak percobaan login. Silakan coba lagi nanti.' };
+  }
+
   // 1. Dapatkan periode aktif
   const { data: activePeriode, error: periodeError } = await supabase
     .from('periode_wisuda')
@@ -176,13 +194,14 @@ export async function loginWisudawan(nim: string, passwordInput: string) {
 
   let isValid = false;
   let usedDefaultPassword = false;
+  let needsUpgrade = false;
 
   if (!storedPassword) {
-    // Tidak ada password tersimpan -> gunakan default
     isValid = (passwordInput === defaultPassword);
     if (isValid) usedDefaultPassword = true;
-  } else if (storedPassword.startsWith('$')) {
-    // Password sudah di-hash (format: $sha256$<salt>$<hash>)
+  } else if (storedPassword.startsWith('$2a$') || storedPassword.startsWith('$2b$')) {
+    isValid = bcrypt.compareSync(passwordInput, storedPassword);
+  } else if (storedPassword.startsWith('$sha256$')) {
     const parts = storedPassword.split('$');
     if (parts.length === 4 && parts[1] === 'sha256') {
       const salt = parts[2];
@@ -193,19 +212,27 @@ export async function loginWisudawan(nim: string, passwordInput: string) {
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       const computedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
       isValid = (computedHash === storedHash);
+      if (isValid) needsUpgrade = true;
     } else {
       isValid = (passwordInput === defaultPassword);
       if (isValid) usedDefaultPassword = true;
     }
   } else {
-    // Plain text password (backward compat)
     isValid = (passwordInput === storedPassword);
-    // Jika plain text cocok dengan defaultPassword, berarti pakai password default
-    if (isValid && storedPassword === defaultPassword) usedDefaultPassword = true;
+    if (isValid && storedPassword === defaultPassword) {
+       usedDefaultPassword = true;
+    } else if (isValid) {
+       needsUpgrade = true;
+    }
   }
 
   if (!isValid) {
     return { success: false, error: 'NIM atau Password salah. Periksa kembali data Anda.' };
+  }
+
+  if (needsUpgrade) {
+    const newHash = bcrypt.hashSync(passwordInput, 10);
+    await supabase.from('wisudawan').update({ password: newHash }).eq('nim', nim);
   }
 
   return { success: true, data: w, isDefaultPassword: usedDefaultPassword };
@@ -253,6 +280,12 @@ export async function checkExistingNims(nims: string[]) {
 }
 
 export async function updateWisudawan(nim: string, updates: Record<string, any>) {
+  const admin = await getAdminSession();
+  if (!admin) return { success: false, error: 'Unauthorized' };
+
+  const validation = updateWisudawanSchema.safeParse({ nim, updates });
+  if (!validation.success) return { success: false, error: validation.error.errors[0].message };
+
   const supabaseData = mapToSupabaseFormat(updates);
 
   // Hapus primary key dari data update untuk mencegah error
@@ -320,16 +353,8 @@ export async function saveFotoWisudawan(nim: string, fotoUrl: string) {
  * entry baru ke kolom `log_status`.
  */
 export async function daftarWisuda(nim: string, newPassword: string) {
-  // Helper untuk hashing password dengan Web Crypto (SHA-256 + salt)
-  const hashPassword = async (plain: string): Promise<string> => {
-    const salt = Math.random().toString(36).substring(2, 10);
-    const encoder = new TextEncoder();
-    const data = encoder.encode(salt + plain);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    return `$sha256$${salt}$${hashHex}`;
-  };
+  const validation = daftarWisudaSchema.safeParse({ nim, newPassword });
+  if (!validation.success) throw new Error(validation.error.errors[0].message);
 
   const getMakassarTime = () => {
     const formatter = new Intl.DateTimeFormat('sv-SE', {
@@ -408,7 +433,7 @@ export async function daftarWisuda(nim: string, newPassword: string) {
   const qrTogaUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(idWisuda)}`;
 
   // 5. Hash password baru
-  const hashedPassword = await hashPassword(newPassword);
+  const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
   // 6. Buat entry baru dan append ke log lama
   let currentLog: any[] = [];
@@ -473,7 +498,9 @@ export async function daftarWisuda(nim: string, newPassword: string) {
 
 export async function changePasswordWisudawan(nim: string, newPassword: string) {
   try {
-    const bcrypt = require('bcryptjs');
+    const validation = changePasswordSchema.safeParse({ nim, newPassword });
+    if (!validation.success) throw new Error(validation.error.errors[0].message);
+
     const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
     const { error } = await supabase
@@ -495,6 +522,9 @@ export async function changePasswordWisudawan(nim: string, newPassword: string) 
 
 export async function resetPasswordWisudawan(nim: string) {
   try {
+    const admin = await getAdminSession();
+    if (!admin) return { success: false, error: 'Unauthorized' };
+
     const { getSetting } = await import('@/actions/settings');
     const defaultPassword = await getSetting('default_password', 'wisuda2026');
     
@@ -567,6 +597,9 @@ export async function resetPasswordWisudawan(nim: string) {
 // namun disarankan upload dilakukan dari client-side untuk menghindari Vercel body size limit.
 // Kita sediakan endpoint ini hanya untuk ekspor ke google sheet atau server-side upload)
 export async function exportToGoogleSheets(period: string) {
+  const admin = await getAdminSession();
+  if (!admin) throw new Error('Unauthorized');
+
   // Fetch all for period
   const { data, error } = await supabase
     .from('wisudawan')
@@ -618,26 +651,11 @@ export async function exportToGoogleSheets(period: string) {
 
 export async function importWisudawanBatch(data: any[]) {
   try {
-    const { createSupabaseServerClient } = await import('@/lib/supabase-server');
-    const supabaseServer = await createSupabaseServerClient();
-    
-    // Ambil session saat ini
-    const { data: { user } } = await supabaseServer.auth.getUser();
-    if (!user) return { success: false, error: 'Unauthorized. Please login first.' };
+    const admin = await getAdminSession();
+    if (!admin) return { success: false, error: 'Unauthorized. Please login first.' };
 
-    // Ambil data admin
-    const { data: adminData, error: adminError } = await supabaseServer
-      .from('admin_users')
-      .select('role, unit_kerja')
-      .eq('id', user.id)
-      .single();
-
-    if (adminError || !adminData) {
-      return { success: false, error: 'Data admin tidak ditemukan.' };
-    }
-
-    const role = adminData.role;
-    const unitKerja = adminData.unit_kerja;
+    const role = admin.role;
+    const unitKerja = admin.unit_kerja;
 
     // Ambil periode yang sedang aktif
     const { data: activePeriode } = await supabase
@@ -772,31 +790,21 @@ export async function importWisudawanBatch(data: any[]) {
 
 export async function deleteWisudawan(nim: string) {
   try {
-    const { createSupabaseServerClient } = await import('@/lib/supabase-server');
-    const supabaseServer = await createSupabaseServerClient();
-    
-    // Auth check
-    const { data: { user } } = await supabaseServer.auth.getUser();
-    if (!user) return { success: false, error: 'Unauthorized' };
+    const adminData = await getAdminSession();
+    if (!adminData) return { success: false, error: 'Unauthorized' };
 
     // Role check: admin unit cuma bisa hapus fakultasnya sendiri
-    const { data: adminData } = await supabaseServer
-      .from('admin_users')
-      .select('role, unit_kerja')
-      .eq('id', user.id)
-      .single();
-
-    if (adminData?.role === 'admin_unit' && adminData.unit_kerja) {
-      const { data: mhs } = await supabaseServer.from('wisudawan').select('fakultas').eq('nim', nim).single();
+    if (adminData.role === 'admin_unit' && adminData.unit_kerja) {
+      const { data: mhs } = await supabase.from('wisudawan').select('fakultas').eq('nim', nim).single();
       if (mhs?.fakultas !== adminData.unit_kerja) {
         return { success: false, error: 'Anda tidak memiliki izin menghapus data wisudawan dari fakultas lain.' };
       }
     }
 
     // Ambil data foto sebelum dihapus
-    const { data: mhsData } = await supabaseServer.from('wisudawan').select('foto').eq('nim', nim).single();
+    const { data: mhsData } = await supabase.from('wisudawan').select('foto').eq('nim', nim).single();
 
-    const { error } = await supabaseServer.from('wisudawan').delete().eq('nim', nim);
+    const { error } = await supabase.from('wisudawan').delete().eq('nim', nim);
     
     if (error) {
       console.error('Error deleting wisudawan:', error);
@@ -834,18 +842,10 @@ export async function deleteWisudawan(nim: string) {
  */
 export async function setupAkunWisudawan(nim: string, email: string, toga: string, newPassword: string) {
   try {
-    // Hash password baru (SHA-256 + salt, sama seperti daftarWisuda)
-    const hashPassword = async (plain: string): Promise<string> => {
-      const salt = Math.random().toString(36).substring(2, 10);
-      const encoder = new TextEncoder();
-      const data = encoder.encode(salt + plain);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      return `$sha256$${salt}$${hashHex}`;
-    };
+    const validation = setupAkunSchema.safeParse({ nim, email, toga, newPassword });
+    if (!validation.success) return { success: false, error: validation.error.errors[0].message };
 
-    const hashedPassword = await hashPassword(newPassword);
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
     const { error } = await supabase
       .from('wisudawan')

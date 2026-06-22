@@ -3,6 +3,7 @@
 import { createSupabaseAdminClient } from "@/lib/supabase-server";
 import { getAdminSession } from "./adminAuth";
 import { revalidatePath } from "next/cache";
+import { tamuPayloadSchema } from "@/lib/validations";
 
 export async function getTamuList() {
   const session = await getAdminSession();
@@ -24,6 +25,9 @@ export async function getTamuList() {
 export async function createTamu(payload: { nama: string; jabatan: string; alamat: string; sesi: string }) {
   const session = await getAdminSession();
   if (!session) return { success: false, error: "Unauthorized" };
+
+  const validation = tamuPayloadSchema.safeParse(payload);
+  if (!validation.success) return { success: false, error: validation.error.errors[0].message };
 
   try {
     // Generate ID: Tamu_yyyyMMddHHmmss_[sesi]
@@ -61,6 +65,9 @@ export async function createTamu(payload: { nama: string; jabatan: string; alama
 export async function updateTamu(id: string, payload: { nama: string; jabatan: string; alamat: string; sesi: string }) {
   const session = await getAdminSession();
   if (!session) return { success: false, error: "Unauthorized" };
+
+  const validation = tamuPayloadSchema.safeParse(payload);
+  if (!validation.success) return { success: false, error: validation.error.errors[0].message };
 
   try {
     const supabaseAdmin = await createSupabaseAdminClient();
