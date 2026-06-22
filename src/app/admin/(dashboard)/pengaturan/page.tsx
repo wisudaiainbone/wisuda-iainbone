@@ -217,8 +217,8 @@ export default function AdminPengaturanPage() {
   return (
     <div className="flex flex-col lg:flex-row gap-6 w-full items-start pb-10">
       {/* Kolom Kiri (Menu) - 10% */}
-      <div className="w-full lg:w-[10%] flex-shrink-0 lg:sticky lg:top-6">
-        <div className="flex items-center lg:items-start lg:flex-col gap-2 lg:gap-4 py-2 w-full overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="w-full lg:w-[10%] flex-shrink-0 sticky top-14 lg:top-6 z-30 bg-[var(--color-bg)] lg:bg-transparent -mx-6 px-6 lg:mx-0 lg:px-0 py-2 lg:py-0 mb-4 lg:mb-0 border-b border-[var(--color-border)] lg:border-none">
+        <div className="flex items-center lg:items-start lg:flex-col gap-2 lg:gap-4 w-full overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-1 lg:pb-0">
           {[
             { id: 'general', label: 'General' },
             { id: 'prestasi', label: 'Prestasi' },
