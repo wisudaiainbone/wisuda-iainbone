@@ -152,7 +152,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
           items.map((prodi, index) => (
             <div 
               key={prodi.id} 
-              className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4 shadow-sm flex flex-col gap-3 relative cursor-grab active:cursor-grabbing"
+              className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 shadow-sm flex flex-col gap-2 relative cursor-grab active:cursor-grabbing"
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
               onDragOver={(e) => handleDragOver(e, index)}
@@ -169,20 +169,20 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
                     <span className="text-sm font-bold text-[var(--color-text)] mt-0.5">{prodi.prodi}</span>
                   </div>
                 </div>
-                {prodi.sesi && (
-                  <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
-                    {prodi.sesi}
-                  </span>
-                )}
               </div>
               
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--color-border)]">
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-[var(--color-border)]">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-bg-secondary)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.singkatan}</span>
                   <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-bg-secondary)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.gelar}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
+                  {prodi.sesi && (
+                    <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
+                      {prodi.sesi}
+                    </span>
+                  )}
                   <ProdiDialog
                     prodi={prodi}
                     existingFakultas={existingFakultas}

@@ -436,7 +436,7 @@ export default function ManajemenAdminClient({
         </div>
 
         {/* Mobile Card View */}
-        <div className="grid grid-cols-1 gap-4 md:hidden pb-24">
+        <div className="grid grid-cols-1 gap-3 md:hidden pb-24">
           {admins.length === 0 ? (
             <div className="text-center py-16 text-[var(--color-text-muted)]">
               <ShieldAlert size={32} className="mx-auto mb-3 opacity-40" />
@@ -446,7 +446,7 @@ export default function ManajemenAdminClient({
             admins.map((admin) => {
               const meta = ROLE_META[admin.role as AdminRole] ?? ROLE_META.admin_unit;
               return (
-                <div key={admin.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4 shadow-sm flex flex-col gap-3 relative">
+                <div key={admin.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 shadow-sm flex flex-col gap-2 relative">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex flex-col">
                       <div className="font-bold text-[var(--color-text)] flex items-center gap-2">
@@ -457,27 +457,18 @@ export default function ManajemenAdminClient({
                           </span>
                         )}
                       </div>
-                      <span className="text-xs font-bold text-[var(--color-text-muted)] mt-0.5 flex items-center gap-1">
-                        <Mail size={12} className="opacity-50" />
+                      <span className="text-xs font-bold text-[var(--color-text-muted)] mt-0.5">
                         {admin.email}
                       </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-6 mt-1">
-                    <div>
-                      <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Fakultas</span>
-                      {admin.unit_kerja ? (
-                        <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-surface)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">
+                      {admin.unit_kerja && (
+                        <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mt-0.5">
                           {admin.unit_kerja}
                         </span>
-                      ) : (
-                        <span className="text-xs text-[var(--color-text-subtle)]">-</span>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2 mt-2 pt-3 border-t border-[var(--color-border)]">
+                  <div className="flex items-center justify-between gap-2 mt-1 pt-2 border-t border-[var(--color-border)]">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase ${meta.color}`}>
                         <span>{meta.icon}</span>
