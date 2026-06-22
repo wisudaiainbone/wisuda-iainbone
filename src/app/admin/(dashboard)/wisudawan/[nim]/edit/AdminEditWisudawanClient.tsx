@@ -286,7 +286,7 @@ export default function AdminEditWisudawanClient({
                 className="w-full px-3 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-sm focus:ring-2 focus:ring-emerald-500/40 outline-none"
               >
                 <option value="">- Pilih Toga -</option>
-                {["S", "M", "L", "XL", "XXL", "XXXL"].map((size) => (
+                {["S", "M", "L", "XL", "XXL"].map((size) => (
                   <option key={size} value={size}>
                     {size}
                   </option>

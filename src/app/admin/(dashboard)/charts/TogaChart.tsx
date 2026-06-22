@@ -12,14 +12,13 @@ type Props = {
   drillFakultas: string | null;
 };
 
-const SIZES = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] as const;
+const SIZES = ['S', 'M', 'L', 'XL', 'XXL'] as const;
 const SIZE_COLORS: Record<string, string> = {
   S: '#6ee7b7',
   M: '#34d399',
   L: '#10b981',
   XL: '#059669',
   XXL: '#047857',
-  XXXL: '#065f46',
 };
 
 const RADIAN = Math.PI / 180;

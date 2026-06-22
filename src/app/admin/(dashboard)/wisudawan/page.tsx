@@ -283,7 +283,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
                       {w.password && (
                         <ResetPasswordButton nim={w.nim} nama={w.nama_mahasiswa} />
                       )}
-                      <DeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} />
+                      <DeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} />
                     </div>
                   </td>
                 </WisudawanTableRow>

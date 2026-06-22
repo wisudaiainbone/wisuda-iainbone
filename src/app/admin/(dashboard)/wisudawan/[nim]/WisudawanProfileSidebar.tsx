@@ -17,6 +17,7 @@ interface Props {
   qrUndanganUrl: string | null;
   idWisuda: string | null;
   idUndangan: string | null;
+  userRole?: string;
 }
 
 export default function WisudawanProfileSidebar({
@@ -29,6 +30,7 @@ export default function WisudawanProfileSidebar({
   qrUndanganUrl,
   idWisuda,
   idUndangan,
+  userRole,
 }: Props) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
@@ -89,7 +91,7 @@ export default function WisudawanProfileSidebar({
             <Pencil size={16} />
           </Link>
           <ResetPasswordButton nim={nim} nama={nama} />
-          <DeleteWisudawanButton nim={nim} nama={nama} />
+          <DeleteWisudawanButton nim={nim} nama={nama} userRole={userRole} />
         </div>
       </div>
 

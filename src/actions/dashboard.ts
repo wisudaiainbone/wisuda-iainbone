@@ -58,7 +58,7 @@ export type OrmawaSummary = {
 export type TogaRow = {
   label: string;
   fakultas?: string;
-  S: number; M: number; L: number; XL: number; XXL: number; XXXL: number;
+  S: number; M: number; L: number; XL: number; XXL: number;
 };
 
 export type BinaryStatSummary = {
@@ -117,7 +117,7 @@ export type DashboardStats = {
 };
 
 function computeStats(rows: any[], periodeKuota: Record<string, number>): DashboardStats {
-  const TOGA_SIZES = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'] as const;
+  const TOGA_SIZES = ['S', 'M', 'L', 'XL', 'XXL'] as const;
   const PREDIKAT_KEYS = ['Cumlaude', 'Sangat Memuaskan', 'Memuaskan', 'Lainnya'] as const;
 
   // --- Summary ---
@@ -249,9 +249,9 @@ function computeStats(rows: any[], periodeKuota: Record<string, number>): Dashbo
 
       // Toga
       if (TOGA_SIZES.includes(togaKey as any)) {
-        if (!fakToga[fak]) { fakToga[fak] = { S: 0, M: 0, L: 0, XL: 0, XXL: 0, XXXL: 0 }; }
+        if (!fakToga[fak]) { fakToga[fak] = { S: 0, M: 0, L: 0, XL: 0, XXL: 0 }; }
         fakToga[fak][togaKey] = (fakToga[fak][togaKey] || 0) + 1;
-        if (!prodiToga[prodi]) { prodiToga[prodi] = { S: 0, M: 0, L: 0, XL: 0, XXL: 0, XXXL: 0 }; }
+        if (!prodiToga[prodi]) { prodiToga[prodi] = { S: 0, M: 0, L: 0, XL: 0, XXL: 0 }; }
         prodiToga[prodi][togaKey] = (prodiToga[prodi][togaKey] || 0) + 1;
       }
 
@@ -371,10 +371,10 @@ function computeStats(rows: any[], periodeKuota: Record<string, number>): Dashbo
   };
 
   const togaFakultas: TogaRow[] = Object.entries(fakToga)
-    .map(([label, v]) => ({ label, S: v.S || 0, M: v.M || 0, L: v.L || 0, XL: v.XL || 0, XXL: v.XXL || 0, XXXL: v.XXXL || 0 }));
+    .map(([label, v]) => ({ label, S: v.S || 0, M: v.M || 0, L: v.L || 0, XL: v.XL || 0, XXL: v.XXL || 0 }));
 
   const togaProdi: TogaRow[] = Object.entries(prodiToga)
-    .map(([label, v]) => ({ label, fakultas: prodiMap[label]?.fakultas, S: v.S || 0, M: v.M || 0, L: v.L || 0, XL: v.XL || 0, XXL: v.XXL || 0, XXXL: v.XXXL || 0 }));
+    .map(([label, v]) => ({ label, fakultas: prodiMap[label]?.fakultas, S: v.S || 0, M: v.M || 0, L: v.L || 0, XL: v.XL || 0, XXL: v.XXL || 0 }));
 
   const kehadiranFakultas: BinaryStatSummary = {
     sudah: Object.values(fakKehadiran).reduce((s, v) => s + v.sudah, 0),

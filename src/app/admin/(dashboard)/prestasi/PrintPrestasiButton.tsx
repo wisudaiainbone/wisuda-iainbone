@@ -126,10 +126,10 @@ export default function PrintPrestasiButton({ data, periode, settings, tempatWis
         onClick={handlePrint}
         disabled={isPrinting}
         title="Download ZIP Sertifikat Prestasi"
-        className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold h-[38px] px-4 rounded-lg transition-colors shadow-sm"
+        className="flex items-center justify-center gap-1.5 h-10 sm:h-9 px-3 sm:px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-xs font-semibold transition-colors shadow-sm shadow-blue-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
       >
-        {isPrinting ? <Loader2 size={16} className="animate-spin" /> : <Printer size={16} />}
-        <span className="hidden sm:inline">
+        {isPrinting ? <Loader2 size={16} className="animate-spin shrink-0" /> : <Printer size={16} className="shrink-0" />}
+        <span className="inline">
           {isPrinting ? "Generate PDF..." : "Sertifikat"}
         </span>
       </button>

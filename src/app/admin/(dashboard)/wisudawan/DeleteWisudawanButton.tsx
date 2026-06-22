@@ -5,9 +5,13 @@ import { useState, useTransition } from "react";
 import { deleteWisudawan } from "@/actions/wisudawan";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
-export default function DeleteWisudawanButton({ nim, nama }: { nim: string, nama: string }) {
+export default function DeleteWisudawanButton({ nim, nama, userRole }: { nim: string, nama: string, userRole?: string }) {
   const [isPending, startTransition] = useTransition();
   const [showConfirm, setShowConfirm] = useState(false);
+
+  if (userRole && userRole !== 'superadmin' && userRole !== 'admin_institut') {
+    return null;
+  }
 
   const handleDelete = () => {
     startTransition(async () => {

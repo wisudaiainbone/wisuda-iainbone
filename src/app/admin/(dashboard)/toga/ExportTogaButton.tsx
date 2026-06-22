@@ -47,7 +47,7 @@ export default function ExportTogaButton({ data, filename = 'data-toga' }: Props
       XLSX.utils.book_append_sheet(wb, ws, 'Data Toga');
 
       // Kalkulasi Rekapitulasi
-      const sizes = ["S", "M", "L", "XL", "XXL", "XXXL"];
+      const sizes = ["S", "M", "L", "XL", "XXL"];
       const recap: Record<string, Record<string, number>> = {};
       const grandTotal: Record<string, number> = { Total: 0 };
       sizes.forEach(s => { grandTotal[s] = 0; });
@@ -100,14 +100,14 @@ export default function ExportTogaButton({ data, filename = 'data-toga' }: Props
       onClick={handleExport}
       disabled={loading || !data.length}
       title="Export Rekap Toga"
-      className="inline-flex items-center gap-2 px-4 h-[38px] rounded-lg border border-emerald-600/40 bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600/20 hover:border-emerald-500 active:scale-95 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+      className="flex items-center justify-center w-10 sm:w-auto gap-1.5 sm:px-3 h-10 sm:h-9 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm sm:text-xs font-semibold transition-colors shadow-sm shadow-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
     >
       {loading ? (
-        <Loader2 size={15} className="animate-spin" />
+        <Loader2 size={16} className="animate-spin shrink-0" />
       ) : (
-        <FileSpreadsheet size={15} />
+        <FileSpreadsheet size={16} className="shrink-0" />
       )}
-      {loading ? 'Mengekspor...' : 'Export XLSX'}
+      <span className="hidden sm:inline">{loading ? 'Mengekspor...' : 'Export XLSX'}</span>
     </button>
   );
 }

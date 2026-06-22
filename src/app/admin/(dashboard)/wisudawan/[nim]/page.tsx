@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { getOptimizedGDriveUrl } from "@/lib/uploadFoto";
 import { GraduationCap, FileText, Award, Clock } from "lucide-react";
 import WisudawanProfileSidebar from "./WisudawanProfileSidebar";
+import { getAdminSession } from "@/actions/adminAuth";
 
 export default async function AdminWisudawanDetail({ params }: { params: Promise<{ nim: string }> }) {
   const { nim } = await params;
+  const adminSession = await getAdminSession();
   const data: any = await getWisudawanByNim(nim);
 
   if (!data) return notFound();
@@ -33,6 +35,7 @@ export default async function AdminWisudawanDetail({ params }: { params: Promise
           qrUndanganUrl={qrUndanganUrl}
           idWisuda={data["ID WISUDA"] || null}
           idUndangan={data["ID UNDANGAN"] || null}
+          userRole={adminSession?.role || ''}
         />
 
         {/* Right Column: Details */}

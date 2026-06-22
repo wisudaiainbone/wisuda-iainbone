@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getAllWisudawan } from "@/actions/wisudawan";
 import { getActivePeriode, getAllPeriode } from "@/actions/periode";
 import { getAdminSession } from "@/actions/adminAuth";
-import { Shirt, Info, Table2, FileSpreadsheet, AlertCircle } from "lucide-react";
+import { Shirt, Info, Table2, FileSpreadsheet, AlertCircle, Filter } from "lucide-react";
 import ExportTogaButton from "./ExportTogaButton";
 import ScanTogaClient from "./ScanTogaClient";
 import { getScanMeta } from "@/actions/scanCache";
@@ -15,7 +15,7 @@ type PageProps = {
 
 export default async function AdminTogaPage(props: PageProps) {
   const resolvedSearchParams = await props.searchParams;
-  const tab = typeof resolvedSearchParams?.tab === 'string' ? resolvedSearchParams.tab : 'rekapitulasi';
+  const tab = (typeof resolvedSearchParams?.tab === 'string' ? resolvedSearchParams.tab : 'rekapitulasi') as string;
 
   const [adminSession, activePeriode, scanMeta, allPeriode] = await Promise.all([
     getAdminSession(),
@@ -66,7 +66,7 @@ export default async function AdminTogaPage(props: PageProps) {
 
   // Rekapitulasi per Fakultas
   const fakultasSet = Array.from(new Set(togaWisudawan.map(w => w.fakultas).filter(Boolean))).sort();
-  const sizes = ["S", "M", "L", "XL", "XXL", "XXXL"];
+  const sizes = ["S", "M", "L", "XL", "XXL"];
 
   // Initialize recap structure
   const recap: Record<string, Record<string, number>> = {};
@@ -106,35 +106,42 @@ export default async function AdminTogaPage(props: PageProps) {
     <div className="space-y-6">
       {/* Header Actions */}
       {tab === 'rekapitulasi' && (
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-          {/* Tabs */}
-        <div className="flex flex-wrap items-center gap-2">
-          <Link 
-            href="?tab=rekapitulasi" 
-            className="flex items-center justify-center px-4 h-[38px] text-sm font-bold rounded-full transition-colors bg-emerald-600 text-white shadow-sm"
-          >
-            Rekapitulasi Data
-          </Link>
-          
-          {(adminSession?.role === 'superadmin' || adminSession?.role === 'admin_institut') && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          {/* Tabs - Floating on mobile */}
+        <div className="fixed sm:relative bottom-20 sm:bottom-auto left-0 right-0 sm:left-auto sm:right-auto px-4 sm:px-0 z-40 flex items-center justify-center sm:justify-start pointer-events-none sm:pointer-events-auto">
+          <div className="flex w-full sm:w-auto items-center gap-2 pointer-events-auto">
             <Link 
-              href="?tab=scan" 
-              className="flex items-center justify-center px-4 h-[38px] text-sm font-bold rounded-full transition-colors bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] border border-[var(--color-border)]"
+              href="?tab=rekapitulasi" 
+              className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${tab === 'rekapitulasi' ? 'bg-emerald-600 text-white shadow-md' : 'bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]'}`}
             >
-              Scan Toga
+              <span className="hidden sm:inline">Rekapitulasi Data</span>
+              <span className="sm:hidden">Data</span>
             </Link>
-          )}
+            
+            {(adminSession?.role === 'superadmin' || adminSession?.role === 'admin_institut') && (
+              <Link 
+                href="?tab=scan" 
+                className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${tab === 'scan' ? 'bg-emerald-600 text-white shadow-md' : 'bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]'}`}
+              >
+                <span className="hidden sm:inline">Scan Toga</span>
+                <span className="sm:hidden">Scan</span>
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* Action Controls */}
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <select className="flex-1 md:flex-none h-[38px] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 text-sm font-medium text-[var(--color-text)] outline-none focus:ring-2 focus:ring-emerald-500/50 min-w-[180px]">
-            {activePeriodes.map(p => (
-              <option key={p.id} value={p.nama_periode}>{p.nama_periode}</option>
-            ))}
-            {activePeriodes.length === 0 && <option value="">Tidak ada periode aktif</option>}
-          </select>
-          <div className="shrink-0 h-[38px] flex">
+        <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 sm:h-9 flex-1 min-w-0">
+            <Filter size={13} className="text-[var(--color-text-muted)] shrink-0" />
+            <select className="text-sm sm:text-xs font-medium bg-transparent text-[var(--color-text)] outline-none flex-1 min-w-0">
+              {activePeriodes.map(p => (
+                <option key={p.id} value={p.nama_periode}>{p.nama_periode}</option>
+              ))}
+              {activePeriodes.length === 0 && <option value="">Tidak ada periode aktif</option>}
+            </select>
+          </div>
+          <div className="shrink-0 flex h-10 sm:h-9">
             <ExportTogaButton data={togaWisudawan} filename={`Data-Toga-${activePeriode?.nama_periode || "All"}`} />
           </div>
         </div>

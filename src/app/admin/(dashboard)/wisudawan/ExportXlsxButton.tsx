@@ -94,7 +94,7 @@ export default function ExportXlsxButton({ data, filename = 'data-wisudawan' }: 
         if (!rekapMap.has(key)) {
           rekapMap.set(key, {
             fakultas: fak, prodi: prd, total: 0, terdaftar: 0,
-            togaS: 0, togaM: 0, togaL: 0, togaXL: 0, togaXXL: 0, togaXXXL: 0, togaLain: 0, togaKosong: 0,
+            togaS: 0, togaM: 0, togaL: 0, togaXL: 0, togaXXL: 0, togaLain: 0, togaKosong: 0,
             jkL: 0, jkP: 0, jkKosong: 0,
             ipkHigh: 0, ipkMid: 0, ipkLow: 0, ipkKosong: 0
           });
@@ -110,7 +110,6 @@ export default function ExportXlsxButton({ data, filename = 'data-wisudawan' }: 
         else if (toga === 'L') r.togaL++;
         else if (toga === 'XL') r.togaXL++;
         else if (toga === 'XXL') r.togaXXL++;
-        else if (toga === 'XXXL') r.togaXXXL++;
         else if (toga === '') r.togaKosong++;
         else r.togaLain++;
         
@@ -131,7 +130,7 @@ export default function ExportXlsxButton({ data, filename = 'data-wisudawan' }: 
 
       const rekapHeaders = [
         'Fakultas', 'Prodi', 'Total Data', 'Terdaftar', 
-        'Toga S', 'Toga M', 'Toga L', 'Toga XL', 'Toga XXL', 'Toga XXXL', 'Toga Lain/Kosong',
+        'Toga S', 'Toga M', 'Toga L', 'Toga XL', 'Toga XXL', 'Toga Lain/Kosong',
         'Laki-laki', 'Perempuan', 'JK Kosong',
         'IPK >= 3.50', 'IPK 3.00-3.49', 'IPK < 3.00', 'IPK Kosong'
       ];
@@ -140,7 +139,7 @@ export default function ExportXlsxButton({ data, filename = 'data-wisudawan' }: 
         .sort((a, b) => a.fakultas.localeCompare(b.fakultas) || a.prodi.localeCompare(b.prodi))
         .map(r => [
           r.fakultas, r.prodi, r.total, r.terdaftar,
-          r.togaS, r.togaM, r.togaL, r.togaXL, r.togaXXL, r.togaXXXL, r.togaLain + r.togaKosong,
+          r.togaS, r.togaM, r.togaL, r.togaXL, r.togaXXL, r.togaLain + r.togaKosong,
           r.jkL, r.jkP, r.jkKosong,
           r.ipkHigh, r.ipkMid, r.ipkLow, r.ipkKosong
         ]);

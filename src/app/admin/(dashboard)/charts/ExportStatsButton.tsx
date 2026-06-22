@@ -101,16 +101,16 @@ export default function ExportStatsButton({ stats, periode }: Props) {
       XLSX.utils.book_append_sheet(wb, wsPred, 'Predikat');
 
       // 5. Sheet Toga
-      const togaHeaders = ['Fakultas', 'Prodi', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+      const togaHeaders = ['Fakultas', 'Prodi', 'S', 'M', 'L', 'XL', 'XXL'];
       const togaRows = stats.togaProdi.map(p => [
         p.fakultas || 'Tidak Diketahui',
         p.label,
-        p.S || 0, p.M || 0, p.L || 0, p.XL || 0, p.XXL || 0, p.XXXL || 0
+        p.S || 0, p.M || 0, p.L || 0, p.XL || 0, p.XXL || 0
       ]);
       const togaFakRows = stats.togaFakultas.map(f => [
         f.label,
         'SEMUA PRODI',
-        f.S || 0, f.M || 0, f.L || 0, f.XL || 0, f.XXL || 0, f.XXXL || 0
+        f.S || 0, f.M || 0, f.L || 0, f.XL || 0, f.XXL || 0
       ]);
       const togaData = [togaHeaders, ...togaFakRows, [], ...togaRows];
       const wsToga = XLSX.utils.aoa_to_sheet(togaData);
