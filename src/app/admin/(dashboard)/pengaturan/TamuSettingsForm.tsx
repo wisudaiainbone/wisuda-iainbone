@@ -34,17 +34,19 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
     e.preventDefault();
     setIsSaving(true);
     try {
-      const r1 = await updateSetting('tamu_nomor', tamuNomor);
-      const r2 = await updateSetting('tamu_tanggal', tamuTanggal);
-      const r3 = await updateSetting('tamu_jabatan', tamuJabatan);
-      const r4 = await updateSetting('tamu_nama', tamuNama);
-      const r5 = await updateSetting('tamu_nip', tamuNip);
-      const r6 = await updateSetting('tamu_acara', tamuAcara);
-      const r7 = await updateSetting('tamu_bg_depan_url', tamuBgDepanUrl);
-      const r8 = await updateSetting('tamu_bg_belakang_url', tamuBgBelakangUrl);
-      const r9 = await updateSetting('tamu_ttd_url', tamuTtdUrl);
+      const results = await Promise.all([
+        updateSetting('tamu_nomor', tamuNomor),
+        updateSetting('tamu_tanggal', tamuTanggal),
+        updateSetting('tamu_jabatan', tamuJabatan),
+        updateSetting('tamu_nama', tamuNama),
+        updateSetting('tamu_nip', tamuNip),
+        updateSetting('tamu_acara', tamuAcara),
+        updateSetting('tamu_bg_depan_url', tamuBgDepanUrl),
+        updateSetting('tamu_bg_belakang_url', tamuBgBelakangUrl),
+        updateSetting('tamu_ttd_url', tamuTtdUrl)
+      ]);
 
-      if (r1.success && r2.success && r3.success && r4.success && r5.success && r6.success && r7.success && r8.success && r9.success) {
+      if (results.every(r => r.success)) {
         showToast("Pengaturan Undangan Tamu berhasil diperbarui!", "success");
       } else {
         showToast("Gagal memperbarui pengaturan undangan tamu.", "error");
