@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { getSetting, updateSetting } from "@/actions/settings";
+import { updateSetting, getAllSettingsAdmin } from "@/actions/settings";
 import { Loader2, CheckCircle2, Upload, ImageIcon, X } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { uploadTamuBackground, uploadTamuSignature, extractSupabasePath, deleteCertAsset } from "@/lib/uploadCertBg";
@@ -35,25 +35,23 @@ export default function TamuSettingsForm() {
     async function loadData() {
       setIsLoading(true);
       try {
-        const nomor = await getSetting("tamu_nomor", "", true);
-        const tanggal = await getSetting("tamu_tanggal", "", true);
-        const jabatan = await getSetting("tamu_jabatan", "Rektor", true);
-        const nama = await getSetting("tamu_nama", "", true);
-        const nip = await getSetting("tamu_nip", "", true);
-        const acara = await getSetting("tamu_acara", "", true);
-        const bgDepanUrl = await getSetting("tamu_bg_depan_url", "", true);
-        const bgBelakangUrl = await getSetting("tamu_bg_belakang_url", "", true);
-        const ttdUrl = await getSetting("tamu_ttd_url", "", true);
+        const allSettings = await getAllSettingsAdmin();
+        const settingsMap: Record<string, string> = {};
+        allSettings.forEach((s: any) => {
+          settingsMap[s.key] = s.value;
+        });
 
-        setTamuNomor(nomor);
-        setTamuTanggal(tanggal);
-        setTamuJabatan(jabatan);
-        setTamuNama(nama);
-        setTamuNip(nip);
-        setTamuAcara(acara);
-        setTamuBgDepanUrl(bgDepanUrl);
-        setTamuBgBelakangUrl(bgBelakangUrl);
-        setTamuTtdUrl(ttdUrl);
+        const getVal = (key: string, def: string) => settingsMap[key] ?? def;
+
+        setTamuNomor(getVal("tamu_nomor", ""));
+        setTamuTanggal(getVal("tamu_tanggal", ""));
+        setTamuJabatan(getVal("tamu_jabatan", "Rektor"));
+        setTamuNama(getVal("tamu_nama", ""));
+        setTamuNip(getVal("tamu_nip", ""));
+        setTamuAcara(getVal("tamu_acara", ""));
+        setTamuBgDepanUrl(getVal("tamu_bg_depan_url", ""));
+        setTamuBgBelakangUrl(getVal("tamu_bg_belakang_url", ""));
+        setTamuTtdUrl(getVal("tamu_ttd_url", ""));
       } catch (err) {
         console.error("Gagal memuat pengaturan tamu", err);
       } finally {

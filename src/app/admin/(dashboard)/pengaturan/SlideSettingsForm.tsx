@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { getSetting, updateSetting } from "@/actions/settings";
+import { updateSetting, getAllSettingsAdmin } from "@/actions/settings";
 import { Loader2, CheckCircle2, Upload, ImageIcon, X } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { uploadSlideFrame, extractSupabasePath, deleteCertAsset } from "@/lib/uploadCertBg";
@@ -51,14 +51,21 @@ export default function SlideSettingsForm() {
     async function loadData() {
       setIsLoading(true);
       try {
+        const allSettings = await getAllSettingsAdmin();
+        const settingsMap: Record<string, string> = {};
+        allSettings.forEach((s: any) => {
+          settingsMap[s.key] = s.value;
+        });
+        const getVal = (key: string, def: string) => settingsMap[key] ?? def;
+
         const loaded: FrameMap = {};
         for (const slot of FRAME_SLOTS) {
-          const url = await getSetting(`slide_frame_${slot.key}_url`, '', true);
-          const warna = await getSetting(`slide_frame_${slot.key}_warna`, '#1a2744', true);
+          const url = getVal(`slide_frame_${slot.key}_url`, '');
+          const warna = getVal(`slide_frame_${slot.key}_warna`, '#1a2744');
           loaded[slot.key] = { url, warna, isUploading: false };
         }
         for (const slot of BADGE_PRESTASI_SLOTS) {
-          const url = await getSetting(`slide_${slot.key}_url`, '', true);
+          const url = getVal(`slide_${slot.key}_url`, '');
           loaded[slot.key] = { url, warna: '#ffffff', isUploading: false };
         }
         setFrames(loaded);
