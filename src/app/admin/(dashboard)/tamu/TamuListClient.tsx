@@ -205,13 +205,15 @@ export default function TamuListClient({ initialData, periode, settings }: Props
       </div>
 
       {/* FAB Tambah */}
-      <button
-        onClick={() => handleOpenModal()}
-        className="fixed bottom-8 right-8 w-14 h-14 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg shadow-emerald-900/20 flex items-center justify-center transition-transform hover:scale-105 active:scale-95 z-40"
-        title="Tambah Tamu"
-      >
-        <Plus size={24} />
-      </button>
+      <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50">
+        <button
+          onClick={() => handleOpenModal()}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+          title="Tambah Tamu"
+        >
+          <Plus size={24} />
+        </button>
+      </div>
 
       {/* Modal Add/Edit */}
       {isModalOpen && (

@@ -43,32 +43,36 @@ export default function TamuClientWrapper({
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${activeTab === "daftar" ? "pb-24 sm:pb-0" : ""}`}>
       {/* Header Actions */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-        {/* Tabs */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        {/* Tabs - Floating on mobile */}
         {!isPresensiOnly && (
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => handleTabChange("daftar")}
-              className={`flex items-center justify-center px-4 h-[38px] text-sm font-bold rounded-full transition-colors ${
-                activeTab === "daftar"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] border border-[var(--color-border)]"
-              }`}
-            >
-              Daftar Tamu
-            </button>
-            <button
-              onClick={() => handleTabChange("scan")}
-              className={`flex items-center justify-center px-4 h-[38px] text-sm font-bold rounded-full transition-colors ${
-                activeTab === "scan"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] border border-[var(--color-border)]"
-              }`}
-            >
-              Scan Kehadiran
-            </button>
+          <div className="fixed sm:relative bottom-20 sm:bottom-auto left-0 right-0 sm:left-auto sm:right-auto px-4 sm:px-0 z-40 flex items-center justify-center sm:justify-start pointer-events-none sm:pointer-events-auto">
+            <div className="flex w-full sm:w-auto items-center gap-2 pointer-events-auto">
+              <button
+                onClick={() => handleTabChange("daftar")}
+                className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${
+                  activeTab === "daftar"
+                    ? "bg-emerald-600 text-white shadow-md"
+                    : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]"
+                }`}
+              >
+                <span className="hidden sm:inline">Daftar Tamu</span>
+                <span className="sm:hidden">Daftar</span>
+              </button>
+              <button
+                onClick={() => handleTabChange("scan")}
+                className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${
+                  activeTab === "scan"
+                    ? "bg-emerald-600 text-white shadow-md"
+                    : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]"
+                }`}
+              >
+                <span className="hidden sm:inline">Scan Kehadiran</span>
+                <span className="sm:hidden">Scan</span>
+              </button>
+            </div>
           </div>
         )}
 

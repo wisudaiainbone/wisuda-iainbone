@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileSpreadsheet, Printer, Loader2 } from "lucide-react";
+import { FileSpreadsheet, Printer, Loader2, Filter } from "lucide-react";
 import { pdf } from "@react-pdf/renderer";
 import UndanganDocument, { TamuItem } from "./UndanganDocument";
 import { useToast } from "@/components/ui/Toast";
@@ -77,37 +77,42 @@ export default function TamuHeaderActions({ data, settings, activePeriodes, curr
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-      <select 
-        value={currentPeriode}
-        disabled
-        className="px-4 h-[38px] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full text-sm font-bold text-[var(--color-text)] outline-none focus:ring-2 focus:ring-emerald-500/50 min-w-[180px] disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {activePeriodes.map(p => (
-          <option key={p.id} value={p.nama_periode}>{p.nama_periode}</option>
-        ))}
-        {activePeriodes.length === 0 && <option value="">Tidak ada periode aktif</option>}
-      </select>
+    <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+      <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 sm:h-9 flex-1 min-w-0">
+        <Filter size={13} className="text-[var(--color-text-muted)] shrink-0" />
+        <select 
+          value={currentPeriode}
+          disabled
+          className="text-sm sm:text-xs font-medium bg-transparent text-[var(--color-text)] outline-none flex-1 min-w-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {activePeriodes.map(p => (
+            <option key={p.id} value={p.nama_periode}>{p.nama_periode}</option>
+          ))}
+          {activePeriodes.length === 0 && <option value="">Tidak ada periode aktif</option>}
+        </select>
+      </div>
       
-      <button
-        onClick={generatePDF}
-        disabled={isGeneratingPdf || data.length === 0}
-        title="Print Undangan"
-        className="inline-flex items-center gap-2 px-4 h-[38px] rounded-lg border border-indigo-600/40 bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600/20 hover:border-indigo-500 active:scale-95 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-      >
-        {isGeneratingPdf ? <Loader2 size={15} className="animate-spin" /> : <Printer size={15} />}
-        {isGeneratingPdf ? 'Memproses...' : 'Print Undangan'}
-      </button>
-      
-      <button
-        onClick={handleExportXlsx}
-        disabled={isExporting || data.length === 0}
-        title="Export Daftar Tamu"
-        className="inline-flex items-center gap-2 px-4 h-[38px] rounded-lg border border-emerald-600/40 bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600/20 hover:border-emerald-500 active:scale-95 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-      >
-        {isExporting ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={15} />}
-        {isExporting ? 'Mengekspor...' : 'Export XLSX'}
-      </button>
+      <div className="shrink-0 flex gap-2 h-10 sm:h-9">
+        <button
+          onClick={generatePDF}
+          disabled={isGeneratingPdf || data.length === 0}
+          title="Print Undangan"
+          className="flex items-center justify-center w-10 sm:w-auto gap-1.5 px-0 sm:px-4 h-full rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-indigo-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        >
+          {isGeneratingPdf ? <Loader2 size={16} className="animate-spin shrink-0" /> : <Printer size={16} className="shrink-0" />}
+          <span className="hidden sm:inline">{isGeneratingPdf ? 'Memproses...' : 'Print Undangan'}</span>
+        </button>
+        
+        <button
+          onClick={handleExportXlsx}
+          disabled={isExporting || data.length === 0}
+          title="Export XLSX"
+          className="flex items-center justify-center w-10 sm:w-auto gap-1.5 px-0 sm:px-4 h-full rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        >
+          {isExporting ? <Loader2 size={16} className="animate-spin shrink-0" /> : <FileSpreadsheet size={16} className="shrink-0" />}
+          <span className="hidden sm:inline">{isExporting ? 'Mengekspor...' : 'Export'}</span>
+        </button>
+      </div>
     </div>
   );
 }
