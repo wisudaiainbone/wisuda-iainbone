@@ -339,12 +339,12 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
 
         {/* ─── Tombol Rekapitulasi Data (Tab tidak aktif) ─── */}
         <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:left-4 lg:translate-x-0 z-30">
-          <a
-            href="?tab=rekapitulasi"
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("switchTogaTab", { detail: "rekapitulasi" }))}
             className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white shadow-lg rounded-full font-bold text-sm transition-colors whitespace-nowrap"
           >
             Rekapitulasi Data
-          </a>
+          </button>
         </div>
 
         {!isCameraActive ? (

@@ -8,6 +8,7 @@ import ScanTogaClient from "./ScanTogaClient";
 import { getScanMeta } from "@/actions/scanCache";
 
 import Link from "next/link";
+import TogaClientWrapper from "./TogaClientWrapper";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }> | { [key: string]: string | string[] | undefined };
@@ -102,35 +103,13 @@ export default async function AdminTogaPage(props: PageProps) {
     }
   });
 
-  return (
-    <div className={`space-y-6 ${tab === 'rekapitulasi' ? 'pb-24 sm:pb-0' : ''}`}>
-      {/* Header Actions */}
-      {tab === 'rekapitulasi' && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-          {/* Tabs - Floating on mobile */}
-        <div className="fixed sm:relative bottom-20 sm:bottom-auto left-0 right-0 sm:left-auto sm:right-auto px-4 sm:px-0 z-40 flex items-center justify-center sm:justify-start pointer-events-none sm:pointer-events-auto">
-          <div className="flex w-full sm:w-auto items-center gap-2 pointer-events-auto">
-            <Link 
-              href="?tab=rekapitulasi" 
-              className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${tab === 'rekapitulasi' ? 'bg-emerald-600 text-white shadow-md' : 'bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]'}`}
-            >
-              <span className="hidden sm:inline">Rekapitulasi Data</span>
-              <span className="sm:hidden">Data</span>
-            </Link>
-            
-            {(adminSession?.role === 'superadmin' || adminSession?.role === 'admin_institut') && (
-              <Link 
-                href="?tab=scan" 
-                className="flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]"
-              >
-                <span className="hidden sm:inline">Scan Toga</span>
-                <span className="sm:hidden">Scan</span>
-              </Link>
-            )}
-          </div>
-        </div>
+  const canScan = adminSession?.role === 'superadmin' || adminSession?.role === 'admin_institut';
 
-        {/* Action Controls */}
+  return (
+    <TogaClientWrapper
+      initialTab={tab}
+      canScan={canScan}
+      rekapControlsNode={
         <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
           <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 sm:h-9 flex-1 min-w-0">
             <Filter size={13} className="text-[var(--color-text-muted)] shrink-0" />
@@ -145,75 +124,63 @@ export default async function AdminTogaPage(props: PageProps) {
             <ExportTogaButton data={togaWisudawan} filename={`Data-Toga-${activePeriode?.nama_periode || "All"}`} />
           </div>
         </div>
-        </div>
-      )}
-
-      <div className="flex flex-col gap-6">
-
-        {/* Scan Toga (Hanya tampil jika tab=scan) */}
-        {tab === 'scan' && (
-          <ScanTogaClient initialMeta={scanMeta} />
-        )}
-
-        {/* Card Progress Pengisian Toga (Hanya tampil jika tab=rekapitulasi) */}
-        {tab === 'rekapitulasi' && (
-          <div className="flex flex-col gap-6">
-
-            <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-5 py-4 border-b border-[var(--color-border)] bg-amber-50/50 dark:bg-amber-900/10 flex items-center gap-2">
-            <AlertCircle size={16} className="text-amber-600 dark:text-amber-500" />
-            <h2 className="text-sm font-bold text-amber-900 dark:text-amber-300">Progress Pengisian Data Toga</h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-[var(--color-text-subtle)] bg-[var(--color-bg)] border-b border-[var(--color-border)]">
-                <tr>
-                  <th className="px-4 py-3 font-semibold whitespace-nowrap">Fakultas</th>
-                  <th className="px-4 py-3 font-semibold text-center w-32">Total Data</th>
-                  <th className="px-4 py-3 font-semibold text-center w-32">Sudah Isi</th>
-                  <th className="px-4 py-3 font-semibold text-center w-32">Belum Isi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--color-border)]">
-                {Object.keys(progressFakultas).length > 0 ? (
-                  Object.keys(progressFakultas).sort().map((fakultas, idx) => (
-                    <tr key={idx} className="hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
-                      <td className="px-4 py-3 font-medium text-[var(--color-text)] whitespace-nowrap">{fakultas}</td>
-                      <td className="px-4 py-3 text-center text-[var(--color-text-muted)] font-mono">
-                        {progressFakultas[fakultas].total}
-                      </td>
-                      <td className="px-4 py-3 text-center font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                        {progressFakultas[fakultas].sudah}
-                      </td>
-                      <td className="px-4 py-3 text-center font-bold text-amber-600 dark:text-amber-400 font-mono">
-                        {progressFakultas[fakultas].belum}
+      }
+      rekapContentNode={
+        <>
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
+            <div className="px-5 py-4 border-b border-[var(--color-border)] bg-amber-50/50 dark:bg-amber-900/10 flex items-center gap-2">
+              <AlertCircle size={16} className="text-amber-600 dark:text-amber-500" />
+              <h2 className="text-sm font-bold text-amber-900 dark:text-amber-300">Progress Pengisian Data Toga</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-[var(--color-text-subtle)] bg-[var(--color-bg)] border-b border-[var(--color-border)]">
+                  <tr>
+                    <th className="px-4 py-3 font-semibold whitespace-nowrap">Fakultas</th>
+                    <th className="px-4 py-3 font-semibold text-center w-32">Total Data</th>
+                    <th className="px-4 py-3 font-semibold text-center w-32">Sudah Isi</th>
+                    <th className="px-4 py-3 font-semibold text-center w-32">Belum Isi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--color-border)]">
+                  {Object.keys(progressFakultas).length > 0 ? (
+                    Object.keys(progressFakultas).sort().map((fakultas, idx) => (
+                      <tr key={idx} className="hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+                        <td className="px-4 py-3 font-medium text-[var(--color-text)] whitespace-nowrap">{fakultas}</td>
+                        <td className="px-4 py-3 text-center text-[var(--color-text-muted)] font-mono">
+                          {progressFakultas[fakultas].total}
+                        </td>
+                        <td className="px-4 py-3 text-center font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+                          {progressFakultas[fakultas].sudah}
+                        </td>
+                        <td className="px-4 py-3 text-center font-bold text-amber-600 dark:text-amber-400 font-mono">
+                          {progressFakultas[fakultas].belum}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={4} className="px-4 py-8 text-center text-sm text-[var(--color-text-muted)]">
+                        Belum ada data pendaftar
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={4} className="px-4 py-8 text-center text-sm text-[var(--color-text-muted)]">
-                      Belum ada data pendaftar
-                    </td>
-                  </tr>
+                  )}
+                </tbody>
+                {Object.keys(progressFakultas).length > 0 && (
+                  <tfoot className="bg-[var(--color-bg-secondary)]/50 border-t border-[var(--color-border)] font-bold">
+                    <tr>
+                      <td className="px-4 py-3 text-[var(--color-text)]">TOTAL KESELURUHAN</td>
+                      <td className="px-4 py-3 text-center text-[var(--color-text)] font-mono">{totalDataSemua}</td>
+                      <td className="px-4 py-3 text-center text-emerald-600 dark:text-emerald-500 font-mono">{totalSudahSemua}</td>
+                      <td className="px-4 py-3 text-center text-amber-600 dark:text-amber-500 font-mono">{totalBelumSemua}</td>
+                    </tr>
+                  </tfoot>
                 )}
-              </tbody>
-              {Object.keys(progressFakultas).length > 0 && (
-                <tfoot className="bg-[var(--color-bg-secondary)]/50 border-t border-[var(--color-border)] font-bold">
-                  <tr>
-                    <td className="px-4 py-3 text-[var(--color-text)]">TOTAL KESELURUHAN</td>
-                    <td className="px-4 py-3 text-center text-[var(--color-text)] font-mono">{totalDataSemua}</td>
-                    <td className="px-4 py-3 text-center text-emerald-600 dark:text-emerald-500 font-mono">{totalSudahSemua}</td>
-                    <td className="px-4 py-3 text-center text-amber-600 dark:text-amber-500 font-mono">{totalBelumSemua}</td>
-                  </tr>
-                </tfoot>
-              )}
-            </table>
+              </table>
+            </div>
           </div>
-        </div>
 
-        {/* Tabel Rekapitulasi per Fakultas */}
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)] flex items-center gap-2">
               <Table2 size={16} className="text-[var(--color-text-subtle)]" />
               <h2 className="text-sm font-bold text-[var(--color-text)]">Rekapitulasi per Fakultas</h2>
@@ -264,9 +231,9 @@ export default async function AdminTogaPage(props: PageProps) {
               </table>
             </div>
           </div>
-          </div>
-        )}
-      </div>
-    </div>
+        </>
+      }
+      scanNode={<ScanTogaClient initialMeta={scanMeta} />}
+    />
   );
 }
