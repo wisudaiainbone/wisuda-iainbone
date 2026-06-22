@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   LayoutDashboard, Users, Settings, Menu, X,
   ShieldCheck, Calendar, Shirt, Building2, FileEdit, Trophy, UserCheck, Ticket, BookOpen,
@@ -28,7 +28,10 @@ type Props = {
 
 export default function AdminBottomNav({ role }: Props) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const isScanTab = searchParams.get("tab") === "scan" || pathname.startsWith("/admin/kehadiran");
 
   const navLinks = [
     { href: "/admin/informasi", icon: Info, label: "Informasi", show: canViewInformasi(role) },
@@ -90,8 +93,8 @@ export default function AdminBottomNav({ role }: Props) {
         </div>
       )}
 
-      {/* Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--color-surface)] border-t border-[var(--color-border)] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+      {/* Bottom Navigation Bar */}
+      <nav className={`md:hidden ${isScanTab ? 'hidden' : 'fixed'} bottom-0 left-0 right-0 h-16 md:h-[72px] bg-[var(--color-surface)] border-t border-[var(--color-border)] z-50 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.04)]`}>
         <div className="flex items-center h-[60px] max-w-md mx-auto relative px-1">
           
           {canManageWisudawan(role) && (

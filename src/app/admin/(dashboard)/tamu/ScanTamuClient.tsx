@@ -268,7 +268,7 @@ export default function ScanTamuClient({ initialMeta, isPresensiOnly = false }: 
 
 
   return (
-    <div className="relative w-full h-[calc(100vh-100px)] flex flex-col lg:flex-row gap-4 overflow-hidden">
+    <div className="fixed inset-0 z-0 bg-[var(--color-bg)] flex flex-col pt-[72px] pb-6 px-4 lg:relative lg:inset-auto lg:z-auto lg:pt-0 lg:pb-0 lg:px-0 lg:bg-transparent lg:w-full lg:h-[calc(100vh-100px)] lg:flex-row gap-4 overflow-hidden">
 
       {/* ─── Kamera (Kiri) ─── */}
       <div className="relative w-full lg:w-1/2 h-full min-h-[50vh] overflow-hidden rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] mx-auto max-w-2xl lg:max-w-none flex-shrink-0 flex items-center justify-center">
@@ -298,19 +298,19 @@ export default function ScanTamuClient({ initialMeta, isPresensiOnly = false }: 
 
         {/* ─── Tombol Navigasi Alternatif ─── */}
         {isPresensiOnly ? (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30">
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:left-4 lg:translate-x-0 z-30">
             <a
               href="/admin/kehadiran"
-              className="flex items-center gap-2 px-6 py-2 bg-indigo-600 border border-indigo-500 hover:bg-indigo-700 text-white shadow-lg rounded-full font-bold text-sm transition-colors whitespace-nowrap"
+              className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white shadow-lg rounded-full font-bold text-sm transition-colors whitespace-nowrap"
             >
               Scan Wisudawan
             </a>
           </div>
         ) : (
-          <div className="absolute top-4 left-4 z-30">
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:left-4 lg:translate-x-0 z-30">
             <a
               href="?tab=daftar"
-              className="flex items-center gap-2 px-4 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text)] shadow-lg rounded-xl font-bold text-sm transition-colors"
+              className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white shadow-lg rounded-full font-bold text-sm transition-colors whitespace-nowrap"
             >
               Daftar Tamu
             </a>
