@@ -5,7 +5,7 @@ import type { ProdiItem } from "@/actions/prodi";
 import { updateProdiOrder } from "@/actions/prodi";
 import ProdiTableRow from "./ProdiTableRow";
 import { useToast } from "@/components/ui/Toast";
-import { Save, X, Loader2, Pencil } from "lucide-react";
+import { Save, X, Loader2, Pencil, GripVertical } from "lucide-react";
 import ProdiDialog from "./ProdiDialog";
 import DeleteProdiButton from "./DeleteProdiButton";
 
@@ -74,10 +74,10 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
   };
 
   return (
-    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm overflow-hidden flex flex-col">
+    <div className="bg-transparent md:bg-[var(--color-surface)] md:rounded-2xl border-none md:border md:border-[var(--color-border)] shadow-none md:shadow-sm overflow-hidden flex flex-col gap-4 md:gap-0">
       {/* Sticky Save/Cancel Bar */}
       {isDirty && (
-        <div className="bg-emerald-50 dark:bg-emerald-900/20 border-b border-emerald-100 dark:border-emerald-800/30 p-3 flex items-center justify-between animate-in slide-in-from-top-2">
+        <div className="bg-emerald-50 dark:bg-emerald-900/20 md:border-b border border-emerald-100 dark:border-emerald-800/30 p-3 flex items-center justify-between animate-in slide-in-from-top-2 rounded-2xl md:rounded-none">
           <div className="text-sm font-medium text-emerald-800 dark:text-emerald-300 px-3 flex items-center gap-2">
             Urutan tabel telah diubah. Simpan perubahan?
           </div>
@@ -140,18 +140,31 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
       </div>
 
       {/* Mobile Card View */}
-      <div className="grid grid-cols-1 gap-4 md:hidden p-4">
+      <div className="grid grid-cols-1 gap-4 md:hidden pb-24">
         {items.length === 0 ? (
           <div className="text-center text-[var(--color-text-muted)] py-8">
             Belum ada data referensi Fakultas & Prodi.
           </div>
         ) : (
-          items.map((prodi) => (
-            <div key={prodi.id} className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-4 shadow-sm flex flex-col gap-3 relative">
+          items.map((prodi, index) => (
+            <div 
+              key={prodi.id} 
+              className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4 shadow-sm flex flex-col gap-3 relative cursor-grab active:cursor-grabbing"
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDragEnd={handleDragEnd}
+            >
               <div className="flex items-start justify-between gap-2">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-wider">{prodi.fakultas}</span>
-                  <span className="text-sm font-bold text-[var(--color-text)] mt-0.5">{prodi.prodi}</span>
+                <div className="flex items-start gap-3">
+                  <div className="flex flex-col items-center justify-center mt-1 opacity-40 hover:opacity-100 transition-opacity">
+                    <GripVertical size={16} />
+                    <span className="font-bold text-[10px] mt-0.5">{index + 1}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-wider">{prodi.fakultas}</span>
+                    <span className="text-sm font-bold text-[var(--color-text)] mt-0.5">{prodi.prodi}</span>
+                  </div>
                 </div>
                 {prodi.sesi && (
                   <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
