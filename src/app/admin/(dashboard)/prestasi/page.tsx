@@ -2,7 +2,7 @@ import { getActivePeriode, getAllPeriode } from "@/actions/periode";
 import { getAllWisudawan } from "@/actions/wisudawan";
 import { getAdminSession } from "@/actions/adminAuth";
 import { getPrestasiOverrides } from "@/actions/prestasiOverrides";
-import { getSetting } from "@/actions/settings";
+import { getSetting, getAllSettingsAdmin } from "@/actions/settings";
 import { Trophy } from "lucide-react";
 import Link from "next/link";
 import PrestasiAkademikView from "./PrestasiAkademikView";
@@ -21,22 +21,25 @@ export default async function AdminPrestasiPage(props: PageProps) {
   const resolvedSearchParams = await props.searchParams;
   const tab = typeof resolvedSearchParams?.tab === 'string' ? resolvedSearchParams.tab : 'akademik';
 
-  const allPeriode = await getAllPeriode();
+  const [allPeriode, adminSession, allProdi] = await Promise.all([
+    getAllPeriode(),
+    getAdminSession(),
+    getProdiList()
+  ]);
   const activePeriodes = allPeriode.filter(p => p.status === 'Sedang Dibuka');
-
-  const adminSession = await getAdminSession();
-  const allWisudawan = await getAllWisudawan({
-    role: adminSession?.role,
-    unitKerja: adminSession?.unit_kerja
-  });
-
-  const allProdi = await getProdiList();
 
   const filterPeriode = typeof resolvedSearchParams?.periode === 'string' 
     ? resolvedSearchParams.periode 
     : (activePeriodes[0]?.nama_periode || '');
 
-  const overrides = await getPrestasiOverrides(filterPeriode);
+  const [allWisudawan, overrides, allSettings] = await Promise.all([
+    getAllWisudawan({
+      role: adminSession?.role,
+      unitKerja: adminSession?.unit_kerja
+    }),
+    getPrestasiOverrides(filterPeriode),
+    getAllSettingsAdmin()
+  ]);
 
   const targetWisudawan = allWisudawan.filter(w => 
     w.periode === filterPeriode && w.status === 'Terdaftar'
@@ -59,14 +62,18 @@ export default async function AdminPrestasiPage(props: PageProps) {
   }
 
   // Ambil pengaturan sertifikat akademik
+  const settingsMap: Record<string, string> = {};
+  allSettings.forEach((s: any) => { settingsMap[s.key] = s.value; });
+  const getVal = (key: string, def: string) => settingsMap[key] ?? def;
+
   const certSettings = {
-    nomor: await getSetting('cert_akd_nomor', ''),
-    tanggal: await getSetting('cert_akd_tanggal', ''),
-    jabatan: await getSetting('cert_akd_jabatan', ''),
-    nip: await getSetting('cert_akd_nip', ''),
-    nama: await getSetting('cert_akd_nama', ''),
-    bgUrl: await getSetting('cert_bg_url', ''),
-    ttdUrl: await getSetting('cert_akd_ttd_url', '')
+    nomor: getVal('cert_akd_nomor', ''),
+    tanggal: getVal('cert_akd_tanggal', ''),
+    jabatan: getVal('cert_akd_jabatan', ''),
+    nip: getVal('cert_akd_nip', ''),
+    nama: getVal('cert_akd_nama', ''),
+    bgUrl: getVal('cert_bg_url', ''),
+    ttdUrl: getVal('cert_akd_ttd_url', '')
   };
 
   const currentPeriodeObj = allPeriode.find(p => p.nama_periode === filterPeriode) || activePeriodes[0];
