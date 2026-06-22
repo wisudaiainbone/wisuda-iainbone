@@ -121,7 +121,7 @@ export default async function AdminTogaPage(props: PageProps) {
             {(adminSession?.role === 'superadmin' || adminSession?.role === 'admin_institut') && (
               <Link 
                 href="?tab=scan" 
-                className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${tab === 'scan' ? 'bg-emerald-600 text-white shadow-md' : 'bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]'}`}
+                className="flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]"
               >
                 <span className="hidden sm:inline">Scan Toga</span>
                 <span className="sm:hidden">Scan</span>
