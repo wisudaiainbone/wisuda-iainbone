@@ -42,44 +42,27 @@ export default function WisudawanMobileFAB({ children }: { children: React.React
         />
       )}
 
-      {/* Bottom Sheet Menu */}
+      {/* Floating Action Menu (Speed Dial) */}
       <div 
         ref={menuRef}
-        className={`fixed left-0 right-0 bottom-0 z-[70] bg-[var(--color-surface)] rounded-t-3xl border-t border-[var(--color-border)] shadow-2xl transition-transform duration-300 ease-out transform ${
-          isOpen ? "translate-y-0" : "translate-y-full"
+        className={`fixed right-4 bottom-24 md:right-8 md:bottom-28 z-[60] flex flex-col items-end gap-3 transition-all duration-300 origin-bottom ${
+          isOpen ? "scale-100 opacity-100 visible" : "scale-75 opacity-0 invisible"
         }`}
       >
-        <div className="flex flex-col p-5 pb-8 max-h-[85vh]">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-[var(--color-text)] flex items-center gap-2">
-              <Sparkles className="text-emerald-500" size={20} />
-              Quick Actions
-            </h3>
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="p-2 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-border)] rounded-full text-[var(--color-text-muted)] transition-colors"
-            >
-              <X size={18} />
-            </button>
-          </div>
-          
-          <div className="overflow-y-auto hide-scrollbar flex flex-col gap-3 pb-safe">
-            {/* We map the children to stretch fully. The buttons are passed from WisudawanSearch */}
-            <div className="flex flex-col gap-3 w-full [&>*]:w-full [&_button]:w-full [&_button]:h-12 [&_button]:text-base [&_button]:justify-start [&_button]:px-4 [&_span.hidden]:!inline">
-              {children}
-            </div>
-          </div>
+        {/* We map the children to stack vertically, right-aligned. */}
+        <div className="flex flex-col items-end gap-3 [&>*]:w-auto [&_button]:w-auto [&_button]:h-10 [&_button]:px-5 [&_button]:rounded-xl [&_button]:shadow-lg [&_button]:shadow-black/10 [&_span.hidden]:!inline">
+          {children}
         </div>
       </div>
 
       {/* Floating Action Button */}
-      <div className={`fixed bottom-24 right-4 md:bottom-8 md:right-8 z-[50] transition-transform duration-300 ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"}`}>
+      <div className={`fixed bottom-6 right-4 md:bottom-8 md:right-8 z-[70] transition-transform duration-300`}>
         <button
-          onClick={() => setIsOpen(true)}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+          onClick={() => setIsOpen(!isOpen)}
+          className={`bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform ${isOpen ? "rotate-45" : "hover:scale-105 active:scale-95"}`}
           title="Tampilkan Quick Actions"
         >
-          <Sparkles size={24} />
+          {isOpen ? <X size={24} /> : <Sparkles size={24} />}
         </button>
       </div>
     </div>
