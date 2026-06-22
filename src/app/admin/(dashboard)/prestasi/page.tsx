@@ -85,7 +85,7 @@ export default async function AdminPrestasiPage(props: PageProps) {
     : "";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 sm:pb-0">
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         
