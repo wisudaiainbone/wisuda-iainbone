@@ -112,6 +112,13 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
 - **Toast Notifikasi Global Terpusat**: Sistem notifikasi terpusat (`src/components/ui/Toast.tsx`) dengan tampilan modern di **tengah layar** — ikon besar, *progress bar* otomatis, *spring animation*, dan dukungan dark mode. Menggantikan seluruh toast lokal di setiap komponen.
 - **Reset Password Admin**: Admin dapat mereset password wisudawan ke default dari tabel wisudawan (ikon kunci), dengan catatan otomatis di `log_status`.
 
+## ⚡ Performa & Optimasi Skala Besar
+Aplikasi ini telah dirombak untuk menangani lalu lintas pendaftaran wisuda serentak dengan efisiensi tingkat tinggi:
+- **Zero N+1 Queries (Promise.all)**: Hampir seluruh *Server Components* dan *Server Actions* telah dioptimasi dengan `Promise.all`. Hal ini mengakhiri antrean lambat kueri sekuensial (waterfall) menjadi proses paralel 100%. Contohnya di halaman Pengaturan, 9 penyetelan dapat disimpan dalam 1 kueri masif secara paralel.
+- **Upstash Redis Caching**: Memuat halaman tak perlu lagi menuggu *database* Supabase. Data pengaturan sistem, profil wisudawan, dan data *scan* disimpan dalam memori Redis untuk disajikan ke pengguna dalam hitungan milidetik.
+- **Client Router Cache (Instant Navigation)**: Di Next.js 15, navigasi rute dinamis secara bawaan dimatikan cachenya. Kami telah mengaktifkan kembali `staleTimes` selama **5 menit** untuk rute dinamis dan menghidupkan `prefetch={true}` pada *Sidebar* maupun *Bottom Navigation*. Hasilnya? Kunjungan ke menu manapun (bahkan yang pertama kali) akan tampil instan (0 detik) di layar tanpa *loading spinner* sama sekali!
+- **Rate Limiting Ganas**: Upstash RateLimit diaktifkan di lapisan Login Wisudawan untuk mencegah serangan *Brute Force* dan *DDoS*. Maksimal 5 percobaan gagal per IP/NIM per 15 menit.
+
 ## 💻 Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org) (App Router)

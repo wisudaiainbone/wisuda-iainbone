@@ -207,6 +207,7 @@ Menyimpan daftar tamu undangan eksternal untuk acara wisuda.
 |---|---|---|
 | Profil wisudawan (`wisudawan:[nim]`) | Redis 1 jam | Dihapus saat wisudawan update data |
 | Pengaturan (`setting_[key]`) | Redis 1 jam | Dihapus oleh `updateSetting()` |
+| Halaman Admin Dashboard (`prefetch`) | **Browser Cache (Next.js)** | `staleTimes` dikonfigurasi 5 menit di `next.config.ts`. Memberikan navigasi klien-sisi super cepat. |
 | Pengaturan di halaman profil wisudawan | **Bypass Redis** (`skipCache: true`) | Agar perubahan admin langsung aktif tanpa menunggu TTL |
 | Data perbaikan (`perbaikan_data`) | **Tidak di-cache** | Selalu fresh dari Supabase |
 | Data tamu (`tamu`) | **Tidak di-cache** | Operasi real-time via server actions untuk akurasi data |
