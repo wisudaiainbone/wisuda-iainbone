@@ -141,12 +141,12 @@ export default function AdminPerbaikanPage() {
       {/* Filter bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         {/* Status tabs */}
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {(["semua", "proses", "diterima", "ditolak"] as const).map((s) => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
-              className={`px-3 h-8 rounded-full text-xs font-semibold border transition-all ${statusFilter === s
+              className={`shrink-0 px-3 h-8 rounded-full text-xs font-semibold border transition-all ${statusFilter === s
                 ? s === "proses" ? "bg-blue-600 text-white border-blue-600"
                   : s === "diterima" ? "bg-emerald-600 text-white border-emerald-600"
                     : s === "ditolak" ? "bg-rose-600 text-white border-rose-600"

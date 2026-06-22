@@ -55,7 +55,7 @@ export default function TamuClientWrapper({
                 <button
                   onClick={() => handleTabChange("daftar")}
                   className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${
-                    activeTab === "daftar"
+                    (activeTab as string) === "daftar"
                       ? "bg-emerald-600 text-white shadow-md"
                       : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]"
                   }`}
@@ -66,7 +66,7 @@ export default function TamuClientWrapper({
                 <button
                   onClick={() => handleTabChange("scan")}
                   className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${
-                    activeTab === "scan"
+                    (activeTab as string) === "scan"
                       ? "bg-emerald-600 text-white shadow-md"
                       : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]"
                   }`}
