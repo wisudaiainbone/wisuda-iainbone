@@ -214,7 +214,7 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
 
       {/* Mobile Action Buttons (Below Filters) */}
       {children && (
-        <div className="xl:hidden flex flex-row flex-wrap items-center gap-2 w-full shrink-0">
+        <div className="xl:hidden flex flex-row flex-wrap items-center gap-2 w-full shrink-0 [&>*]:flex-1 [&>*]:min-w-[120px] [&>*]:sm:flex-none">
           {children}
         </div>
       )}

@@ -130,12 +130,17 @@ export default async function AdminWisudawanPage(props: PageProps) {
             <WisudawanSearch fakultasList={fakultasList} prodiList={prodiList} statusList={statusList}>
               <ImportWisudawanDialog userRole={adminSession?.role || ''} unitKerja={adminSession?.unit_kerja} dbProdiList={dbProdiList} />
               <ExportXlsxButton data={wisudawanList} filename="data-wisudawan" />
-              <SesiDialog />
-              <SlidePptxDialog data={wisudawanList} prodiData={dbProdiList} />
-              <TagDialog data={wisudawanList} />
-              <NomorDialog />
               <ExportDaftarButton data={wisudawanList} filename="daftar-wisudawan" />
-              <AlbumDialog data={wisudawanList} prodiData={dbProdiList} />
+              
+              {adminSession?.role !== 'admin_unit' && (
+                <>
+                  <SesiDialog />
+                  <SlidePptxDialog data={wisudawanList} prodiData={dbProdiList} />
+                  <TagDialog data={wisudawanList} />
+                  <NomorDialog />
+                  <AlbumDialog data={wisudawanList} prodiData={dbProdiList} />
+                </>
+              )}
             </WisudawanSearch>
           </Suspense>
         </div>
