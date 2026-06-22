@@ -89,7 +89,7 @@ export default function NomorDialog() {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-[var(--color-text)]">Generate Nomor & ID Undangan</h3>
-                    <p className="text-[11px] text-[var(--color-text-muted)]">Wisudawan aktif · berstatus Terdaftar · sesi terisi</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">Wisudawan aktif · berstatus Terdaftar · sesi terisi</p>
                   </div>
                 </div>
                 {phase !== "loading" && (

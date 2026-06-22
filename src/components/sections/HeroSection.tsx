@@ -515,7 +515,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                             >
                               <ChevronLeft size={18} />
                             </button>
-                            <span className="text-[11px] font-bold text-[var(--color-text-subtle)] uppercase tracking-widest whitespace-nowrap px-4">
+                            <span className="text-xs font-bold text-[var(--color-text-subtle)] uppercase tracking-widest whitespace-nowrap px-4">
                               Periode {activePeriodIdx + 1} dari {graduationPeriods.length}
                             </span>
                             <button

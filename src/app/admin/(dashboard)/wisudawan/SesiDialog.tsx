@@ -119,7 +119,7 @@ export default function SesiDialog() {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-[var(--color-text)]">Pengaturan Sesi per Fakultas</h3>
-                    <p className="text-[11px] text-[var(--color-text-muted)]">Pilih sesi untuk setiap fakultas, lalu klik Simpan.</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">Pilih sesi untuk setiap fakultas, lalu klik Simpan.</p>
                   </div>
                 </div>
                 <button
@@ -144,11 +144,10 @@ export default function SesiDialog() {
                     return (
                       <div
                         key={row.fakultas}
-                        className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border transition-colors ${
-                          isChanged
+                        className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border transition-colors ${isChanged
                             ? "bg-violet-50 dark:bg-violet-900/10 border-violet-200 dark:border-violet-800/40"
                             : "bg-[var(--color-surface)] border-[var(--color-border)]"
-                        }`}
+                          }`}
                       >
                         {/* Fakultas Info */}
                         <div className="flex items-center gap-3 min-w-0">
@@ -157,7 +156,7 @@ export default function SesiDialog() {
                           </span>
                           <div className="min-w-0">
                             <p className="text-xs font-semibold text-[var(--color-text)] truncate">{row.fakultas}</p>
-                            <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
+                            <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
                               {currentDraft ? (
                                 <span className={`font-medium ${isChanged ? "text-violet-600 dark:text-violet-400" : "text-emerald-600 dark:text-emerald-400"}`}>
                                   {isChanged ? "→ " : "✓ "}{currentDraft}
@@ -177,11 +176,10 @@ export default function SesiDialog() {
                               <button
                                 key={opt.value}
                                 onClick={() => handleSelect(row.fakultas, opt.value)}
-                                className={`flex items-center gap-1.5 px-3 h-9 rounded-lg text-xs font-semibold border transition-all ${
-                                  isActive
+                                className={`flex items-center gap-1.5 px-3 h-9 rounded-lg text-xs font-semibold border transition-all ${isActive
                                     ? "bg-violet-600 text-white border-violet-600 shadow-sm"
                                     : "bg-[var(--color-bg-secondary)] border-[var(--color-border)] text-[var(--color-text-subtle)] hover:text-[var(--color-text)] hover:border-violet-400"
-                                }`}
+                                  }`}
                               >
                                 {isActive && <Check size={11} strokeWidth={3} />}
                                 {opt.label}
@@ -198,7 +196,7 @@ export default function SesiDialog() {
               {/* Footer */}
               <div className="px-5 py-3 border-t border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-end gap-2">
                 {hasChanges && (
-                  <p className="text-[11px] text-violet-600 dark:text-violet-400 mr-auto font-medium">
+                  <p className="text-xs text-violet-600 dark:text-violet-400 mr-auto font-medium">
                     Ada perubahan yang belum disimpan.
                   </p>
                 )}

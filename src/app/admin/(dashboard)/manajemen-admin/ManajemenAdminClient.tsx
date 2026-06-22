@@ -474,7 +474,7 @@ export default function ManajemenAdminClient({
                         {admin.email}
                       </span>
                       {admin.unit_kerja && (
-                        <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mt-0.5">
+                        <span className="text-xs font-medium text-[var(--color-text-subtle)] mt-0.5">
                           {admin.unit_kerja}
                         </span>
                       )}

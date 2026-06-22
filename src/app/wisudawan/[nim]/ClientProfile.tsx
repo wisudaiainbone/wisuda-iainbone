@@ -844,7 +844,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                           ))}
                         </div>
                         {!allowEditToga && (
-                          <p className="text-[11px] text-amber-600 dark:text-amber-400 italic">
+                          <p className="text-xs text-amber-600 dark:text-amber-400 italic">
                             * Pengubahan ukuran toga saat ini dinonaktifkan oleh Admin.
                           </p>
                         )}
