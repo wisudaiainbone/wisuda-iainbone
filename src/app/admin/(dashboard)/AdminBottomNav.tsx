@@ -69,6 +69,7 @@ export default function AdminBottomNav({ role }: Props) {
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch={true}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                       isActive
@@ -92,6 +93,7 @@ export default function AdminBottomNav({ role }: Props) {
           {/* Beranda Button - Left */}
           <Link
             href="/admin"
+            prefetch={true}
             className={`flex-1 flex flex-col items-center justify-center gap-1 h-full relative transition-colors active:scale-95 ${
               isBerandaActive
                 ? "text-emerald-600 dark:text-emerald-400"

@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    staleTimes: {
+      dynamic: 300, // Cache halaman dinamis selama 5 menit di browser memory (mengatasi issue loading berulang)
+      static: 1800,
+    },
+  },
 };
 
 export default nextConfig;

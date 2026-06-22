@@ -84,6 +84,7 @@ export default function AdminSidebar({ namaAdmin, role, roleMeta }: Props) {
             <Link
               key={link.href}
               href={link.href}
+              prefetch={true}
               title={isCollapsed ? link.label : undefined}
               className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${isActive
                 ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
