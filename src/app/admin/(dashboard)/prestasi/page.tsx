@@ -10,6 +10,7 @@ import ExportPrestasiButton from "./ExportPrestasiButton";
 import GeneratePrestasiButton from "./GeneratePrestasiButton";
 import PrintPrestasiButton from "./PrintPrestasiButton";
 import SlidePrestasiPptxDialog from "./SlidePrestasiPptxDialog";
+import PrestasiClientWrapper from "./PrestasiClientWrapper";
 import { supabase } from "@/lib/supabase";
 import { getProdiList } from "@/actions/prodi";
 
@@ -85,87 +86,57 @@ export default async function AdminPrestasiPage(props: PageProps) {
     : "";
 
   return (
-    <div className="space-y-6 pb-24 sm:pb-0">
-      {/* Header Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        
-        {/* Tabs - Floating on mobile */}
-        <div className="fixed sm:relative bottom-20 sm:bottom-auto left-0 right-0 sm:left-auto sm:right-auto px-4 sm:px-0 z-40 flex items-center justify-center sm:justify-start pointer-events-none sm:pointer-events-auto">
-          <div className="flex w-full sm:w-auto items-center gap-2 pointer-events-auto">
-            <Link 
-              href="?tab=akademik" 
-              className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${tab === 'akademik' ? 'bg-emerald-600 text-white shadow-md' : 'bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]'}`}
-            >
-              <span className="hidden sm:inline">Prestasi Akademik</span>
-              <span className="sm:hidden">Akademik</span>
-            </Link>
-            <Link 
-              href="?tab=organisasi" 
-              className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${tab === 'organisasi' ? 'bg-emerald-600 text-white shadow-md' : 'bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]'}`}
-            >
-              <span className="hidden sm:inline">Pengalaman Organisasi</span>
-              <span className="sm:hidden">Ormawa</span>
-            </Link>
+    <PrestasiClientWrapper
+      initialTab={tab}
+      akademikControlsNode={
+        <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+          {/* Periode Dropdown */}
+          <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 flex-1 min-w-0">
+            <Filter size={13} className="text-[var(--color-text-muted)] shrink-0" />
+            <select className="text-sm sm:text-xs font-medium bg-transparent text-[var(--color-text)] outline-none flex-1 min-w-0">
+              {activePeriodes.map(p => (
+                <option key={p.id} value={p.nama_periode}>{p.nama_periode}</option>
+              ))}
+              {activePeriodes.length === 0 && <option value="">Tidak ada periode aktif</option>}
+            </select>
+          </div>
+
+          {/* Export XLSX Button */}
+          <div className="shrink-0 flex h-10">
+            <ExportPrestasiButton data={targetWisudawan} overrides={overrides} periode={filterPeriode} />
           </div>
         </div>
-
-        {/* Action Controls */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-          
-          <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
-            {/* Periode Dropdown */}
-            <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 flex-1 min-w-0">
-              <Filter size={13} className="text-[var(--color-text-muted)] shrink-0" />
-              <select className="text-sm sm:text-xs font-medium bg-transparent text-[var(--color-text)] outline-none flex-1 min-w-0">
-                {activePeriodes.map(p => (
-                  <option key={p.id} value={p.nama_periode}>{p.nama_periode}</option>
-                ))}
-                {activePeriodes.length === 0 && <option value="">Tidak ada periode aktif</option>}
-              </select>
-            </div>
-
-            {/* Export XLSX Button */}
-            <div className="shrink-0 flex h-10">
-              <ExportPrestasiButton data={targetWisudawan} overrides={overrides} periode={filterPeriode} />
-            </div>
+      }
+      akademikActionButtonsNode={
+        adminSession?.role !== 'admin_unit' ? (
+          <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
+            <GeneratePrestasiButton periode={filterPeriode} isGenerated={isGenerated} />
+            <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
+            <PrintPrestasiButton 
+              data={targetWisudawan} 
+              periode={filterPeriode} 
+              settings={certSettings} 
+              tempatWisuda={tempatWisuda} 
+              tanggalWisuda={tanggalWisuda} 
+            />
           </div>
-
-          {/* Action Buttons (Generate, Slide, Print) under the filter on mobile */}
-          {tab === 'akademik' && adminSession?.role !== 'admin_unit' && (
-            <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
-              <GeneratePrestasiButton periode={filterPeriode} isGenerated={isGenerated} />
-              <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
-              <PrintPrestasiButton 
-                data={targetWisudawan} 
-                periode={filterPeriode} 
-                settings={certSettings} 
-                tempatWisuda={tempatWisuda} 
-                tanggalWisuda={tanggalWisuda} 
-              />
-            </div>
-          )}
-
+        ) : undefined
+      }
+      akademikContentNode={
+        <PrestasiAkademikView
+          data={targetWisudawan}
+          periode={filterPeriode}
+          overrides={overrides}
+          isGenerated={isGenerated}
+          role={adminSession?.role}
+        />
+      }
+      organisasiContentNode={
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px]">
+          <Trophy size={48} className="text-[var(--color-text-muted)] opacity-20 mb-4" />
+          <p className="text-[var(--color-text-muted)] font-medium text-sm">Data pengalaman organisasi belum tersedia.</p>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-6">
-        {tab === 'akademik' && (
-          <PrestasiAkademikView
-            data={targetWisudawan}
-            periode={filterPeriode}
-            overrides={overrides}
-            isGenerated={isGenerated}
-            role={adminSession?.role}
-          />
-        )}
-
-        {tab === 'organisasi' && (
-          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px]">
-            <Trophy size={48} className="text-[var(--color-text-muted)] opacity-20 mb-4" />
-            <p className="text-[var(--color-text-muted)] font-medium text-sm">Data pengalaman organisasi belum tersedia.</p>
-          </div>
-        )}
-      </div>
-    </div>
+      }
+    />
   );
 }
