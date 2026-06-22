@@ -5,7 +5,9 @@ import type { ProdiItem } from "@/actions/prodi";
 import { updateProdiOrder } from "@/actions/prodi";
 import ProdiTableRow from "./ProdiTableRow";
 import { useToast } from "@/components/ui/Toast";
-import { Save, X, Loader2 } from "lucide-react";
+import { Save, X, Loader2, Pencil } from "lucide-react";
+import ProdiDialog from "./ProdiDialog";
+import DeleteProdiButton from "./DeleteProdiButton";
 
 interface Props {
   initialProdiList: ProdiItem[];
@@ -101,7 +103,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
         </div>
       )}
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto hidden md:block">
         <table className="w-full text-sm text-left">
           <thead className="text-xs uppercase bg-[var(--color-bg-secondary)] text-[var(--color-text-subtle)] font-bold">
             <tr>
@@ -135,6 +137,57 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="grid grid-cols-1 gap-4 md:hidden p-4">
+        {items.length === 0 ? (
+          <div className="text-center text-[var(--color-text-muted)] py-8">
+            Belum ada data referensi Fakultas & Prodi.
+          </div>
+        ) : (
+          items.map((prodi) => (
+            <div key={prodi.id} className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-4 shadow-sm flex flex-col gap-3 relative">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-wider">{prodi.fakultas}</span>
+                  <span className="text-sm font-bold text-[var(--color-text)] mt-0.5">{prodi.prodi}</span>
+                </div>
+                {prodi.sesi && (
+                  <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
+                    {prodi.sesi}
+                  </span>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-6 mt-1">
+                <div>
+                  <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Singkatan</span>
+                  <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-surface)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.singkatan}</span>
+                </div>
+                <div>
+                  <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Gelar</span>
+                  <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-surface)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.gelar}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 mt-2 pt-3 border-t border-[var(--color-border)]">
+                <ProdiDialog
+                  prodi={prodi}
+                  trigger={
+                    <button
+                      title="Edit Prodi"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                    >
+                      <Pencil size={14} />
+                    </button>
+                  }
+                />
+                <DeleteProdiButton id={prodi.id} prodiName={prodi.prodi} />
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
