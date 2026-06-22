@@ -315,7 +315,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
 
 
   return (
-    <div className="relative w-full h-[calc(100vh-100px)] flex flex-col lg:flex-row gap-4 overflow-hidden">
+    <div className="relative w-full h-[calc(100dvh-150px)] lg:h-[calc(100vh-100px)] flex flex-col lg:flex-row gap-4 overflow-hidden">
 
       {/* ─── Kamera (Kiri) ─── */}
       <div className="relative w-full lg:w-1/2 h-full min-h-[50vh] overflow-hidden rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] mx-auto max-w-2xl lg:max-w-none flex-shrink-0 flex items-center justify-center">
