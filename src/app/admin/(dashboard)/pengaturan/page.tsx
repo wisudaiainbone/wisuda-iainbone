@@ -217,8 +217,8 @@ export default function AdminPengaturanPage() {
   return (
     <div className="flex flex-col lg:flex-row gap-6 w-full items-start pb-10">
       {/* Kolom Kiri (Menu) - 10% */}
-      <div className="w-full lg:w-[10%] flex-shrink-0 sticky top-14 lg:top-6 z-30 bg-[var(--color-bg)] lg:bg-transparent -mx-6 px-6 lg:mx-0 lg:px-0 py-2 lg:py-0 mb-4 lg:mb-0 border-b border-[var(--color-border)] lg:border-none">
-        <div className="flex items-center lg:items-start lg:flex-col gap-2 lg:gap-4 w-full overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-1 lg:pb-0">
+      <div className="w-full lg:w-[10%] flex-shrink-0 lg:sticky lg:top-6">
+        <div className="flex items-center lg:items-start lg:flex-col gap-2 lg:gap-4 py-2 w-full overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {[
             { id: 'general', label: 'General' },
             { id: 'prestasi', label: 'Prestasi' },
@@ -329,14 +329,14 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="relative flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-center shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
                     checked={allowEditProfile}
                     onChange={(e) => setAllowEditProfile(e.target.checked)}
                   />
-                  <div className={`w-12 h-6 rounded-full transition-colors ${allowEditProfile ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${allowEditProfile ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowEditProfile ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
@@ -354,14 +354,14 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="relative flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-center shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
                     checked={allowEditToga}
                     onChange={(e) => setAllowEditToga(e.target.checked)}
                   />
-                  <div className={`w-12 h-6 rounded-full transition-colors ${allowEditToga ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${allowEditToga ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowEditToga ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
@@ -379,14 +379,14 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="relative flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-center shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
                     checked={showTogaInfo}
                     onChange={(e) => setShowTogaInfo(e.target.checked)}
                   />
-                  <div className={`w-12 h-6 rounded-full transition-colors ${showTogaInfo ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${showTogaInfo ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${showTogaInfo ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
@@ -404,14 +404,14 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="relative flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-center shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
                     checked={showUndanganInfo}
                     onChange={(e) => setShowUndanganInfo(e.target.checked)}
                   />
-                  <div className={`w-12 h-6 rounded-full transition-colors ${showUndanganInfo ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${showUndanganInfo ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${showUndanganInfo ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
@@ -433,14 +433,14 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="relative flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-center shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
                     checked={allowPerbaikan}
                     onChange={(e) => setAllowPerbaikan(e.target.checked)}
                   />
-                  <div className={`w-12 h-6 rounded-full transition-colors ${allowPerbaikan ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${allowPerbaikan ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowPerbaikan ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
@@ -462,14 +462,14 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="relative flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-center shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
                     checked={allowAbsensiLogin}
                     onChange={(e) => setAllowAbsensiLogin(e.target.checked)}
                   />
-                  <div className={`w-12 h-6 rounded-full transition-colors ${allowAbsensiLogin ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${allowAbsensiLogin ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowAbsensiLogin ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
@@ -491,14 +491,14 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="relative flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-center shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
                     checked={showPrestasiCard}
                     onChange={(e) => setShowPrestasiCard(e.target.checked)}
                   />
-                  <div className={`w-12 h-6 rounded-full transition-colors ${showPrestasiCard ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${showPrestasiCard ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${showPrestasiCard ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>

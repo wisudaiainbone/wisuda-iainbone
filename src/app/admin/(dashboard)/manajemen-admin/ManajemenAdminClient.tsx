@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck, ShieldAlert, UserPlus, Trash2, Edit2,
-  Clock, Mail, Check, X, Loader2
+  Clock, Mail, Check, X, Loader2, Plus
 } from "lucide-react";
 import type { AdminUser } from "@/actions/adminUsers";
 import {
@@ -477,27 +477,6 @@ export default function ManajemenAdminClient({
                         {admin.email}
                       </span>
                     </div>
-                    {/* Role */}
-                    <div className="shrink-0">
-                      {currentAdminRole === "superadmin" && admin.id !== currentAdminId ? (
-                        <select
-                          value={admin.role}
-                          onChange={(e) => handleRoleChange(admin.id, e.target.value as AdminRole)}
-                          disabled={isPending}
-                          className="text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] cursor-pointer focus:ring-1 focus:ring-emerald-500/40 outline-none"
-                        >
-                          {ALL_ROLES.map((r) => (
-                            <option key={r} value={r}>
-                              {ROLE_META[r].label}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase ${meta.color}`}>
-                          <span>{meta.icon}</span>
-                          {meta.label}
-                        </span>
-                      )}
                     </div>
                   </div>
                   
@@ -539,26 +518,32 @@ export default function ManajemenAdminClient({
                     </div>
                   </div>
 
-                  {currentAdminRole === "superadmin" && (
-                    <div className="flex items-center justify-end gap-2 mt-2 pt-3 border-t border-[var(--color-border)]">
-                      <button
-                        onClick={() => openEditForm(admin)}
-                        disabled={isPending}
-                        title="Edit admin"
-                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        <Edit2 size={14} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(admin.id)}
-                        disabled={isPending || admin.id === currentAdminId}
-                        title="Hapus admin"
-                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  )}
+                  <div className="flex items-center justify-between gap-2 mt-2 pt-3 border-t border-[var(--color-border)]">
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase ${meta.color}`}>
+                      <span>{meta.icon}</span>
+                      {meta.label}
+                    </span>
+                    {currentAdminRole === "superadmin" && (
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openEditForm(admin)}
+                          disabled={isPending}
+                          title="Edit admin"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(admin.id)}
+                          disabled={isPending || admin.id === currentAdminId}
+                          title="Hapus admin"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })
@@ -575,7 +560,7 @@ export default function ManajemenAdminClient({
             className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
             title="Tambah Admin"
           >
-            <UserPlus size={24} />
+            <Plus size={24} />
           </button>
         </div>
       )}

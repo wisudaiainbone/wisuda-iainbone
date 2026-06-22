@@ -176,31 +176,33 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
                 )}
               </div>
               
-              <div className="flex items-center gap-6 mt-1">
-                <div>
-                  <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Singkatan</span>
-                  <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-surface)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.singkatan}</span>
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--color-border)]">
+                <div className="flex items-center gap-4">
+                  <div>
+                    <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Singkatan</span>
+                    <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-bg-secondary)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.singkatan}</span>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Gelar</span>
+                    <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-bg-secondary)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.gelar}</span>
+                  </div>
                 </div>
-                <div>
-                  <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Gelar</span>
-                  <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-surface)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.gelar}</span>
-                </div>
-              </div>
 
-              <div className="flex items-center justify-end gap-2 mt-2 pt-3 border-t border-[var(--color-border)]">
-                <ProdiDialog
-                  prodi={prodi}
-                  existingFakultas={existingFakultas}
-                  trigger={
-                    <button
-                      title="Edit Prodi"
-                      className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
-                    >
-                      <Pencil size={14} />
-                    </button>
-                  }
-                />
-                <DeleteProdiButton id={prodi.id} prodiName={prodi.prodi} />
+                <div className="flex items-center gap-2">
+                  <ProdiDialog
+                    prodi={prodi}
+                    existingFakultas={existingFakultas}
+                    trigger={
+                      <button
+                        title="Edit Prodi"
+                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                    }
+                  />
+                  <DeleteProdiButton id={prodi.id} prodiName={prodi.prodi} />
+                </div>
               </div>
             </div>
           ))
