@@ -4,7 +4,7 @@ import { AdminRole } from "./permissions";
 // Schemas untuk wisudawan
 export const updateWisudawanSchema = z.object({
   nim: z.string().min(1, "NIM wajib diisi"),
-  updates: z.record(z.any()).refine(data => Object.keys(data).length > 0, "Payload update tidak boleh kosong")
+  updates: z.record(z.string(), z.any()).refine(data => Object.keys(data).length > 0, "Payload update tidak boleh kosong")
 });
 
 export const loginWisudawanSchema = z.object({

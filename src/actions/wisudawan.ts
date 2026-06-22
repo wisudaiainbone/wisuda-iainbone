@@ -149,7 +149,7 @@ export async function getAllWisudawan(filterOptions?: { role?: string, unitKerja
 
 export async function loginWisudawan(nim: string, passwordInput: string) {
   const validation = loginWisudawanSchema.safeParse({ nim, passwordInput });
-  if (!validation.success) return { success: false, error: validation.error.errors[0].message };
+  if (!validation.success) return { success: false, error: validation.error.issues[0].message };
 
   // Rate Limiting
   const loginRateLimit = new Ratelimit({
@@ -284,7 +284,7 @@ export async function updateWisudawan(nim: string, updates: Record<string, any>)
   if (!admin) return { success: false, error: 'Unauthorized' };
 
   const validation = updateWisudawanSchema.safeParse({ nim, updates });
-  if (!validation.success) return { success: false, error: validation.error.errors[0].message };
+  if (!validation.success) return { success: false, error: validation.error.issues[0].message };
 
   const supabaseData = mapToSupabaseFormat(updates);
 
@@ -354,7 +354,7 @@ export async function saveFotoWisudawan(nim: string, fotoUrl: string) {
  */
 export async function daftarWisuda(nim: string, newPassword: string) {
   const validation = daftarWisudaSchema.safeParse({ nim, newPassword });
-  if (!validation.success) throw new Error(validation.error.errors[0].message);
+  if (!validation.success) throw new Error(validation.error.issues[0].message);
 
   const getMakassarTime = () => {
     const formatter = new Intl.DateTimeFormat('sv-SE', {
@@ -499,7 +499,7 @@ export async function daftarWisuda(nim: string, newPassword: string) {
 export async function changePasswordWisudawan(nim: string, newPassword: string) {
   try {
     const validation = changePasswordSchema.safeParse({ nim, newPassword });
-    if (!validation.success) throw new Error(validation.error.errors[0].message);
+    if (!validation.success) throw new Error(validation.error.issues[0].message);
 
     const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
@@ -843,7 +843,7 @@ export async function deleteWisudawan(nim: string) {
 export async function setupAkunWisudawan(nim: string, email: string, toga: string, newPassword: string) {
   try {
     const validation = setupAkunSchema.safeParse({ nim, email, toga, newPassword });
-    if (!validation.success) return { success: false, error: validation.error.errors[0].message };
+    if (!validation.success) return { success: false, error: validation.error.issues[0].message };
 
     const hashedPassword = bcrypt.hashSync(newPassword, 10);
 

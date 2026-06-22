@@ -27,7 +27,7 @@ export async function createTamu(payload: { nama: string; jabatan: string; alama
   if (!session) return { success: false, error: "Unauthorized" };
 
   const validation = tamuPayloadSchema.safeParse(payload);
-  if (!validation.success) return { success: false, error: validation.error.errors[0].message };
+  if (!validation.success) return { success: false, error: validation.error.issues[0].message };
 
   try {
     // Generate ID: Tamu_yyyyMMddHHmmss_[sesi]
@@ -67,7 +67,7 @@ export async function updateTamu(id: string, payload: { nama: string; jabatan: s
   if (!session) return { success: false, error: "Unauthorized" };
 
   const validation = tamuPayloadSchema.safeParse(payload);
-  if (!validation.success) return { success: false, error: validation.error.errors[0].message };
+  if (!validation.success) return { success: false, error: validation.error.issues[0].message };
 
   try {
     const supabaseAdmin = await createSupabaseAdminClient();
