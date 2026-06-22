@@ -477,7 +477,6 @@ export default function ManajemenAdminClient({
                         {admin.email}
                       </span>
                     </div>
-                    </div>
                   </div>
                   
                   <div className="flex items-center gap-6 mt-1">
