@@ -106,7 +106,7 @@ export default function SlideSettingsForm({ initialData }: { initialData?: Recor
 
 
   return (
-    <form onSubmit={handleSaveWarna} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <form onSubmit={handleSaveWarna} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-24 sm:pb-0">
       <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
 
         {/* Header */}
@@ -329,8 +329,7 @@ export default function SlideSettingsForm({ initialData }: { initialData?: Recor
       </div>
 
       {/* Action Bar */}
-      <div className="pt-6 mt-4 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex-1 w-full" />
+      <div className="fixed bottom-0 left-0 right-0 sm:static sm:bottom-auto sm:left-auto sm:right-auto z-40 bg-[var(--color-bg)]/80 sm:bg-transparent backdrop-blur-xl sm:backdrop-blur-none border-t border-[var(--color-border)] sm:border-t-0 px-4 py-3 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:p-0 sm:pb-0 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] sm:shadow-none sm:mt-8 sm:flex sm:flex-row items-center justify-end gap-4 mt-8">
         <button
           type="submit"
           disabled={isSaving}

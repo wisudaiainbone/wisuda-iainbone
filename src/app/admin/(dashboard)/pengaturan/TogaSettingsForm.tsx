@@ -61,7 +61,7 @@ export default function TogaSettingsForm({ activePeriode }: { activePeriode: any
   if (!activePeriode) return null;
 
   return (
-    <form onSubmit={handleSave} className="w-full space-y-8">
+    <form onSubmit={handleSave} className="w-full space-y-8 pb-24 sm:pb-0">
       {message && (
         <div className={`p-4 rounded-xl flex items-center gap-2 text-sm font-bold shadow-sm ${message.type === 'success' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800'}`}>
           <AlertCircle size={16} />
@@ -115,8 +115,7 @@ export default function TogaSettingsForm({ activePeriode }: { activePeriode: any
       </div>
 
       {/* Action Bar */}
-      <div className="pt-6 mt-8 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex-1 w-full"></div>
+      <div className="fixed bottom-0 left-0 right-0 sm:static sm:bottom-auto sm:left-auto sm:right-auto z-40 bg-[var(--color-bg)]/80 sm:bg-transparent backdrop-blur-xl sm:backdrop-blur-none border-t border-[var(--color-border)] sm:border-t-0 px-4 py-3 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:p-0 sm:pb-0 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] sm:shadow-none sm:mt-8 sm:flex sm:flex-row items-center justify-end gap-4 mt-8">
         <button
           type="submit"
           disabled={isLoading}

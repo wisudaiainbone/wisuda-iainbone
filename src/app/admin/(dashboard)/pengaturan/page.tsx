@@ -217,45 +217,35 @@ export default function AdminPengaturanPage() {
   return (
     <div className="flex flex-col lg:flex-row gap-6 w-full items-start pb-10">
       {/* Kolom Kiri (Menu) - 10% */}
-      <div className="w-full lg:w-[10%] flex-shrink-0 sticky top-6">
-        <div className="flex flex-col gap-4 py-2">
-          <button
-            onClick={() => setActiveTab('general')}
-            className={`text-left text-sm font-bold transition-colors ${activeTab === 'general' ? 'text-emerald-600 dark:text-emerald-400' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'}`}
-          >
-            General
-          </button>
-          <button
-            onClick={() => setActiveTab('prestasi')}
-            className={`text-left text-sm font-bold transition-colors ${activeTab === 'prestasi' ? 'text-emerald-600 dark:text-emerald-400' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'}`}
-          >
-            Prestasi
-          </button>
-          <button
-            onClick={() => setActiveTab('toga')}
-            className={`text-left text-sm font-bold transition-colors ${activeTab === 'toga' ? 'text-emerald-600 dark:text-emerald-400' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'}`}
-          >
-            Toga
-          </button>
-          <button
-            onClick={() => setActiveTab('tamu')}
-            className={`text-left text-sm font-bold transition-colors ${activeTab === 'tamu' ? 'text-emerald-600 dark:text-emerald-400' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'}`}
-          >
-            Tamu
-          </button>
-          <button
-            onClick={() => setActiveTab('slide')}
-            className={`text-left text-sm font-bold transition-colors ${activeTab === 'slide' ? 'text-emerald-600 dark:text-emerald-400' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'}`}
-          >
-            Slide
-          </button>
+      <div className="w-full lg:w-[10%] flex-shrink-0 lg:sticky lg:top-6">
+        <div className="flex items-center lg:items-start lg:flex-col gap-2 lg:gap-4 py-2 w-full overflow-x-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          {[
+            { id: 'general', label: 'General' },
+            { id: 'prestasi', label: 'Prestasi' },
+            { id: 'toga', label: 'Toga' },
+            { id: 'tamu', label: 'Tamu' },
+            { id: 'slide', label: 'Slide' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`shrink-0 px-4 h-9 rounded-full text-xs font-semibold border transition-all lg:px-0 lg:h-auto lg:rounded-none lg:text-sm lg:font-bold lg:border-none lg:text-left
+                ${activeTab === tab.id
+                  ? 'bg-emerald-600 lg:bg-transparent text-white lg:text-emerald-600 dark:lg:text-emerald-400 border-emerald-600'
+                  : 'bg-[var(--color-surface)] lg:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] lg:hover:bg-transparent'
+                }
+              `}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Kolom Kanan (Konten) - 90% */}
       <div className="w-full lg:w-[90%] flex-1">
         {activeTab === 'general' && (
-          <form onSubmit={handleSave} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <form onSubmit={handleSave} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-24 sm:pb-0">
             <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
 
               {/* Password Default */}
@@ -517,9 +507,7 @@ export default function AdminPengaturanPage() {
             </div>
 
             {/* Action Bar */}
-            <div className="pt-6 mt-8 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex-1 w-full">
-              </div>
+            <div className="fixed bottom-0 left-0 right-0 sm:static sm:bottom-auto sm:left-auto sm:right-auto z-40 bg-[var(--color-bg)]/80 sm:bg-transparent backdrop-blur-xl sm:backdrop-blur-none border-t border-[var(--color-border)] sm:border-t-0 px-4 py-3 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:p-0 sm:pb-0 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] sm:shadow-none sm:mt-8 sm:flex sm:flex-row items-center justify-end gap-4 mt-8">
               <button
                 type="submit"
                 disabled={isSaving}
@@ -533,7 +521,7 @@ export default function AdminPengaturanPage() {
         )}
 
         {activeTab === 'prestasi' && (
-          <form onSubmit={handleSavePrestasi} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <form onSubmit={handleSavePrestasi} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-24 sm:pb-0">
             <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
 
               {/* === Background Upload === */}
@@ -827,9 +815,7 @@ export default function AdminPengaturanPage() {
             </div>
             
             {/* Action Bar */}
-            <div className="pt-6 mt-8 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex-1 w-full">
-              </div>
+            <div className="fixed bottom-0 left-0 right-0 sm:static sm:bottom-auto sm:left-auto sm:right-auto z-40 bg-[var(--color-bg)]/80 sm:bg-transparent backdrop-blur-xl sm:backdrop-blur-none border-t border-[var(--color-border)] sm:border-t-0 px-4 py-3 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:p-0 sm:pb-0 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] sm:shadow-none sm:mt-8 sm:flex sm:flex-row items-center justify-end gap-4 mt-8">
               <button
                 type="submit"
                 disabled={isSaving}
