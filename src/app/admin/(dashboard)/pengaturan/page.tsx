@@ -248,7 +248,7 @@ export default function AdminPengaturanPage() {
 
       {/* Kolom Kanan (Konten) - 90% */}
       <div className="w-full lg:w-[90%] flex-1">
-        {activeTab === 'general' && (
+        <div className={activeTab === 'general' ? 'block' : 'hidden'}>
           <form onSubmit={handleSave} className="w-full space-y-8">
             <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
 
@@ -524,9 +524,9 @@ export default function AdminPengaturanPage() {
               </button>
             </div>
           </form>
-        )}
+        </div>
 
-        {activeTab === 'prestasi' && (
+        <div className={activeTab === 'prestasi' ? 'block' : 'hidden'}>
           <form onSubmit={handleSavePrestasi} className="w-full space-y-8">
             <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
 
@@ -834,9 +834,9 @@ export default function AdminPengaturanPage() {
               </button>
             </div>
           </form>
-        )}
+        </div>
 
-        {activeTab === 'toga' && (
+        <div className={activeTab === 'toga' ? 'block' : 'hidden'}>
           <div className="w-full">
             {activePeriode ? (
               <TogaSettingsForm activePeriode={activePeriode} />
@@ -847,13 +847,13 @@ export default function AdminPengaturanPage() {
               </div>
             )}
           </div>
-        )}
-        {activeTab === 'tamu' && (
+        </div>
+        <div className={activeTab === 'tamu' ? 'block' : 'hidden'}>
           <TamuSettingsForm />
-        )}
-        {activeTab === 'slide' && (
+        </div>
+        <div className={activeTab === 'slide' ? 'block' : 'hidden'}>
           <SlideSettingsForm />
-        )}
+        </div>
       </div>
     </div>
   );
