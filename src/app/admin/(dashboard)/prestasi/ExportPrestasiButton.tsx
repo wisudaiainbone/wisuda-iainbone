@@ -197,10 +197,10 @@ export default function ExportPrestasiButton({ data, overrides, periode }: Props
       onClick={handleExport}
       disabled={isExporting || data.length === 0}
       title="Export XLSX"
-      className="flex items-center justify-center w-10 sm:w-auto gap-1.5 sm:px-3 h-10 sm:h-9 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm sm:text-xs font-semibold transition-colors shadow-sm shadow-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+      className="flex items-center justify-center w-10 sm:w-32 gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
     >
       {isExporting ? <Loader2 size={16} className="animate-spin shrink-0" /> : <FileSpreadsheet size={16} className="shrink-0" />}
-      <span className="hidden sm:inline">{isExporting ? "Memproses..." : "Export XLSX"}</span>
+      <span className="hidden sm:inline">{isExporting ? "Memproses..." : "Export"}</span>
     </button>
   );
 }

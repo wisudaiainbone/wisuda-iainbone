@@ -114,7 +114,7 @@ export default async function AdminPrestasiPage(props: PageProps) {
           
           <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
             {/* Periode Dropdown */}
-            <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 sm:h-9 flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 flex-1 min-w-0">
               <Filter size={13} className="text-[var(--color-text-muted)] shrink-0" />
               <select className="text-sm sm:text-xs font-medium bg-transparent text-[var(--color-text)] outline-none flex-1 min-w-0">
                 {activePeriodes.map(p => (
@@ -125,7 +125,7 @@ export default async function AdminPrestasiPage(props: PageProps) {
             </div>
 
             {/* Export XLSX Button */}
-            <div className="shrink-0 flex h-10 sm:h-9">
+            <div className="shrink-0 flex h-10">
               <ExportPrestasiButton data={targetWisudawan} overrides={overrides} periode={filterPeriode} />
             </div>
           </div>
