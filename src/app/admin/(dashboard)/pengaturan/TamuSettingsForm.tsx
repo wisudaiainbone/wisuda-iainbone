@@ -335,15 +335,17 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
       </div>
 
       {/* Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 sm:static sm:bottom-auto sm:left-auto sm:right-auto z-40 bg-[var(--color-bg)]/80 sm:bg-transparent backdrop-blur-xl sm:backdrop-blur-none border-t border-[var(--color-border)] sm:border-t-0 px-4 py-3 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:p-0 sm:pb-0 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] sm:shadow-none sm:mt-8 sm:flex sm:flex-row items-center justify-end gap-4 mt-8">
-        <button
-          type="submit"
-          disabled={isSaving}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-xl text-sm font-semibold transition-all shadow-md shadow-emerald-900/20 active:scale-95"
-        >
-          {isSaving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
-          {isSaving ? "Menyimpan..." : "Simpan Pengaturan Tamu"}
-        </button>
+      <div className="fixed sm:static bottom-20 sm:bottom-auto left-0 right-0 sm:left-auto sm:right-auto px-4 sm:px-0 z-40 flex sm:block pointer-events-none sm:pointer-events-auto sm:mt-8 sm:pt-6 sm:border-t sm:border-[var(--color-border)]">
+        <div className="flex w-full sm:w-auto items-center sm:justify-end pointer-events-auto">
+          <button
+            type="submit"
+            disabled={isSaving}
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all shadow-md shadow-emerald-900/20 active:scale-95"
+          >
+            {isSaving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
+            {isSaving ? "Menyimpan..." : "Simpan Pengaturan Tamu"}
+          </button>
+        </div>
       </div>
     </form>
   );
