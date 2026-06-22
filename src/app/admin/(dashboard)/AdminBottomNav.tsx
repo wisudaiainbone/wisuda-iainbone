@@ -33,13 +33,10 @@ export default function AdminBottomNav({ role }: Props) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (searchParams.get("menu") === "open") {
-      setIsMobileMenuOpen(true);
-      const newParams = new URLSearchParams(searchParams.toString());
-      newParams.delete("menu");
-      router.replace(`${pathname}${newParams.toString() ? `?${newParams.toString()}` : ""}`);
-    }
-  }, [searchParams, pathname, router]);
+    const handleOpenMenu = () => setIsMobileMenuOpen(true);
+    window.addEventListener("openMobileMenu", handleOpenMenu);
+    return () => window.removeEventListener("openMobileMenu", handleOpenMenu);
+  }, []);
 
   const isScanTab = searchParams.get("tab") === "scan" || pathname.startsWith("/admin/kehadiran");
 
