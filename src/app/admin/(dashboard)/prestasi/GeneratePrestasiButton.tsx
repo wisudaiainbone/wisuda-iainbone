@@ -35,7 +35,7 @@ export default function GeneratePrestasiButton({ periode, isGenerated }: Props) 
       onClick={handleGenerate}
       disabled={isPending || !periode}
       title={isGenerated ? "Generate ulang peringkat prestasi ke database" : "Generate peringkat prestasi ke database"}
-      className={`flex items-center justify-center gap-1.5 h-10 sm:h-9 px-3 sm:px-3 rounded-lg text-sm sm:text-xs font-semibold transition-colors shadow-sm shadow-amber-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap ${
+      className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-amber-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap ${
         isGenerated
           ? "bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white"
           : "bg-violet-600 hover:bg-violet-700 active:bg-violet-800 text-white"
