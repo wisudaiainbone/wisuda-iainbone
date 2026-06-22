@@ -197,6 +197,19 @@ export default function ManajemenAdminClient({
     }).format(new Date(dateStr));
   };
 
+  const roleOrder: Record<AdminRole, number> = {
+    superadmin: 1,
+    admin_institut: 2,
+    admin_unit: 3,
+    admin_absensi: 4,
+  };
+
+  const sortedAdmins = [...admins].sort((a, b) => {
+    const orderA = roleOrder[a.role as AdminRole] || 99;
+    const orderB = roleOrder[b.role as AdminRole] || 99;
+    return orderA - orderB;
+  });
+
   return (
     <div className="space-y-6">
       {/* Form Tambah Admin */}
@@ -322,7 +335,7 @@ export default function ManajemenAdminClient({
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
-              {admins.map((admin) => {
+              {sortedAdmins.map((admin) => {
                 const meta = ROLE_META[admin.role as AdminRole] ?? ROLE_META.admin_unit;
                 return (
                   <tr key={admin.id} className="hover:bg-[var(--color-bg-secondary)] transition-colors">
@@ -443,7 +456,7 @@ export default function ManajemenAdminClient({
               <p className="text-sm">Belum ada admin terdaftar.</p>
             </div>
           ) : (
-            admins.map((admin) => {
+            sortedAdmins.map((admin) => {
               const meta = ROLE_META[admin.role as AdminRole] ?? ROLE_META.admin_unit;
               return (
                 <div key={admin.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 shadow-sm flex flex-col gap-2 relative">

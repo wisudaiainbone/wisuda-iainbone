@@ -5,7 +5,7 @@ import type { ProdiItem } from "@/actions/prodi";
 import { updateProdiOrder } from "@/actions/prodi";
 import ProdiTableRow from "./ProdiTableRow";
 import { useToast } from "@/components/ui/Toast";
-import { Save, X, Loader2, Pencil, GripVertical } from "lucide-react";
+import { Save, X, Loader2, Pencil, GripVertical, Plus } from "lucide-react";
 import ProdiDialog from "./ProdiDialog";
 import DeleteProdiButton from "./DeleteProdiButton";
 
@@ -77,33 +77,84 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
 
   return (
     <div className="bg-transparent md:bg-[var(--color-surface)] md:rounded-2xl border-none md:border md:border-[var(--color-border)] shadow-none md:shadow-sm overflow-hidden flex flex-col gap-4 md:gap-0">
-      {/* Sticky/Floating Save/Cancel Bar */}
+      {/* Sticky Save/Cancel Bar (Desktop) */}
       {isDirty && (
-        <div className="fixed md:static bottom-20 md:bottom-auto left-0 right-0 px-4 md:px-0 z-50 pointer-events-none md:pointer-events-auto">
-          <div className="pointer-events-auto bg-emerald-50 dark:bg-[#06241a]/90 backdrop-blur-md md:backdrop-blur-none border border-emerald-200 dark:border-emerald-800/50 p-4 md:p-3 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0 animate-in slide-in-from-bottom-4 md:slide-in-from-top-2 rounded-2xl md:rounded-none shadow-xl md:shadow-none">
-            <div className="text-sm font-medium text-emerald-800 dark:text-emerald-300 flex items-center text-center md:text-left w-full md:w-auto justify-center md:justify-start">
-              Urutan tabel telah diubah. Simpan perubahan?
-            </div>
-            <div className="flex items-center justify-end gap-2 w-full md:w-auto">
+        <div className="hidden md:flex bg-emerald-50 dark:bg-emerald-900/20 border-b border border-emerald-100 dark:border-emerald-800/30 p-3 items-center justify-between animate-in slide-in-from-top-2 rounded-t-2xl">
+          <div className="text-sm font-medium text-emerald-800 dark:text-emerald-300 px-3 flex items-center gap-2">
+            Urutan tabel telah diubah. Simpan perubahan?
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleCancel}
+              disabled={isPending}
+              className="px-3 py-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 rounded-lg transition-colors disabled:opacity-50"
+            >
+              <div className="flex items-center gap-1.5">
+                <X size={16} /> Batal
+              </div>
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={isPending}
+              className="px-4 py-1.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1.5"
+            >
+              {isPending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+              Simpan
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Action Bar (Mobile Only) */}
+      <div className="md:hidden fixed bottom-20 left-0 right-0 px-4 z-50 pointer-events-none flex items-center justify-center">
+        <div className="flex w-full items-center justify-end gap-2 pointer-events-auto">
+          {isDirty && (
+            <>
               <button
                 onClick={handleCancel}
                 disabled={isPending}
-                className="flex-1 md:flex-none px-3 py-2.5 md:py-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 rounded-xl md:rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
+                className="flex-1 flex items-center justify-center px-5 h-[42px] text-sm font-bold rounded-full transition-colors bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm border border-[var(--color-border)]"
               >
-                <X size={16} /> Batal
+                Batal
               </button>
               <button
                 onClick={handleSave}
                 disabled={isPending}
-                className="flex-1 md:flex-none px-4 py-2.5 md:py-1.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl md:rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-900/20 active:scale-95"
+                className="flex-1 flex items-center justify-center px-5 h-[42px] text-sm font-bold rounded-full transition-colors bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-95"
               >
-                {isPending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                {isPending ? <Loader2 size={16} className="animate-spin mr-1.5" /> : null}
                 Simpan
               </button>
-            </div>
-          </div>
+            </>
+          )}
+
+          <ProdiDialog 
+            existingFakultas={existingFakultas}
+            trigger={
+              <button 
+                title="Tambah Data Prodi"
+                className={`${isDirty ? 'w-[42px] shrink-0' : 'w-14 shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30'} flex items-center justify-center ${isDirty ? 'h-[42px] rounded-full bg-emerald-600 hover:bg-emerald-700' : 'h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 transition-transform hover:scale-105'} text-white shadow-md active:scale-95 transition-colors`}
+              >
+                <Plus size={isDirty ? 20 : 24} />
+              </button>
+            } 
+          />
         </div>
-      )}
+      </div>
+
+      {/* Desktop FAB Tambah Data */}
+      <div className="hidden md:flex fixed bottom-8 right-8 z-50">
+        <ProdiDialog 
+          existingFakultas={existingFakultas}
+          trigger={
+          <button 
+            title="Tambah Data Prodi"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+          >
+            <Plus size={24} />
+          </button>
+        } />
+      </div>
 
       <div className="overflow-x-auto hidden md:block">
         <table className="w-full text-sm text-left">
