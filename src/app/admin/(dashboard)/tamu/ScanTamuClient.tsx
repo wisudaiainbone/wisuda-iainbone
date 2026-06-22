@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { warmUpTamuCache } from "@/actions/scanCache";
 import { getRecentScans, getAllTamuScans } from "@/actions/scanHistory";
+import Link from "next/link";
 import { Html5Qrcode } from "html5-qrcode";
 import { Camera, CameraOff, CheckCircle2, XCircle, AlertCircle, RefreshCw, Users, Search, Database, ClipboardList, X, FileDown } from "lucide-react";
 
@@ -299,12 +300,13 @@ export default function ScanTamuClient({ initialMeta, isPresensiOnly = false }: 
         {/* ─── Tombol Navigasi Alternatif ─── */}
         {isPresensiOnly ? (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:left-4 lg:translate-x-0 z-30">
-            <a
+            <Link
               href="/admin/kehadiran"
+              prefetch={true}
               className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white shadow-lg rounded-full font-bold text-sm transition-colors whitespace-nowrap"
             >
               Scan Wisudawan
-            </a>
+            </Link>
           </div>
         ) : (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:left-4 lg:translate-x-0 z-30">
