@@ -161,14 +161,16 @@ export default function AdminPerbaikanPage() {
         </div>
 
         {/* Search */}
-        <div className="relative w-full sm:w-64 ml-auto">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
+        <div className="relative w-full sm:w-64 ml-auto shrink-0">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-[var(--color-text-muted)]" />
+          </div>
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari NIM atau nama..."
-            className="w-full pl-8 pr-3 h-9 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+            placeholder="Cari NIM atau Nama..."
+            className="w-full pl-9 pr-4 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all outline-none h-10"
           />
         </div>
       </div>
