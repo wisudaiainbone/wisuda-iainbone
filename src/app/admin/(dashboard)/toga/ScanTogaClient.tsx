@@ -321,7 +321,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
       <div className="relative w-full lg:w-1/2 h-full min-h-[50vh] overflow-hidden rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] mx-auto max-w-2xl lg:max-w-none flex-shrink-0 flex items-center justify-center">
 
         {/* ─── Info Badges (Selalu Tampil) ─── */}
-        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center justify-center gap-2 pointer-events-none w-full px-4">
+        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center justify-center gap-2 pointer-events-none w-full px-4">
           {meta && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
               <CheckCircle2 size={14} className="text-emerald-400" />
@@ -384,7 +384,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
       </div>
 
       {/* ─── Floating Actions (terkurung di kolom kiri/kamera) ─── */}
-      <div className="absolute bottom-6 left-0 w-full lg:w-1/2 z-30 px-4">
+      <div className="absolute bottom-10 left-0 w-full lg:w-1/2 z-30 px-4 pb-safe">
         {isCameraActive ? (
           <div className="w-full max-w-lg mx-auto flex items-center gap-2">
             <input

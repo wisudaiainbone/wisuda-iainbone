@@ -364,7 +364,7 @@ export default function ScanKehadiranClient({ initialMeta, isPresensiOnly = fals
         )}
 
         {/* ─── Info Badges (Selalu Tampil) ─── */}
-        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center justify-center gap-2 pointer-events-none w-full px-4">
+        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center justify-center gap-2 pointer-events-none w-full px-4">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
             <Users size={14} className="text-emerald-400" />
             <span className="text-white text-xs font-bold">{sesiLabel}</span>
@@ -421,7 +421,7 @@ export default function ScanKehadiranClient({ initialMeta, isPresensiOnly = fals
       </div>
 
       {/* ─── Floating Actions (terkurung di kolom kiri/kamera) ─── */}
-      <div className="absolute bottom-6 left-0 w-full lg:w-1/2 z-30 px-4">
+      <div className="absolute bottom-10 left-0 w-full lg:w-1/2 z-30 px-4 pb-safe">
         {isCameraActive ? (
           <div className="w-full max-w-lg mx-auto flex items-center gap-2">
             <input
