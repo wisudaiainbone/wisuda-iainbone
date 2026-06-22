@@ -27,6 +27,8 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
     }
   }, [initialProdiList, isDirty]);
 
+  const existingFakultas = Array.from(new Set(items.map(p => p.fakultas).filter(Boolean)));
+
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedItemIndex(index);
     if (e.dataTransfer) {
@@ -129,6 +131,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
                   key={prodi.id} 
                   prodi={prodi} 
                   index={index}
+                  existingFakultas={existingFakultas}
                   onDragStart={(e) => handleDragStart(e, index)}
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDragEnd={handleDragEnd}
@@ -187,6 +190,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
               <div className="flex items-center justify-end gap-2 mt-2 pt-3 border-t border-[var(--color-border)]">
                 <ProdiDialog
                   prodi={prodi}
+                  existingFakultas={existingFakultas}
                   trigger={
                     <button
                       title="Edit Prodi"

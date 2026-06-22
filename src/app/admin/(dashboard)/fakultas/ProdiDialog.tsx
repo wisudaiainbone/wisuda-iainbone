@@ -7,9 +7,10 @@ import { createProdi, updateProdi, type ProdiItem } from "@/actions/prodi";
 interface Props {
   trigger: React.ReactNode;
   prodi?: ProdiItem;
+  existingFakultas?: string[];
 }
 
-export default function ProdiDialog({ trigger, prodi }: Props) {
+export default function ProdiDialog({ trigger, prodi, existingFakultas = [] }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -83,6 +84,7 @@ export default function ProdiDialog({ trigger, prodi }: Props) {
               <div className="space-y-1.5">
                 <label className="text-sm font-semibold text-[var(--color-text)]">Nama Fakultas</label>
                 <input
+                  list="fakultas-list"
                   type="text"
                   required
                   value={formData.fakultas}
@@ -91,6 +93,13 @@ export default function ProdiDialog({ trigger, prodi }: Props) {
                   className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all"
                   disabled={isPending}
                 />
+                {existingFakultas.length > 0 && (
+                  <datalist id="fakultas-list">
+                    {existingFakultas.map(fak => (
+                      <option key={fak} value={fak} />
+                    ))}
+                  </datalist>
+                )}
               </div>
 
               <div className="space-y-1.5">

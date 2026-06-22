@@ -6,12 +6,13 @@ import DeleteProdiButton from "./DeleteProdiButton";
 interface Props {
   prodi: ProdiItem;
   index: number;
+  existingFakultas?: string[];
   onDragStart?: (e: React.DragEvent) => void;
   onDragOver?: (e: React.DragEvent) => void;
   onDragEnd?: (e: React.DragEvent) => void;
 }
 
-export default function ProdiTableRow({ prodi, index, onDragStart, onDragOver, onDragEnd }: Props) {
+export default function ProdiTableRow({ prodi, index, existingFakultas = [], onDragStart, onDragOver, onDragEnd }: Props) {
   return (
     <tr 
       className="hover:bg-[var(--color-bg-secondary)] transition-colors group cursor-grab active:cursor-grabbing"
@@ -51,6 +52,7 @@ export default function ProdiTableRow({ prodi, index, onDragStart, onDragOver, o
         <div className="flex items-center justify-end gap-2">
           <ProdiDialog
             prodi={prodi}
+            existingFakultas={existingFakultas}
             trigger={
               <button
                 title="Edit Prodi"
