@@ -1,7 +1,6 @@
 "use client";
 
-import { Search, X, Filter, ChevronDown, ChevronUp } from "lucide-react";
-import WisudawanMobileFAB from "./WisudawanMobileFAB";
+import { Search, Filter, X, ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTransition, useState, useEffect, useRef } from "react";
 
@@ -213,11 +212,11 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
       </div>
       </div>
 
-      {/* Mobile Action Buttons (Bottom Sheet FAB) */}
+      {/* Mobile Action Buttons (Below Filters) */}
       {children && (
-        <WisudawanMobileFAB>
+        <div className="xl:hidden flex flex-row flex-wrap items-stretch gap-2 w-full shrink-0 [&>*]:flex-auto [&>*]:sm:flex-none">
           {children}
-        </WisudawanMobileFAB>
+        </div>
       )}
     </div>
   );
