@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Users, Settings, Menu, X,
   ShieldCheck, Calendar, Shirt, Building2, FileEdit, Trophy, UserCheck, Ticket, BookOpen,
@@ -29,7 +29,17 @@ type Props = {
 export default function AdminBottomNav({ role }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("menu") === "open") {
+      setIsMobileMenuOpen(true);
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.delete("menu");
+      router.replace(`${pathname}${newParams.toString() ? `?${newParams.toString()}` : ""}`);
+    }
+  }, [searchParams, pathname, router]);
 
   const isScanTab = searchParams.get("tab") === "scan" || pathname.startsWith("/admin/kehadiran");
 

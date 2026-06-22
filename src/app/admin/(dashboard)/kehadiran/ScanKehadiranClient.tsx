@@ -352,13 +352,22 @@ export default function ScanKehadiranClient({ initialMeta, isPresensiOnly = fals
       <div className="relative w-full lg:w-1/2 h-full min-h-[50vh] overflow-hidden rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] mx-auto max-w-2xl lg:max-w-none flex-shrink-0 flex items-center justify-center">
 
         {/* ─── Tombol Navigasi Alternatif ─── */}
-        {isPresensiOnly && (
+        {isPresensiOnly ? (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:left-4 lg:translate-x-0 z-30">
             <a
               href="/admin/tamu?tab=scan"
               className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white shadow-lg rounded-full font-bold text-sm transition-colors whitespace-nowrap"
             >
               Scan Tamu
+            </a>
+          </div>
+        ) : (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:left-4 lg:translate-x-0 z-30 lg:hidden">
+            <a
+              href="?menu=open"
+              className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white shadow-lg rounded-full font-bold text-sm transition-colors whitespace-nowrap"
+            >
+              Menu
             </a>
           </div>
         )}
