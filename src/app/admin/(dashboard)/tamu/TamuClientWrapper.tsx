@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Plus } from "lucide-react";
 
 type Props = {
   initialTab: string;
@@ -72,6 +73,17 @@ export default function TamuClientWrapper({
                 <span className="hidden sm:inline">Scan Kehadiran</span>
                 <span className="sm:hidden">Scan</span>
               </button>
+              
+              {/* Mobile FAB Tambah */}
+              {activeTab === "daftar" && (
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent("openAddTamuModal"))}
+                  className="sm:hidden flex items-center justify-center w-[42px] h-[42px] rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-transform active:scale-95 shrink-0"
+                  title="Tambah Tamu"
+                >
+                  <Plus size={20} />
+                </button>
+              )}
             </div>
           </div>
         )}

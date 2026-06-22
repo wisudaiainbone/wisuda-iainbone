@@ -1,7 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Search, FileSpreadsheet, Printer, Edit2, Trash2, X, Check, Loader2, RefreshCw } from "lucide-react";
+import {
+  Plus,
+  Search,
+  FileSpreadsheet,
+  Printer,
+  Edit2,
+  Trash2,
+  X,
+  Check,
+  Loader2,
+  RefreshCw,
+} from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { createTamu, updateTamu, deleteTamu } from "@/actions/tamu";
 import { pdf } from "@react-pdf/renderer";
@@ -23,14 +34,23 @@ type Props = {
   settings: any;
 };
 
-export default function TamuListClient({ initialData, periode, settings }: Props) {
+export default function TamuListClient({
+  initialData,
+  periode,
+  settings,
+}: Props) {
   const { showToast } = useToast();
   const [data, setData] = useState<TamuItem[]>(initialData);
-  
+
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ nama: "", jabatan: "", alamat: "", sesi: "Sesi Satu" });
+  const [formData, setFormData] = useState({
+    nama: "",
+    jabatan: "",
+    alamat: "",
+    sesi: "Sesi Satu",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Delete Modal State
@@ -41,12 +61,21 @@ export default function TamuListClient({ initialData, periode, settings }: Props
   // QR Modal State
   const [qrModalId, setQrModalId] = useState<string | null>(null);
 
-
-
+  useEffect(() => {
+    const handleOpenAddModal = () => handleOpenModal();
+    window.addEventListener("openAddTamuModal", handleOpenAddModal);
+    return () =>
+      window.removeEventListener("openAddTamuModal", handleOpenAddModal);
+  }, []);
   const handleOpenModal = (tamu?: TamuItem) => {
     if (tamu) {
       setEditingId(tamu.id);
-      setFormData({ nama: tamu.nama, jabatan: tamu.jabatan || "", alamat: tamu.alamat || "", sesi: tamu.sesi });
+      setFormData({
+        nama: tamu.nama,
+        jabatan: tamu.jabatan || "",
+        alamat: tamu.alamat || "",
+        sesi: tamu.sesi,
+      });
     } else {
       setEditingId(null);
       setFormData({ nama: "", jabatan: "", alamat: "", sesi: "Sesi Satu" });
@@ -57,18 +86,20 @@ export default function TamuListClient({ initialData, periode, settings }: Props
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       if (editingId) {
         const res = await updateTamu(editingId, { ...formData });
         if (!res.success) throw new Error(res.error);
-        
-        setData(prev => prev.map(t => t.id === editingId ? { ...t, ...formData } : t));
+
+        setData((prev) =>
+          prev.map((t) => (t.id === editingId ? { ...t, ...formData } : t)),
+        );
         showToast("Tamu berhasil diperbarui!", "success");
       } else {
         const res = await createTamu({ ...formData });
         if (!res.success) throw new Error(res.error);
-        
+
         // We do a simple reload to get the new ID from DB, since we generate ID in server
         window.location.reload();
       }
@@ -86,7 +117,7 @@ export default function TamuListClient({ initialData, periode, settings }: Props
     try {
       const res = await deleteTamu(deleteId);
       if (!res.success) throw new Error(res.error);
-      setData(prev => prev.filter(t => t.id !== deleteId));
+      setData((prev) => prev.filter((t) => t.id !== deleteId));
       showToast("Tamu dihapus.", "success");
       setDeleteId(null);
     } catch (err: any) {
@@ -100,16 +131,20 @@ export default function TamuListClient({ initialData, periode, settings }: Props
     setIsPrintingSingle(tamu.id);
     try {
       const blob = await pdf(
-        <UndanganDocument data={[tamu]} settings={settings} periode={periode} />
+        <UndanganDocument
+          data={[tamu]}
+          settings={settings}
+          periode={periode}
+        />,
       ).toBlob();
-      
+
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `Undangan_Tamu_${tamu.nama.replace(/\s+/g, '_')}.pdf`;
+      link.download = `Undangan_Tamu_${tamu.nama.replace(/\s+/g, "_")}.pdf`;
       link.click();
       URL.revokeObjectURL(url);
-      
+
       showToast("Undangan berhasil diprint!", "success");
     } catch (err: any) {
       showToast("Gagal memproses PDF: " + err.message, "error");
@@ -120,8 +155,6 @@ export default function TamuListClient({ initialData, periode, settings }: Props
 
   return (
     <div className="space-y-6">
-
-
       {/* Tabel */}
       <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
@@ -139,25 +172,40 @@ export default function TamuListClient({ initialData, periode, settings }: Props
             <tbody className="divide-y divide-[var(--color-border)]">
               {data.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--color-text-muted)]">
+                  <td
+                    colSpan={6}
+                    className="px-6 py-12 text-center text-[var(--color-text-muted)]"
+                  >
                     Belum ada data tamu
                   </td>
                 </tr>
               ) : (
                 data.map((tamu) => (
-                  <tr key={tamu.id} className="hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+                  <tr
+                    key={tamu.id}
+                    className="hover:bg-[var(--color-bg-secondary)]/50 transition-colors"
+                  >
                     <td className="px-6 py-4">
-                      <div 
+                      <div
                         className="w-12 h-12 bg-white p-1 rounded-lg border border-[var(--color-border)] shadow-sm shrink-0 flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
                         onClick={() => setQrModalId(tamu.id)}
                         title="Perbesar QR Code"
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={tamu.qr_code || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${tamu.id}`} alt="QR Code" className="w-full h-full object-contain mix-blend-multiply" />
+                        <img
+                          src={
+                            tamu.qr_code ||
+                            `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${tamu.id}`
+                          }
+                          alt="QR Code"
+                          className="w-full h-full object-contain mix-blend-multiply"
+                        />
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="font-bold text-[var(--color-text)]">{tamu.nama}</div>
+                      <div className="font-bold text-[var(--color-text)]">
+                        {tamu.nama}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-[var(--color-text-subtle)]">
                       {tamu.jabatan || "-"}
@@ -166,9 +214,13 @@ export default function TamuListClient({ initialData, periode, settings }: Props
                       {tamu.alamat || "-"}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
-                        tamu.sesi === "Sesi Satu" ? "bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400" : "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400"
-                      }`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
+                          tamu.sesi === "Sesi Satu"
+                            ? "bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400"
+                            : "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400"
+                        }`}
+                      >
                         {tamu.sesi}
                       </span>
                     </td>
@@ -179,7 +231,11 @@ export default function TamuListClient({ initialData, periode, settings }: Props
                         className="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 dark:text-indigo-400 rounded-lg transition-colors disabled:opacity-50"
                         title="Print Undangan"
                       >
-                        {isPrintingSingle === tamu.id ? <Loader2 size={16} className="animate-spin" /> : <Printer size={16} />}
+                        {isPrintingSingle === tamu.id ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                          <Printer size={16} />
+                        )}
                       </button>
                       <button
                         onClick={() => handleOpenModal(tamu)}
@@ -204,8 +260,8 @@ export default function TamuListClient({ initialData, periode, settings }: Props
         </div>
       </div>
 
-      {/* FAB Tambah */}
-      <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50">
+      {/* FAB Tambah (Hidden on Mobile) */}
+      <div className="hidden sm:flex fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50">
         <button
           onClick={() => handleOpenModal()}
           className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
@@ -230,47 +286,63 @@ export default function TamuListClient({ initialData, periode, settings }: Props
                 <X size={20} />
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-[var(--color-text)]">Nama Lengkap</label>
+                <label className="text-sm font-semibold text-[var(--color-text)]">
+                  Nama Lengkap
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.nama}
-                  onChange={e => setFormData({...formData, nama: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, nama: e.target.value })
+                  }
                   className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none"
                   placeholder="Nama tamu..."
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-[var(--color-text)]">Jabatan / Instansi (Opsional)</label>
+                <label className="text-sm font-semibold text-[var(--color-text)]">
+                  Jabatan / Instansi (Opsional)
+                </label>
                 <input
                   type="text"
                   value={formData.jabatan}
-                  onChange={e => setFormData({...formData, jabatan: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, jabatan: e.target.value })
+                  }
                   className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none"
                   placeholder="Contoh: Bupati Bone"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-[var(--color-text)]">Alamat (Opsional)</label>
+                <label className="text-sm font-semibold text-[var(--color-text)]">
+                  Alamat (Opsional)
+                </label>
                 <input
                   type="text"
                   value={formData.alamat}
-                  onChange={e => setFormData({...formData, alamat: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, alamat: e.target.value })
+                  }
                   className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none"
                   placeholder="Contoh: Watampone"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-[var(--color-text)]">Sesi</label>
+                <label className="text-sm font-semibold text-[var(--color-text)]">
+                  Sesi
+                </label>
                 <select
                   value={formData.sesi}
-                  onChange={e => setFormData({...formData, sesi: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, sesi: e.target.value })
+                  }
                   className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none"
                 >
                   <option value="Sesi Satu">Sesi Satu</option>
@@ -291,7 +363,11 @@ export default function TamuListClient({ initialData, periode, settings }: Props
                   disabled={isSubmitting}
                   className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
+                  {isSubmitting ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Check size={16} />
+                  )}
                   Simpan
                 </button>
               </div>
@@ -307,9 +383,12 @@ export default function TamuListClient({ initialData, periode, settings }: Props
             <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 mx-auto rounded-full flex items-center justify-center mb-4">
               <Trash2 size={32} />
             </div>
-            <h3 className="text-xl font-bold text-[var(--color-text)] mb-2">Hapus Tamu?</h3>
+            <h3 className="text-xl font-bold text-[var(--color-text)] mb-2">
+              Hapus Tamu?
+            </h3>
             <p className="text-sm text-[var(--color-text-muted)] mb-6">
-              Apakah Anda yakin ingin menghapus tamu ini? Tindakan ini tidak dapat dibatalkan.
+              Apakah Anda yakin ingin menghapus tamu ini? Tindakan ini tidak
+              dapat dibatalkan.
             </p>
             <div className="flex gap-3">
               <button
@@ -324,8 +403,10 @@ export default function TamuListClient({ initialData, periode, settings }: Props
                 disabled={isDeleting}
                 className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {isDeleting ? <Loader2 size={16} className="animate-spin" /> : null}
-                {isDeleting ? 'Menghapus...' : 'Ya, Hapus'}
+                {isDeleting ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : null}
+                {isDeleting ? "Menghapus..." : "Ya, Hapus"}
               </button>
             </div>
           </div>
@@ -334,13 +415,13 @@ export default function TamuListClient({ initialData, periode, settings }: Props
 
       {/* QR Code Modal */}
       {qrModalId && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={() => setQrModalId(null)}
         >
-          <div 
+          <div
             className="bg-white p-6 rounded-2xl shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center relative"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setQrModalId(null)}
@@ -348,14 +429,18 @@ export default function TamuListClient({ initialData, periode, settings }: Props
             >
               <X size={16} />
             </button>
-            <h3 className="text-sm font-bold text-gray-800 mb-4 uppercase tracking-wider">Scan Kehadiran Tamu</h3>
+            <h3 className="text-sm font-bold text-gray-800 mb-4 uppercase tracking-wider">
+              Scan Kehadiran Tamu
+            </h3>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${qrModalId}`} 
-              alt="QR Code" 
-              className="w-64 h-64 object-contain" 
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${qrModalId}`}
+              alt="QR Code"
+              className="w-64 h-64 object-contain"
             />
-            <p className="mt-4 text-xs font-mono text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200">{qrModalId}</p>
+            <p className="mt-4 text-xs font-mono text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200">
+              {qrModalId}
+            </p>
           </div>
         </div>
       )}
