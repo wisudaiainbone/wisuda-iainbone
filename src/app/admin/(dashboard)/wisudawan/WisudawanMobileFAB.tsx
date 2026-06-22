@@ -45,7 +45,7 @@ export default function WisudawanMobileFAB({ children }: { children: React.React
       {/* Floating Action Menu (Speed Dial) */}
       <div 
         ref={menuRef}
-        className={`fixed right-4 bottom-24 md:right-8 md:bottom-28 z-[60] flex flex-col items-end gap-3 transition-all duration-300 origin-bottom ${
+        className={`fixed right-4 bottom-44 md:right-8 md:bottom-28 z-[60] flex flex-col items-end gap-3 transition-all duration-300 origin-bottom ${
           isOpen ? "scale-100 opacity-100 visible" : "scale-75 opacity-0 invisible"
         }`}
       >
@@ -56,7 +56,7 @@ export default function WisudawanMobileFAB({ children }: { children: React.React
       </div>
 
       {/* Floating Action Button */}
-      <div className={`fixed bottom-6 right-4 md:bottom-8 md:right-8 z-[70] transition-transform duration-300`}>
+      <div className={`fixed bottom-24 right-4 md:bottom-8 md:right-8 z-[70] transition-transform duration-300`}>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={`bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform ${isOpen ? "rotate-45" : "hover:scale-105 active:scale-95"}`}
