@@ -233,9 +233,10 @@ Modul pemindai QR untuk mencatat pengambilan toga. Lihat bagian **[Scan QR Toga 
 
 ### Manajemen Admin (`/admin/manajemen-admin`) — *Superadmin Only*
 - Lihat semua admin beserta role, status, unit kerja, dan waktu login terakhir.
+- **Tampilan Responsif Mobile**: Daftar admin dirender sebagai barisan Kartu (Card) dengan label Role dan Status yang disusun padat sejajar dengan tombol aksi.
 - **Tambah admin baru**: Masukkan Nama Lengkap, Email Google, Role, dan Unit Kerja (Password tidak lagi dibutuhkan karena menggunakan Google Login).
 - **Toggle aktif/nonaktif** akun admin.
-- **Ubah role** admin.
+- **Ubah role** admin melalui tombol Edit.
 - **Hapus admin** secara permanen.
 
 ### Perbaikan Data Wisudawan (`/admin/perbaikan`)

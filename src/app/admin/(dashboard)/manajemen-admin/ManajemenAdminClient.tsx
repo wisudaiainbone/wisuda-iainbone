@@ -347,26 +347,11 @@ export default function ManajemenAdminClient({
                     </td>
 
                     {/* Role */}
-                    <td className="px-6 py-4">
-                      {currentAdminRole === "superadmin" && admin.id !== currentAdminId ? (
-                        <select
-                          value={admin.role}
-                          onChange={(e) => handleRoleChange(admin.id, e.target.value as AdminRole)}
-                          disabled={isPending}
-                          className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] cursor-pointer focus:ring-1 focus:ring-emerald-500/40 outline-none"
-                        >
-                          {ALL_ROLES.map((r) => (
-                            <option key={r} value={r}>
-                              {ROLE_META[r].icon} {ROLE_META[r].label}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg ${meta.color}`}>
-                          <span>{meta.icon}</span>
-                          {meta.label}
-                        </span>
-                      )}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase ${meta.color}`}>
+                        <span>{meta.icon}</span>
+                        {meta.label}
+                      </span>
                     </td>
 
                     {/* Fakultas */}
@@ -472,8 +457,8 @@ export default function ManajemenAdminClient({
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] font-bold text-[var(--color-text-muted)] mt-0.5 flex items-center gap-1">
-                        <Mail size={10} className="opacity-50" />
+                      <span className="text-xs font-bold text-[var(--color-text-muted)] mt-0.5 flex items-center gap-1">
+                        <Mail size={12} className="opacity-50" />
                         {admin.email}
                       </span>
                     </div>
@@ -490,8 +475,14 @@ export default function ManajemenAdminClient({
                         <span className="text-xs text-[var(--color-text-subtle)]">-</span>
                       )}
                     </div>
-                    <div>
-                      <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Status</span>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2 mt-2 pt-3 border-t border-[var(--color-border)]">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase ${meta.color}`}>
+                        <span>{meta.icon}</span>
+                        {meta.label}
+                      </span>
                       {currentAdminRole === "superadmin" && admin.id !== currentAdminId ? (
                         <button
                           onClick={() => handleToggle(admin.id, admin.is_active)}
@@ -515,13 +506,6 @@ export default function ManajemenAdminClient({
                         </span>
                       )}
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2 mt-2 pt-3 border-t border-[var(--color-border)]">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase ${meta.color}`}>
-                      <span>{meta.icon}</span>
-                      {meta.label}
-                    </span>
                     {currentAdminRole === "superadmin" && (
                       <div className="flex items-center justify-end gap-2">
                         <button

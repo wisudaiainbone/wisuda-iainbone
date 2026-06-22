@@ -318,7 +318,7 @@ export default function AdminPengaturanPage() {
               </div>
 
               {/* Akses Edit Profile */}
-              <label className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
                 <div className="flex-1">
                   <h2 className="text-sm font-bold text-[var(--color-text)] flex items-center gap-2">
                     Izinkan Pendaftaran & Edit Profil
@@ -329,7 +329,7 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-start shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
@@ -343,7 +343,7 @@ export default function AdminPengaturanPage() {
               </label>
 
               {/* Akses Edit Toga */}
-              <label className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
                 <div className="flex-1">
                   <h2 className="text-sm font-bold text-[var(--color-text)]">
                     Izinkan Edit Ukuran Toga
@@ -354,7 +354,7 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-start shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
@@ -368,7 +368,7 @@ export default function AdminPengaturanPage() {
               </label>
 
               {/* Tampilkan Toga */}
-              <label className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
                 <div className="flex-1">
                   <h2 className="text-sm font-bold text-[var(--color-text)]">
                     Tampilkan Informasi Toga
@@ -379,7 +379,7 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-start shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
@@ -393,7 +393,7 @@ export default function AdminPengaturanPage() {
               </label>
 
               {/* Tampilkan Undangan */}
-              <label className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
                 <div className="flex-1">
                   <h2 className="text-sm font-bold text-[var(--color-text)]">
                     Tampilkan Informasi Undangan
@@ -404,7 +404,7 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-start shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
@@ -418,7 +418,7 @@ export default function AdminPengaturanPage() {
               </label>
 
               {/* Izinkan Perbaikan Data */}
-              <label className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
                 <div className="flex-1">
                   <h2 className="text-sm font-bold text-[var(--color-text)]">
                     Izinkan Pengajuan Perbaikan Data
@@ -433,7 +433,7 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-start shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
@@ -447,7 +447,7 @@ export default function AdminPengaturanPage() {
               </label>
 
               {/* Izinkan Akses Presensi */}
-              <label className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
                 <div className="flex-1">
                   <h2 className="text-sm font-bold text-[var(--color-text)]">
                     Buka Akses Admin Absensi (Tanpa Login)
@@ -462,7 +462,7 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-start shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"
@@ -476,7 +476,7 @@ export default function AdminPengaturanPage() {
               </label>
 
               {/* Tampilkan Kartu Prestasi */}
-              <label className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
                 <div className="flex-1">
                   <h2 className="text-sm font-bold text-[var(--color-text)]">
                     Munculkan Kartu Prestasi di halaman Wisudawan
@@ -491,7 +491,7 @@ export default function AdminPengaturanPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center shrink-0">
+                <div className="flex items-center justify-start shrink-0">
                   <input
                     type="checkbox"
                     className="sr-only"

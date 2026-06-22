@@ -177,15 +177,9 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
               </div>
               
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--color-border)]">
-                <div className="flex items-center gap-4">
-                  <div>
-                    <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Singkatan</span>
-                    <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-bg-secondary)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.singkatan}</span>
-                  </div>
-                  <div>
-                    <span className="block text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-0.5">Gelar</span>
-                    <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-bg-secondary)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.gelar}</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-bg-secondary)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.singkatan}</span>
+                  <span className="text-xs font-bold text-[var(--color-text)] bg-[var(--color-bg-secondary)] px-2 py-1 rounded-md border border-[var(--color-border)] inline-block">{prodi.gelar}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
