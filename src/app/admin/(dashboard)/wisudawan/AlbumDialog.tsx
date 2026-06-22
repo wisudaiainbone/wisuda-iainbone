@@ -355,7 +355,7 @@ export default function AlbumDialog({ data, prodiData }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-semibold text-sm w-full sm:w-auto justify-center whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-pink-600 hover:bg-pink-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-pink-900/20 whitespace-nowrap"
       >
         <BookOpen size={18} />
         <span>Album</span>

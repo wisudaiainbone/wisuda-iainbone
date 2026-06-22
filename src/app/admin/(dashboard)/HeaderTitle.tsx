@@ -30,7 +30,7 @@ export default function HeaderTitle() {
     }
   }, [pathname]);
 
-  let title = "Beranda";
+  let title = "Statistik";
 
   if (pathname.startsWith("/admin/wisudawan")) {
     const editMatch = pathname.match(/^\/admin\/wisudawan\/(\w+)\/edit$/);

@@ -84,32 +84,41 @@ export default async function AdminWisudawanPage(props: PageProps) {
 
 
       {/* Stats Quick View */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-xl flex items-center gap-4">
-          <div className="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <div className="bg-blue-50 border border-blue-100 dark:bg-blue-900/10 dark:border-blue-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4 shadow-sm">
+          <div className="hidden sm:flex w-10 h-10 rounded-lg bg-blue-500/10 text-blue-500 items-center justify-center shrink-0">
             <UserCheck size={20} />
           </div>
-          <div>
-            <p className="text-xs uppercase font-bold tracking-wider text-[var(--color-text-subtle)]">Total Data Periode Ini</p>
-            <p className="text-xl font-bold text-[var(--color-text)] font-mono">{allWisudawan.length}</p>
+          <div className="text-center sm:text-left">
+            <p className="text-[10px] sm:text-xs uppercase font-bold tracking-wider text-blue-600/80 dark:text-blue-400/80">
+              <span className="sm:hidden">Data</span>
+              <span className="hidden sm:inline">Total Data Periode Ini</span>
+            </p>
+            <p className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-300 font-mono">{allWisudawan.length}</p>
           </div>
         </div>
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-xl flex items-center gap-4">
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+        <div className="bg-emerald-50 border border-emerald-100 dark:bg-emerald-900/10 dark:border-emerald-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4 shadow-sm">
+          <div className="hidden sm:flex w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-500 items-center justify-center shrink-0">
             <GraduationCap size={20} />
           </div>
-          <div>
-            <p className="text-xs uppercase font-bold tracking-wider text-[var(--color-text-subtle)]">Total Pendaftar</p>
-            <p className="text-xl font-bold text-[var(--color-text)] font-mono">{totalPendaftar}</p>
+          <div className="text-center sm:text-left">
+            <p className="text-[10px] sm:text-xs uppercase font-bold tracking-wider text-emerald-600/80 dark:text-emerald-400/80">
+              <span className="sm:hidden">Daftar</span>
+              <span className="hidden sm:inline">Total Pendaftar</span>
+            </p>
+            <p className="text-lg sm:text-xl font-bold text-emerald-700 dark:text-emerald-300 font-mono">{totalPendaftar}</p>
           </div>
         </div>
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-xl flex items-center gap-4">
-          <div className="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
+        <div className="bg-amber-50 border border-amber-100 dark:bg-amber-900/10 dark:border-amber-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4 shadow-sm">
+          <div className="hidden sm:flex w-10 h-10 rounded-lg bg-amber-500/10 text-amber-500 items-center justify-center shrink-0">
             <Clock size={20} />
           </div>
-          <div>
-            <p className="text-xs uppercase font-bold tracking-wider text-[var(--color-text-subtle)]">Belum Mendaftar</p>
-            <p className="text-xl font-bold text-[var(--color-text)] font-mono">{belumMendaftar}</p>
+          <div className="text-center sm:text-left">
+            <p className="text-[10px] sm:text-xs uppercase font-bold tracking-wider text-amber-600/80 dark:text-amber-400/80">
+              <span className="sm:hidden">Belum</span>
+              <span className="hidden sm:inline">Belum Mendaftar</span>
+            </p>
+            <p className="text-lg sm:text-xl font-bold text-amber-700 dark:text-amber-300 font-mono">{belumMendaftar}</p>
           </div>
         </div>
       </div>
@@ -119,21 +128,21 @@ export default async function AdminWisudawanPage(props: PageProps) {
         <div className="w-full">
           <Suspense fallback={<div className="h-10 w-full bg-[var(--color-bg-secondary)] animate-pulse rounded-xl"></div>}>
             <WisudawanSearch fakultasList={fakultasList} prodiList={prodiList} statusList={statusList}>
-              <ExportXlsxButton data={wisudawanList} filename="data-wisudawan" />
               <ImportWisudawanDialog userRole={adminSession?.role || ''} unitKerja={adminSession?.unit_kerja} dbProdiList={dbProdiList} />
+              <ExportXlsxButton data={wisudawanList} filename="data-wisudawan" />
               <SesiDialog />
+              <SlidePptxDialog data={wisudawanList} prodiData={dbProdiList} />
+              <TagDialog data={wisudawanList} />
               <NomorDialog />
               <ExportDaftarButton data={wisudawanList} filename="daftar-wisudawan" />
-              <TagDialog data={wisudawanList} />
-              <SlidePptxDialog data={wisudawanList} prodiData={dbProdiList} />
               <AlbumDialog data={wisudawanList} prodiData={dbProdiList} />
             </WisudawanSearch>
           </Suspense>
         </div>
       </div>
 
-      {/* Table Section */}
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm">
+      {/* Table Section (Desktop) / Card Section (Mobile) */}
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">

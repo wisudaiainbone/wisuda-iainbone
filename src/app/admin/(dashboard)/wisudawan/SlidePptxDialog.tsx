@@ -398,7 +398,7 @@ export default function SlidePptxDialog({ data, prodiData }: Props) {
         onClick={() => setOpen(true)}
         disabled={!data.length}
         title="Generate Slide PPTX"
-        className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 h-10 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold transition-colors shadow-sm shadow-violet-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-fuchsia-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
       >
         <MonitorPlay size={16} />
         Slide

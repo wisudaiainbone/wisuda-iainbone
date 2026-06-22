@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
-import { UploadCloud, FileSpreadsheet, Download, AlertCircle, CheckCircle2, Loader2, X } from "lucide-react";
+import { Plus, Download, AlertCircle, CheckCircle2, Loader2, X, UploadCloud, FileSpreadsheet } from "lucide-react";
 import { importWisudawanBatch, checkExistingNims } from "@/actions/wisudawan";
 
 type Props = {
@@ -288,10 +288,10 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
     <>
       <button
         onClick={handleOpen}
-        className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors shadow-sm shadow-emerald-900/20 whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-emerald-900/20 whitespace-nowrap"
       >
-        <UploadCloud size={16} />
-        Tambah
+        <Plus size={16} />
+        <span className="hidden sm:inline">Tambah</span>
       </button>
 
       {isOpen && (

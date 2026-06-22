@@ -147,9 +147,11 @@ Mengelola aset desain untuk fitur Generate Slide PPTX wisudawan.
 
 ### Data Wisudawan (`/admin/wisudawan`)
 Pengelolaan data wisudawan dari Supabase, dilengkapi:
-- **Toolbar Terpadu (Satu Baris)**: Kolom pencarian dan semua tombol aksi (Export, Import, Sesi, Nomor, Daftar, Tag) berada dalam **satu baris** yang sejajar dan seragam tingginya (`h-10`). Di layar sempit, tombol-tombol mengalir ke bawah dalam satu baris scrollable.
+- **Toolbar Terpadu & Responsif Mobile**: Kolom pencarian dan semua tombol aksi (Tambah, Export, Sesi, Slide, Tag, Nomor, Daftar, Album) berada dalam satu baris sejajar (`h-10`) di desktop. Di perangkat *mobile*, deretan tombol berubah gaya menjadi **Tag Cloud** mungil yang padat (hanya menampilkan ikon tanpa teks).
 - **Pencarian Real-time**: Cari berdasarkan NIM atau Nama. Tombol Reset (✕) muncul otomatis saat ada filter aktif.
+- **Tampilan Card View Mobile**: Khusus pengguna *smartphone*, tabel data wisudawan dirender sebagai barisan **Kartu (Card)** interaktif yang merangkum seluruh informasi profil dan aksi tanpa perlu *scroll horizontal*.
 - **Filter Dinamis Multi-Kolom**:
+  - Di layar *mobile*, seluruh filter dropdown secara cerdas dikelompokkan dalam satu tombol toggle **Filter Data** (*collapsible*) dengan status default tertutup.
   - Fakultas, Prodi, Status
   - **Status Toga** — memunculkan kolom `Uk Toga` di tabel secara dinamis ketika diaktifkan.
   - **Filter Sesi** (`Sesi Satu` / `Sesi Dua` / `Tanpa Sesi`) — memunculkan kolom `Sesi` di tabel secara dinamis ketika diaktifkan.

@@ -203,13 +203,13 @@ export default function DashboardClient({ stats, periodeOptions, selectedPeriode
         </div>
 
         {/* Filter Periode */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-9">
+        <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 sm:h-9 flex-1 min-w-0">
             <Filter size={13} className="text-[var(--color-text-muted)] shrink-0" />
             <select
               value={selectedPeriode ?? ''}
               onChange={e => updateParams('periode', e.target.value || undefined)}
-              className="text-xs font-medium bg-transparent text-[var(--color-text)] outline-none min-w-[140px]"
+              className="text-sm sm:text-xs font-medium bg-transparent text-[var(--color-text)] outline-none flex-1 min-w-0"
             >
               <option value="">Semua Periode</option>
               {periodeOptions.map(p => (
@@ -217,8 +217,10 @@ export default function DashboardClient({ stats, periodeOptions, selectedPeriode
               ))}
             </select>
           </div>
-          <ExportStatsButton stats={stats} periode={selectedPeriode} />
-          {isPending && <RefreshCw size={16} className="text-emerald-600 animate-spin" />}
+          <div className="shrink-0 flex">
+            <ExportStatsButton stats={stats} periode={selectedPeriode} />
+          </div>
+          {isPending && <RefreshCw size={16} className="text-emerald-600 animate-spin shrink-0" />}
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FileSpreadsheet, Loader2 } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
 
 type WisudawanRow = {
   nim: string;
@@ -175,14 +175,14 @@ export default function ExportXlsxButton({ data, filename = 'data-wisudawan' }: 
       onClick={handleExport}
       disabled={loading || !data.length}
       title="Export ke XLSX"
-      className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 h-10 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold transition-colors shadow-sm shadow-sky-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+      className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-sky-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
     >
       {loading ? (
         <Loader2 size={16} className="animate-spin" />
       ) : (
-        <FileSpreadsheet size={16} />
+        <Download size={16} />
       )}
-      {loading ? 'Mengekspor...' : 'Export'}
+      <span className="hidden sm:inline">{loading ? 'Mengekspor...' : 'Export'}</span>
     </button>
   );
 }

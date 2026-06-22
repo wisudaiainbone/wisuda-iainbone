@@ -35,8 +35,8 @@ export default function AdminSidebar({ namaAdmin, role, roleMeta }: Props) {
   const router = useRouter();
 
   const navLinks = [
-    { href: "/admin", icon: LayoutDashboard, label: "Beranda", show: true, exact: true },
     { href: "/admin/informasi", icon: Info, label: "Informasi", show: canViewInformasi(role) },
+    { href: "/admin", icon: LayoutDashboard, label: "Statistik", show: true, exact: true },
     { href: "/admin/periode", icon: Calendar, label: "Periode", show: canManagePeriode(role) },
     { href: "/admin/wisudawan", icon: User, label: "Wisudawan", show: canManageWisudawan(role) },
     { href: "/admin/toga", icon: GraduationCap, label: "Toga", show: canManageToga(role) },

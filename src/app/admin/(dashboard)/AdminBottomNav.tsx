@@ -31,8 +31,8 @@ export default function AdminBottomNav({ role }: Props) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: "/admin", icon: LayoutDashboard, label: "Beranda", show: true, exact: true },
     { href: "/admin/informasi", icon: Info, label: "Informasi", show: canViewInformasi(role) },
+    { href: "/admin", icon: LayoutDashboard, label: "Statistik", show: true, exact: true },
     { href: "/admin/periode", icon: Calendar, label: "Periode", show: canManagePeriode(role) },
     { href: "/admin/wisudawan", icon: User, label: "Wisudawan", show: canManageWisudawan(role) },
     { href: "/admin/toga", icon: GraduationCap, label: "Toga", show: canManageToga(role) },
@@ -46,6 +46,9 @@ export default function AdminBottomNav({ role }: Props) {
   ];
 
   const visibleLinks = navLinks.filter(link => link.show);
+  const isWisudawanActive = pathname.startsWith("/admin/wisudawan");
+  const isPerbaikanActive = pathname.startsWith("/admin/perbaikan");
+  const isPengaturanActive = pathname.startsWith("/admin/pengaturan");
   const isBerandaActive = pathname === "/admin";
 
   return (
@@ -60,7 +63,7 @@ export default function AdminBottomNav({ role }: Props) {
           />
           {/* Sidebar Panel */}
           <div className="relative w-[75vw] max-w-[300px] bg-[var(--color-surface)] h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
-            <div className="flex-1 overflow-y-auto p-4 space-y-1">
+            <div className="flex-1 overflow-y-auto p-4 space-y-1 pb-20">
               {visibleLinks.map((link) => {
                 const isActive = link.exact
                   ? pathname === link.href
@@ -89,33 +92,86 @@ export default function AdminBottomNav({ role }: Props) {
 
       {/* Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--color-surface)] border-t border-[var(--color-border)] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-        <div className="flex items-center h-[60px] max-w-md mx-auto relative px-2">
-          {/* Beranda Button - Left */}
-          <Link
-            href="/admin"
-            prefetch={true}
-            className={`flex-1 flex flex-col items-center justify-center gap-1 h-full relative transition-colors active:scale-95 ${
-              isBerandaActive
-                ? "text-emerald-600 dark:text-emerald-400"
-                : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-            }`}
-          >
-            {isBerandaActive && (
-              <span className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
-            )}
-            <LayoutDashboard size={22} className={isBerandaActive ? "animate-in zoom-in duration-300" : ""} />
-            <span className="text-[10px] font-semibold leading-none">Beranda</span>
-          </Link>
-
-          {/* Divider */}
-          <div className="w-[1px] h-8 bg-[var(--color-border)]" />
+        <div className="flex items-center h-[60px] max-w-md mx-auto relative px-1">
           
+          {canManageWisudawan(role) && (
+            <Link
+              href="/admin/wisudawan"
+              prefetch={true}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 h-full relative transition-colors active:scale-95 ${
+                isWisudawanActive
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+              }`}
+            >
+              {isWisudawanActive && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
+              )}
+              <User size={20} className={isWisudawanActive ? "animate-in zoom-in duration-300" : ""} />
+              <span className="text-[10px] font-semibold leading-none">Wisudawan</span>
+            </Link>
+          )}
+
+          {canManageWisudawan(role) && (
+            <Link
+              href="/admin/perbaikan"
+              prefetch={true}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 h-full relative transition-colors active:scale-95 ${
+                isPerbaikanActive
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+              }`}
+            >
+              {isPerbaikanActive && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
+              )}
+              <Hammer size={20} className={isPerbaikanActive ? "animate-in zoom-in duration-300" : ""} />
+              <span className="text-[10px] font-semibold leading-none">Perbaikan</span>
+            </Link>
+          )}
+
+          {canManagePengaturan(role) && (
+            <Link
+              href="/admin/pengaturan"
+              prefetch={true}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 h-full relative transition-colors active:scale-95 ${
+                isPengaturanActive
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+              }`}
+            >
+              {isPengaturanActive && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
+              )}
+              <Settings size={20} className={isPengaturanActive ? "animate-in zoom-in duration-300" : ""} />
+              <span className="text-[10px] font-semibold leading-none">Pengaturan</span>
+            </Link>
+          )}
+
+          {role === 'admin_unit' && (
+            <Link
+              href="/admin"
+              prefetch={true}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 h-full relative transition-colors active:scale-95 ${
+                isBerandaActive
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+              }`}
+            >
+              {isBerandaActive && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
+              )}
+              <LayoutDashboard size={20} className={isBerandaActive ? "animate-in zoom-in duration-300" : ""} />
+              <span className="text-[10px] font-semibold leading-none">Statistik</span>
+            </Link>
+          )}
+
           {/* Menu Button - Right */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="flex-1 flex flex-col items-center justify-center gap-1 h-full text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors active:scale-95"
           >
-            <Menu size={22} />
+            <Menu size={20} />
             <span className="text-[10px] font-semibold leading-none">Menu</span>
           </button>
         </div>

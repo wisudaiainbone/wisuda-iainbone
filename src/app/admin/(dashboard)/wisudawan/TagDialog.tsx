@@ -84,7 +84,7 @@ export default function TagDialog({ data }: Props) {
       <button
         onClick={() => setIsOpen(true)}
         title="Cetak Label Nama Dada"
-        className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors shadow-sm shadow-indigo-900/20 whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-indigo-900/20 whitespace-nowrap"
       >
         <Tag size={16} />
         Tag

@@ -227,3 +227,24 @@ export async function updatePeriodePengaturan(id: string, updates: any) {
     return { success: false, error: error.message };
   }
 }
+
+export async function deletePeriode(id: string) {
+  try {
+    const { error } = await supabase
+      .from('periode_wisuda')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    await redis.del(CACHE_KEY);
+    revalidatePath('/');
+    revalidatePath('/admin/periode');
+    revalidatePath('/admin/informasi');
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting periode:', error);
+    return { success: false, error: error.message };
+  }
+}

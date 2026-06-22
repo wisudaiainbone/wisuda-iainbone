@@ -65,12 +65,12 @@ export function CountdownBadge({ registrationDateLabel, isActive }: Props) {
   return (
     <div className={`rounded-xl border overflow-hidden ${accent.wrap}`}>
       {/* Header row */}
-      <div className={`px-4 py-2.5 flex items-center justify-between border-b ${accent.head}`}>
+      <div className={`px-4 py-2.5 flex flex-col sm:flex-row items-center justify-center sm:justify-between border-b gap-1 sm:gap-0 ${accent.head}`}>
         <div className="flex items-center gap-1.5">
-          <Calendar size={12} className={accent.icon} />
+          <Calendar size={12} className={`hidden sm:block ${accent.icon}`} />
           <span className={`text-[10px] font-bold uppercase tracking-widest ${accent.label}`}>Jadwal Pendaftaran</span>
         </div>
-        <span className={`text-xs font-semibold ${accent.label}`}>{registrationDateLabel}</span>
+        <span className={`text-xs font-semibold text-center ${accent.label}`}>{registrationDateLabel}</span>
       </div>
 
       {/* Countdown */}

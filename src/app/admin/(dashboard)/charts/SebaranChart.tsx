@@ -84,9 +84,9 @@ export default function SebaranChart({ data, isDrillingFakultas, isDrillingProdi
           <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-subtle)]">{title}</h2>
         </div>
         {!isDrillingProdi && (
-          <span className="text-[10px] text-[var(--color-text-muted)] flex items-center gap-1">
+          <div className="hidden sm:flex items-center gap-1.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-md">
             <MousePointerClick size={11} /> Klik {isDrillingFakultas ? 'prodi' : 'fakultas'} pada tabel untuk detail
-          </span>
+          </div>
         )}
       </div>
       <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
@@ -95,10 +95,10 @@ export default function SebaranChart({ data, isDrillingFakultas, isDrillingProdi
           <PieChart>
             <Pie
               data={pieData}
-              cx="50%"
+              cx="45%"
               cy="50%"
-              innerRadius={60}
-              outerRadius={110}
+              innerRadius={55}
+              outerRadius={95}
               dataKey="value"
               labelLine={false}
               label={renderCustomLabel}

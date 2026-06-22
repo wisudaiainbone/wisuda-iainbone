@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Filter, X } from "lucide-react";
+import { Search, Filter, X, ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTransition, useState, useEffect, useRef } from "react";
 
@@ -9,6 +9,7 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const [showFilters, setShowFilters] = useState(false);
   
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
   const [fakultas, setFakultas] = useState(searchParams.get("fakultas") || "");
@@ -108,13 +109,27 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
           )}
         </div>
         {children && (
-          <div className="flex items-center gap-2 w-full xl:w-auto overflow-x-auto pb-1 xl:pb-0 hide-scrollbar shrink-0">
+          <div className="hidden xl:flex flex-row flex-wrap items-center gap-2 shrink-0">
             {children}
           </div>
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2 w-full">
+      {/* Mobile Filter Toggle */}
+      <button 
+        onClick={() => setShowFilters(!showFilters)}
+        className="xl:hidden flex items-center justify-between w-full px-4 h-10 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-colors shadow-sm"
+      >
+        <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
+          <Filter size={16} />
+          <span className="text-[var(--color-text)]">Filter Data</span>
+        </div>
+        {showFilters ? <ChevronUp size={16} className="text-[var(--color-text-muted)]" /> : <ChevronDown size={16} className="text-[var(--color-text-muted)]" />}
+      </button>
+
+      {/* Filters Area */}
+      <div className={`flex flex-col gap-3 ${showFilters ? 'flex' : 'hidden'} xl:flex w-full animate-in fade-in slide-in-from-top-2 duration-200`}>
+        <div className="flex flex-wrap gap-2 w-full">
         {fakultasList.length > 0 && (
           <select
             value={fakultas}
@@ -195,6 +210,14 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
           <option value="Tanpa Sesi">Tanpa Sesi</option>
         </select>
       </div>
+      </div>
+
+      {/* Mobile Action Buttons (Below Filters) */}
+      {children && (
+        <div className="xl:hidden flex flex-row flex-wrap items-center gap-2 w-full shrink-0">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
