@@ -77,30 +77,30 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
 
   return (
     <div className="bg-transparent md:bg-[var(--color-surface)] md:rounded-2xl border-none md:border md:border-[var(--color-border)] shadow-none md:shadow-sm overflow-hidden flex flex-col gap-4 md:gap-0">
-      {/* Sticky Save/Cancel Bar */}
+      {/* Sticky/Floating Save/Cancel Bar */}
       {isDirty && (
-        <div className="bg-emerald-50 dark:bg-emerald-900/20 md:border-b border border-emerald-100 dark:border-emerald-800/30 p-3 flex items-center justify-between animate-in slide-in-from-top-2 rounded-2xl md:rounded-none">
-          <div className="text-sm font-medium text-emerald-800 dark:text-emerald-300 px-3 flex items-center gap-2">
-            Urutan tabel telah diubah. Simpan perubahan?
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleCancel}
-              disabled={isPending}
-              className="px-3 py-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 rounded-lg transition-colors disabled:opacity-50"
-            >
-              <div className="flex items-center gap-1.5">
+        <div className="fixed md:static bottom-20 md:bottom-auto left-0 right-0 px-4 md:px-0 z-50 pointer-events-none md:pointer-events-auto">
+          <div className="pointer-events-auto bg-emerald-50 dark:bg-[#06241a]/90 backdrop-blur-md md:backdrop-blur-none border border-emerald-200 dark:border-emerald-800/50 p-4 md:p-3 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0 animate-in slide-in-from-bottom-4 md:slide-in-from-top-2 rounded-2xl md:rounded-none shadow-xl md:shadow-none">
+            <div className="text-sm font-medium text-emerald-800 dark:text-emerald-300 flex items-center text-center md:text-left w-full md:w-auto justify-center md:justify-start">
+              Urutan tabel telah diubah. Simpan perubahan?
+            </div>
+            <div className="flex items-center justify-end gap-2 w-full md:w-auto">
+              <button
+                onClick={handleCancel}
+                disabled={isPending}
+                className="flex-1 md:flex-none px-3 py-2.5 md:py-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 rounded-xl md:rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
+              >
                 <X size={16} /> Batal
-              </div>
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={isPending}
-              className="px-4 py-1.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1.5"
-            >
-              {isPending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-              Simpan
-            </button>
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={isPending}
+                className="flex-1 md:flex-none px-4 py-2.5 md:py-1.5 text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl md:rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-900/20 active:scale-95"
+              >
+                {isPending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                Simpan
+              </button>
+            </div>
           </div>
         </div>
       )}
