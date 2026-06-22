@@ -132,7 +132,7 @@ export default async function AdminPrestasiPage(props: PageProps) {
 
           {/* Action Buttons (Generate, Slide, Print) under the filter on mobile */}
           {tab === 'akademik' && adminSession?.role !== 'admin_unit' && (
-            <div className="flex flex-row items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 hide-scrollbar mt-1 sm:mt-0">
+            <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
               <GeneratePrestasiButton periode={filterPeriode} isGenerated={isGenerated} />
               <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
               <PrintPrestasiButton 
