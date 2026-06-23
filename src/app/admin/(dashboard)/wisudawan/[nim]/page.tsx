@@ -4,11 +4,16 @@ import { getOptimizedGDriveUrl } from "@/lib/uploadFoto";
 import { GraduationCap, FileText, Award, Clock } from "lucide-react";
 import WisudawanProfileSidebar from "./WisudawanProfileSidebar";
 import { getAdminSession } from "@/actions/adminAuth";
+import { getSetting } from "@/actions/settings";
 
 export default async function AdminWisudawanDetail({ params }: { params: Promise<{ nim: string }> }) {
   const { nim } = await params;
   const adminSession = await getAdminSession();
-  const data: any = await getWisudawanByNim(nim);
+  const [data, allowDeleteSetting] = await Promise.all([
+    getWisudawanByNim(nim),
+    getSetting('allow_delete_wisudawan', 'false'),
+  ]);
+  const allowDeleteWisudawan = allowDeleteSetting === 'true';
 
   if (!data) return notFound();
 
@@ -36,6 +41,7 @@ export default async function AdminWisudawanDetail({ params }: { params: Promise
           idWisuda={data["ID WISUDA"] || null}
           idUndangan={data["ID UNDANGAN"] || null}
           userRole={adminSession?.role || ''}
+          allowDeleteWisudawan={allowDeleteWisudawan}
         />
 
         {/* Right Column: Details */}

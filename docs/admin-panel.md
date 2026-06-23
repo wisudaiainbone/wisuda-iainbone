@@ -204,7 +204,7 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
 - **Kolom Aksi Cepat**:
   - 👁️ **Lihat Profil** — pratinjau profil.
   - 🔑 **Reset Password** — reset password ke default.
-  - 🗑️ **Hapus Data** — hapus permanen (otomatis menghapus foto di Google Drive via GAS).
+  - 🗑️ **Hapus Data Satuan / Massal** — hapus permanen wisudawan secara individual maupun **hapus massal (bulk delete)** menggunakan kotak centang untuk wisudawan yang belum mendaftar. (Otomatis menghapus foto di Google Drive via GAS dan membersihkan cache Upstash Redis).
 
 ### Detail Wisudawan (`/admin/wisudawan/[nim]`)
 Halaman detail khusus panel admin dengan desain *full-width* minimalis.

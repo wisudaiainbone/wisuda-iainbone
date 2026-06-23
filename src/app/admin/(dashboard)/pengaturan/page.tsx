@@ -20,6 +20,7 @@ export default function AdminPengaturanPage() {
   const [allowPerbaikan, setAllowPerbaikan] = useState(true);
   const [showPrestasiCard, setShowPrestasiCard] = useState(true);
   const [allowAbsensiLogin, setAllowAbsensiLogin] = useState(true);
+  const [allowDeleteWisudawan, setAllowDeleteWisudawan] = useState(false);
   const [contactEmail, setContactEmail] = useState("");
   const [contactWa, setContactWa] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -129,6 +130,7 @@ export default function AdminPengaturanPage() {
         setAllowPerbaikan(getVal('allow_perbaikan', 'true') === 'true');
         setShowPrestasiCard(getVal('show_prestasi_card', 'true') === 'true');
         setAllowAbsensiLogin(getVal('allow_absensi_login', 'true') === 'true');
+        setAllowDeleteWisudawan(getVal('allow_delete_wisudawan', 'false') === 'true');
         setContactEmail(getVal('contact_email', 'wisuda@iainbone.ac.id'));
         setContactWa(getVal('contact_wa', '+62 811 9429 035'));
 
@@ -169,10 +171,11 @@ export default function AdminPengaturanPage() {
     const res6 = await updateSetting('allow_perbaikan', allowPerbaikan.toString());
     const resPrestasi = await updateSetting('show_prestasi_card', showPrestasiCard.toString());
     const resAbsensi = await updateSetting('allow_absensi_login', allowAbsensiLogin.toString());
+    const resDelete = await updateSetting('allow_delete_wisudawan', allowDeleteWisudawan.toString());
     const res7 = await updateSetting('contact_email', contactEmail);
     const res8 = await updateSetting('contact_wa', contactWa);
 
-    if (res1.success && res2.success && res3.success && res4.success && res5.success && res6.success && resPrestasi.success && resAbsensi.success && res7.success && res8.success) {
+    if (res1.success && res2.success && res3.success && res4.success && res5.success && res6.success && resPrestasi.success && resAbsensi.success && resDelete.success && res7.success && res8.success) {
       showToast("Pengaturan berhasil diperbarui!", "success");
     } else {
       showToast(res1.error || res2.error || res3.error || "Gagal memperbarui pengaturan.", "error");
@@ -500,6 +503,35 @@ export default function AdminPengaturanPage() {
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${showPrestasiCard ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
                     <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${showPrestasiCard ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                  </div>
+                </div>
+              </label>
+
+              {/* Izinkan Hapus Data Wisudawan */}
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
+                <div className="flex-1">
+                  <h2 className="text-sm font-bold text-[var(--color-text)]">
+                    Izinkan Hapus Data Wisudawan (Admin Unit)
+                  </h2>
+                  {descriptions['allow_delete_wisudawan'] ? (
+                    <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
+                      {descriptions['allow_delete_wisudawan']}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
+                      Izinkan admin unit (Fakultas/Pascasarjana) untuk menghapus data wisudawan.
+                    </p>
+                  )}
+                </div>
+                <div className="flex items-center justify-start shrink-0">
+                  <input
+                    type="checkbox"
+                    className="sr-only"
+                    checked={allowDeleteWisudawan}
+                    onChange={(e) => setAllowDeleteWisudawan(e.target.checked)}
+                  />
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${allowDeleteWisudawan ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowDeleteWisudawan ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>

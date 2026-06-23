@@ -5,11 +5,18 @@ import { useState, useTransition } from "react";
 import { deleteWisudawan } from "@/actions/wisudawan";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
-export default function DeleteWisudawanButton({ nim, nama, userRole }: { nim: string, nama: string, userRole?: string }) {
+export default function DeleteWisudawanButton({ nim, nama, userRole, allowDeleteWisudawan }: { nim: string, nama: string, userRole?: string, allowDeleteWisudawan?: boolean }) {
   const [isPending, startTransition] = useTransition();
   const [showConfirm, setShowConfirm] = useState(false);
 
-  if (userRole && userRole !== 'superadmin' && userRole !== 'admin_institut') {
+  // Superadmin & Admin Institut can always delete
+  // Admin Unit can delete ONLY IF allowDeleteWisudawan is true
+  const canDelete = 
+    userRole === 'superadmin' || 
+    userRole === 'admin_institut' || 
+    (userRole === 'admin_unit' && allowDeleteWisudawan);
+
+  if (!canDelete) {
     return null;
   }
 

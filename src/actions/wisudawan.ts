@@ -836,6 +836,72 @@ export async function deleteWisudawan(nim: string) {
   }
 }
 
+export async function deleteWisudawanBulk(nims: string[]) {
+  try {
+    if (!nims || nims.length === 0) return { success: true };
+
+    const adminData = await getAdminSession();
+    if (!adminData) return { success: false, error: 'Unauthorized' };
+
+    // Role check: admin unit cuma bisa hapus fakultasnya sendiri
+    if (adminData.role === 'admin_unit' && adminData.unit_kerja) {
+      const { data: mhsList } = await supabase.from('wisudawan').select('fakultas').in('nim', nims);
+      const isAllSameFakultas = mhsList?.every(m => m.fakultas === adminData.unit_kerja);
+      if (!isAllSameFakultas) {
+        return { success: false, error: 'Anda tidak memiliki izin menghapus sebagian data wisudawan dari fakultas lain.' };
+      }
+    }
+
+    // Ambil data foto sebelum dihapus
+    const { data: mhsDataList } = await supabase.from('wisudawan').select('nim, foto').in('nim', nims);
+
+    // Hapus data massal
+    const { error } = await supabase.from('wisudawan').delete().in('nim', nims);
+    
+    if (error) {
+      console.error('Error deleting bulk wisudawan:', error);
+      return { success: false, error: error.message };
+    }
+
+    // Hapus foto dari Google Drive
+    if (mhsDataList && mhsDataList.length > 0) {
+      const { extractGDriveFileId, deleteFotoFromGDrive } = await import('@/lib/uploadFoto');
+      
+      const fileIdsToDelete = mhsDataList
+        .filter(mhs => mhs.foto)
+        .map(mhs => extractGDriveFileId(mhs.foto!))
+        .filter(Boolean) as string[];
+
+      if (fileIdsToDelete.length > 0) {
+        // Hapus secara background
+        Promise.all(fileIdsToDelete.map(fileId => deleteFotoFromGDrive(fileId)))
+          .catch(err => {
+            console.error(`Gagal menghapus beberapa foto wisudawan dari GDrive:`, err);
+          });
+      }
+    }
+
+    // Invalidate cache
+    try {
+      const pipeline = redis.pipeline();
+      nims.forEach(nim => pipeline.del(`wisudawan:${nim}`));
+      pipeline.del('wisudawan_list');
+      pipeline.del('dashboard:stats:all');
+      await pipeline.exec();
+    } catch (err) {
+      console.error("Redis del pipeline error:", err);
+    }
+
+    revalidatePath('/admin/wisudawan');
+    revalidatePath('/admin');
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error in deleteWisudawanBulk:', error);
+    return { success: false, error: error.message || 'Terjadi kesalahan saat menghapus.' };
+  }
+}
+
 /**
  * Setup akun pertama kali: simpan email, toga, dan password baru (di-hash).
  * Dipanggil dari halaman /setup/[nim] saat wisudawan login dengan password default.

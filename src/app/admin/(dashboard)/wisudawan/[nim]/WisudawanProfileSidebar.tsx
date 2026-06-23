@@ -18,6 +18,7 @@ interface Props {
   idWisuda: string | null;
   idUndangan: string | null;
   userRole?: string;
+  allowDeleteWisudawan?: boolean;
 }
 
 export default function WisudawanProfileSidebar({
@@ -31,6 +32,7 @@ export default function WisudawanProfileSidebar({
   idWisuda,
   idUndangan,
   userRole,
+  allowDeleteWisudawan,
 }: Props) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
@@ -91,7 +93,7 @@ export default function WisudawanProfileSidebar({
             <Pencil size={16} />
           </Link>
           <ResetPasswordButton nim={nim} nama={nama} />
-          <DeleteWisudawanButton nim={nim} nama={nama} userRole={userRole} />
+          <DeleteWisudawanButton nim={nim} nama={nama} userRole={userRole} allowDeleteWisudawan={allowDeleteWisudawan} />
         </div>
       </div>
 
