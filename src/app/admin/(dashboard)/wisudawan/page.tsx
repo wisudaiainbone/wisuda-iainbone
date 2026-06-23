@@ -14,6 +14,7 @@ import SlidePptxDialog from "./SlidePptxDialog";
 import AlbumDialog from "./AlbumDialog";
 import TagDialog from "./TagDialog";
 import WisudawanTableRow from "./WisudawanTableRow";
+import WisudawanMobileCard from "./WisudawanMobileCard";
 import Pagination from "@/components/ui/Pagination";
 import SesiDialog from "./SesiDialog";
 import NomorDialog from "./NomorDialog";
@@ -146,8 +147,8 @@ export default async function AdminWisudawanPage(props: PageProps) {
         </div>
       </div>
 
-      {/* Table Section */}
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm">
+      {/* Table Section (Desktop) */}
+      <div className="hidden md:block bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
@@ -282,6 +283,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
                         href={`/admin/wisudawan/${w.nim}`}
                         className="text-blue-500 hover:text-blue-600 transition-colors"
                         title="Lihat Profil"
+                        prefetch={true}
                       >
                         <Eye size={16} />
                       </Link>
@@ -306,6 +308,115 @@ export default async function AdminWisudawanPage(props: PageProps) {
         </div>
         
         {/* Pagination Control */}
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={ITEMS_PER_PAGE}
+        />
+      </div>
+
+      {/* Card Section (Mobile) */}
+      <div className="md:hidden space-y-4">
+        {paginatedList.map((w, index) => (
+          <WisudawanMobileCard 
+            key={w.nim} 
+            href={`/admin/wisudawan/${w.nim}`} 
+            className="block bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4 shadow-sm hover:border-emerald-300 transition-colors group relative"
+          >
+            <div className="flex gap-3">
+              <div className="w-16 h-20 shrink-0 overflow-hidden rounded-lg bg-[var(--color-bg-secondary)] flex items-center justify-center">
+                {w.foto ? (
+                  <img src={w.foto.replace('open?', 'uc?export=view&')} alt="Foto" className="w-full h-full object-cover" />
+                ) : (
+                  <User size={24} className="text-[var(--color-text-muted)]" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="font-bold text-sm text-[var(--color-text)] truncate">{w.nama_gelar || w.nama_mahasiswa}</p>
+                    <p className="font-mono text-xs text-[var(--color-text-muted)]">{w.nim}</p>
+                  </div>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-[var(--color-bg-secondary)] shrink-0">
+                    {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
+                  </span>
+                </div>
+                
+                <div className="mt-2 flex flex-wrap gap-1.5 text-[10px] font-medium">
+                  {(() => {
+                    const fakData = getFakultasData(w.fakultas);
+                    return (
+                      <span className={`px-1.5 py-0.5 rounded border ${fakData.colorClass}`}>
+                        {fakData.singkatan}
+                      </span>
+                    );
+                  })()}
+                  <span className="px-1.5 py-0.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)] truncate max-w-[120px]">
+                    {w.prodi}
+                  </span>
+                  {showSesi && w.sesi && (
+                    <span className={`px-1.5 py-0.5 rounded border ${
+                        w.sesi === 'Sesi Satu' ? 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800' :
+                        w.sesi === 'Sesi Dua' ? 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200 dark:bg-fuchsia-900/30 dark:text-fuchsia-400 dark:border-fuchsia-800' :
+                        'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700'
+                      }`}>
+                      {w.sesi}
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-2 flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
+                  <span>IPK: <strong className="text-[var(--color-text)]">{w.ipk ? Number(w.ipk).toFixed(2) : '-'}</strong></span>
+                  {w.predikat && <span>• <strong className="text-[var(--color-text)]">{w.predikat}</strong></span>}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 pt-3 border-t border-[var(--color-border)] flex items-center justify-between gap-2">
+              <div className="flex gap-2 text-[10px]">
+                <div className={`flex flex-col items-center justify-center w-12 h-10 rounded-lg border ${Boolean(w.terdaftar && w.terdaftar !== 'false' && w.terdaftar !== '0') ? 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800/50 dark:text-emerald-400' : 'bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-900/20 dark:border-rose-800/50 dark:text-rose-400'}`}>
+                  {Boolean(w.terdaftar && w.terdaftar !== 'false' && w.terdaftar !== '0') ? <Check size={14} /> : <X size={14} />}
+                  <span>Daftar</span>
+                </div>
+                <div className={`flex flex-col items-center justify-center w-12 h-10 rounded-lg border ${Boolean(w.waktu_toga) ? 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800/50 dark:text-emerald-400' : 'bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-900/20 dark:border-rose-800/50 dark:text-rose-400'}`}>
+                  {Boolean(w.waktu_toga) ? <Check size={14} /> : <X size={14} />}
+                  <span>Toga</span>
+                </div>
+                <div className={`flex flex-col items-center justify-center w-12 h-10 rounded-lg border ${Boolean(w.waktu_hadir) ? 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800/50 dark:text-emerald-400' : 'bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-900/20 dark:border-rose-800/50 dark:text-rose-400'}`}>
+                  {Boolean(w.waktu_hadir) ? <Check size={14} /> : <X size={14} />}
+                  <span>Hadir</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 relative z-10">
+                <Link
+                  href={`/admin/wisudawan/${w.nim}`}
+                  className="p-1.5 text-blue-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                  title="Lihat Profil"
+                  prefetch={true}
+                >
+                  <Eye size={16} />
+                </Link>
+                {w.password && (
+                  <ResetPasswordButton nim={w.nim} nama={w.nama_mahasiswa} />
+                )}
+                <DeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} />
+              </div>
+            </div>
+            
+            {/* Link overlay over whole card except buttons */}
+            <Link prefetch={true} href={`/admin/wisudawan/${w.nim}`} className="absolute inset-0 z-0"></Link>
+            
+          </WisudawanMobileCard>
+        ))}
+
+        {paginatedList.length === 0 && (
+          <div className="p-8 text-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-[var(--color-text-muted)]">
+            Belum ada data wisudawan.
+          </div>
+        )}
+
         <Pagination 
           currentPage={currentPage}
           totalPages={totalPages}

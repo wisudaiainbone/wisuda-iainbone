@@ -149,7 +149,7 @@ Mengelola aset desain untuk fitur Generate Slide PPTX wisudawan.
 Pengelolaan data wisudawan dari Supabase, dilengkapi:
 - **Toolbar Terpadu & Responsif Mobile**: Kolom pencarian dan semua tombol aksi (Tambah, Export, Sesi, Slide, Tag, Nomor, Daftar, Album) berada dalam satu baris sejajar (`h-10`) di desktop. Di perangkat *mobile*, deretan tombol berubah gaya menjadi **Tag Cloud** mungil yang padat (hanya menampilkan ikon tanpa teks).
 - **Pencarian Real-time**: Cari berdasarkan NIM atau Nama. Tombol Reset (✕) muncul otomatis saat ada filter aktif.
-- **Tampilan Responsif Mobile Terbaik**: Khusus pengguna *smartphone*, tabel data dirender dengan *horizontal scroll* yang nyaman agar seluruh informasi profil dan aksi tetap dapat diakses secara utuh tanpa mengorbankan kepadatan data.
+- **Tampilan Card View Mobile yang Padat**: Khusus pengguna *smartphone*, tabel data dirender sebagai barisan **Kartu (Card)** interaktif yang merangkum seluruh informasi profil dan aksi tanpa perlu *scroll horizontal*, dengan desain padding dan gap minimum agar hemat ruang layar. Mengklik area manapun pada kartu akan mengarah secara instan ke profil wisudawan bersangkutan berkat fitur prefetch otomatis.
 - **Panel Aksi Mengambang (Floating Action Bar)**: Untuk aksi penyimpanan yang penting (seperti menyimpan urutan Fakultas, Setelan Toga, atau mode Scan Tamu), tombol aksi dan pemberitahuan (`hint`) akan ditampilkan mengambang di bawah layar tepat di atas menu navigasi utama agar mudah diakses jempol.
 - **Filter Dinamis Multi-Kolom**:
   - Di layar *mobile*, seluruh filter dropdown secara cerdas dikelompokkan dalam satu tombol toggle **Filter Data** (*collapsible*) dengan status default tertutup.
