@@ -146,8 +146,8 @@ export default async function AdminWisudawanPage(props: PageProps) {
         </div>
       </div>
 
-      {/* Table Section (Desktop) / Card Section (Mobile) */}
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm hidden md:block">
+      {/* Table Section */}
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">

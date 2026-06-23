@@ -178,16 +178,16 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
           if (row.tanggal_yudisium) {
             if (row.tanggal_yudisium instanceof Date) {
               const d = row.tanggal_yudisium;
-              const year = d.getFullYear();
-              const month = String(d.getMonth() + 1).padStart(2, '0');
-              const day = String(d.getDate()).padStart(2, '0');
+              const year = d.getUTCFullYear();
+              const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+              const day = String(d.getUTCDate()).padStart(2, '0');
               formattedDate = `${year}-${month}-${day}`;
             } else if (typeof row.tanggal_yudisium === 'number') {
-              const excelEpoch = new Date(1899, 11, 30);
+              const excelEpoch = new Date(Date.UTC(1899, 11, 30));
               const d = new Date(excelEpoch.getTime() + row.tanggal_yudisium * 86400000);
-              const year = d.getFullYear();
-              const month = String(d.getMonth() + 1).padStart(2, '0');
-              const day = String(d.getDate()).padStart(2, '0');
+              const year = d.getUTCFullYear();
+              const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+              const day = String(d.getUTCDate()).padStart(2, '0');
               formattedDate = `${year}-${month}-${day}`;
             } else if (typeof row.tanggal_yudisium === 'string') {
                const str = row.tanggal_yudisium.trim();
