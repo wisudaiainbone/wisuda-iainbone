@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       }
       data = dbData;
       // Populate cache
-      await redis.set(`scan:toga:${id_wisuda}`, JSON.stringify(data));
+      await redis.set(`scan:toga:${id_wisuda}`, JSON.stringify(data), { ex: 172800 });
     }
 
     // 3. Validasi
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
     
     // a. Update Redis (Sync)
     data.waktu_toga = timestamp;
-    await redis.set(`scan:toga:${id_wisuda}`, JSON.stringify(data));
+    await redis.set(`scan:toga:${id_wisuda}`, JSON.stringify(data), { ex: 172800 });
 
     // b. Update Supabase (Async fire-and-forget)
     supabase.from('wisudawan').update({ waktu_toga: timestamp }).eq('id_wisuda', id_wisuda).then(({ error }) => {

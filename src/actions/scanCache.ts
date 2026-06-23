@@ -34,19 +34,27 @@ export async function warmUpTogaCache() {
       return { success: true, total: 0, durationMs: Date.now() - start };
     }
 
-    const pipeline = redis.pipeline();
-    for (const w of wisudawan) {
-      pipeline.set(`scan:toga:${w.id_wisuda}`, JSON.stringify(w));
+    // Proses batch/chunking untuk menghindari limit payload Upstash 1MB
+    const CHUNK_SIZE = 200;
+    for (let i = 0; i < wisudawan.length; i += CHUNK_SIZE) {
+      const chunk = wisudawan.slice(i, i + CHUNK_SIZE);
+      const pipeline = redis.pipeline();
+      
+      for (const w of chunk) {
+        pipeline.set(`scan:toga:${w.id_wisuda}`, JSON.stringify(w), { ex: 172800 });
+      }
+      
+      if (i === 0) { // Set meta hanya di chunk pertama
+        const meta = {
+          cached_at: new Date().toISOString(),
+          total: wisudawan.length,
+          periode: activePeriode.nama_periode
+        };
+        pipeline.set('scan:meta:toga', JSON.stringify(meta), { ex: 172800 });
+      }
+      
+      await pipeline.exec();
     }
-    
-    const meta = {
-      cached_at: new Date().toISOString(),
-      total: wisudawan.length,
-      periode: activePeriode.nama_periode
-    };
-    pipeline.set('scan:meta:toga', JSON.stringify(meta));
-    
-    await pipeline.exec();
 
     return { success: true, total: wisudawan.length, durationMs: Date.now() - start };
   } catch (err: any) {
@@ -84,19 +92,27 @@ export async function warmUpUndanganCache() {
       return { success: true, total: 0, durationMs: Date.now() - start };
     }
 
-    const pipeline = redis.pipeline();
-    for (const w of wisudawan) {
-      pipeline.set(`scan:undangan:${w.id_undangan}`, JSON.stringify(w));
+    // Proses batch/chunking
+    const CHUNK_SIZE = 200;
+    for (let i = 0; i < wisudawan.length; i += CHUNK_SIZE) {
+      const chunk = wisudawan.slice(i, i + CHUNK_SIZE);
+      const pipeline = redis.pipeline();
+      
+      for (const w of chunk) {
+        pipeline.set(`scan:undangan:${w.id_undangan}`, JSON.stringify(w), { ex: 172800 });
+      }
+      
+      if (i === 0) {
+        const meta = {
+          cached_at: new Date().toISOString(),
+          total: wisudawan.length,
+          periode: activePeriode.nama_periode
+        };
+        pipeline.set('scan:meta:undangan', JSON.stringify(meta), { ex: 172800 });
+      }
+      
+      await pipeline.exec();
     }
-    
-    const meta = {
-      cached_at: new Date().toISOString(),
-      total: wisudawan.length,
-      periode: activePeriode.nama_periode
-    };
-    pipeline.set('scan:meta:undangan', JSON.stringify(meta));
-    
-    await pipeline.exec();
 
     return { success: true, total: wisudawan.length, durationMs: Date.now() - start };
   } catch (err: any) {
@@ -122,18 +138,26 @@ export async function warmUpTamuCache() {
       return { success: true, total: 0, durationMs: Date.now() - start };
     }
 
-    const pipeline = redis.pipeline();
-    for (const t of tamuList) {
-      pipeline.set(`scan:tamu:${t.id}`, JSON.stringify(t));
+    // Proses batch/chunking
+    const CHUNK_SIZE = 200;
+    for (let i = 0; i < tamuList.length; i += CHUNK_SIZE) {
+      const chunk = tamuList.slice(i, i + CHUNK_SIZE);
+      const pipeline = redis.pipeline();
+      
+      for (const t of chunk) {
+        pipeline.set(`scan:tamu:${t.id}`, JSON.stringify(t), { ex: 172800 });
+      }
+      
+      if (i === 0) {
+        const meta = {
+          cached_at: new Date().toISOString(),
+          total: tamuList.length
+        };
+        pipeline.set('scan:meta:tamu', JSON.stringify(meta), { ex: 172800 });
+      }
+      
+      await pipeline.exec();
     }
-    
-    const meta = {
-      cached_at: new Date().toISOString(),
-      total: tamuList.length
-    };
-    pipeline.set('scan:meta:tamu', JSON.stringify(meta));
-    
-    await pipeline.exec();
 
     return { success: true, total: tamuList.length, durationMs: Date.now() - start };
   } catch (err: any) {

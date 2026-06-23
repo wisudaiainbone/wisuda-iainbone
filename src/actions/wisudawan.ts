@@ -824,7 +824,6 @@ export async function deleteWisudawan(nim: string) {
     }
 
     // Invalidate cache
-    await redis.del('wisudawan_list');
     await redis.del('dashboard:stats:all');
     revalidatePath('/admin/wisudawan');
     revalidatePath('/admin');
@@ -885,7 +884,6 @@ export async function deleteWisudawanBulk(nims: string[]) {
     try {
       const pipeline = redis.pipeline();
       nims.forEach(nim => pipeline.del(`wisudawan:${nim}`));
-      pipeline.del('wisudawan_list');
       pipeline.del('dashboard:stats:all');
       await pipeline.exec();
     } catch (err) {

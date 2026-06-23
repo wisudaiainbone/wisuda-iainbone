@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
       }
       data = dbData;
       // Populate cache
-      await redis.set(`scan:undangan:${id_undangan}`, JSON.stringify(data));
+      await redis.set(`scan:undangan:${id_undangan}`, JSON.stringify(data), { ex: 172800 });
     }
 
     // 3. Validasi Sesi
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
     
     // a. Update Redis (Sync)
     data.waktu_hadir = timestamp;
-    await redis.set(`scan:undangan:${id_undangan}`, JSON.stringify(data));
+    await redis.set(`scan:undangan:${id_undangan}`, JSON.stringify(data), { ex: 172800 });
 
     // b. Update Supabase (Async fire-and-forget)
     supabase.from('wisudawan').update({ waktu_hadir: timestamp }).eq('id_undangan', id_undangan).then(({ error }) => {

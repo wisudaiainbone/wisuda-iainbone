@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       }
       data = dbData;
       // Populate cache
-      await redis.set(`scan:tamu:${id}`, JSON.stringify(data));
+      await redis.set(`scan:tamu:${id}`, JSON.stringify(data), { ex: 172800 });
     }
 
     // 3. Validasi Sesi
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     
     // a. Update Redis (Sync)
     data.hadir = timestamp;
-    await redis.set(`scan:tamu:${id}`, JSON.stringify(data));
+    await redis.set(`scan:tamu:${id}`, JSON.stringify(data), { ex: 172800 });
 
     // b. Update Supabase (Async fire-and-forget)
     supabase.from('tamu').update({ hadir: timestamp }).eq('id', id).then(({ error }) => {

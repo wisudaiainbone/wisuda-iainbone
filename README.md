@@ -66,7 +66,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
   - **Layout Dua Kolom (Desktop)**: Di PC/Laptop, tampilan terbagi — **kolom kiri** area kamera dengan kendali terpusat, **kolom kanan** tabel riwayat scan real-time.
   - **Export XLSX Kehadiran**: Tombol **Export** di panel riwayat kehadiran mengunduh data kehadiran lengkap dalam dua sheet: *Kehadiran* (daftar semua hadir) dan *Rekap* (rekapitulasi per Fakultas & Prodi dengan subtotal).
   - **Info Cache & Badge Timestamp**: Tombol Cache wajib ditekan sebelum scan. Status jumlah data di-*cache* dan **waktu pembaruan terakhir** (contoh: `5 data • 12:00`) selalu tampil sebagai lencana.
-  - **Arsitektur Cache Scan (Redis Pipeline)**: Data dipanaskan ke Upstash Redis sebelum sesi scan dimulai. Response lookup < 50ms.
+  - **Arsitektur Cache Scan (Redis Pipeline Chunking)**: Data dipanaskan ke Upstash Redis dengan proses *chunking* (per 200 data) untuk menghindari batas payload 1MB, dan diberi TTL otomatis 2 Hari (172800 detik) untuk mencegah *memory leak*. Response lookup < 50ms.
   - **Fire-and-forget Update**: Pencatatan waktu (`waktu_toga` / `waktu_hadir`) dikirim ke Supabase secara asinkron agar tidak memperlambat scan berikutnya.
   - **UI Feedback & Debounce**: Kartu hasil warna-warni (sukses/peringatan/error) muncul 4 detik. Delay 3 detik antar scan mencegah pemindaian berulang yang tak disengaja.
 - **Tiket Toga Digital**: Modal Tiket Pengambilan Toga di profil wisudawan menampilkan QR Code asli dengan **logo institusi di tengah**, nama wisuda, periode, institusi, ukuran toga, dan jadwal pengambilan toga per Fakultas.

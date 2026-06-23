@@ -332,10 +332,10 @@ Digunakan pada hari wisuda untuk mencatat kehadiran.
        └─ warmUpTogaCache() / warmUpUndanganCache()
               │
               ├─ Fetch kolom minimal dari Supabase
-              └─ Simpan ke Redis via pipeline:
-                   scan:toga:[id_wisuda]     = { nim, nama, toga, waktu_toga, ... }
-                   scan:undangan:[id_undangan] = { nim, nama, sesi, waktu_hadir, ... }
-                   scan:meta:toga / scan:meta:undangan = { cached_at, total, periode }
+              └─ Simpan ke Redis via pipeline (Proses Chunking per 200 data):
+                   scan:toga:[id_wisuda]     = { nim, nama, toga, waktu_toga, ... } [EX: 172800]
+                   scan:undangan:[id_undangan] = { nim, nama, sesi, waktu_hadir, ... } [EX: 172800]
+                   scan:meta:toga / scan:meta:undangan = { cached_at, total, periode } [EX: 172800]
 
 [Admin Aktifkan Kamera] → Mulai html5-qrcode (Delay 500ms mencegah React Strict Mode hardware-lock)
 
@@ -350,10 +350,10 @@ Digunakan pada hari wisuda untuk mencatat kehadiran.
 
 | Key Redis | TTL | Isi |
 |---|---|---|
-| `scan:toga:[id_wisuda]` | Tidak ada (permanen sampai reset) | Data wisudawan untuk lookup toga |
-| `scan:undangan:[id_undangan]` | Tidak ada | Data wisudawan untuk lookup kehadiran |
-| `scan:meta:toga` | Tidak ada | `{ cached_at, total, periode }` |
-| `scan:meta:undangan` | Tidak ada | `{ cached_at, total, periode }` |
+| `scan:toga:[id_wisuda]` | 2 Hari (172800 detik) | Data wisudawan untuk lookup toga |
+| `scan:undangan:[id_undangan]` | 2 Hari (172800 detik) | Data wisudawan untuk lookup kehadiran |
+| `scan:meta:toga` | 2 Hari (172800 detik) | `{ cached_at, total, periode }` |
+| `scan:meta:undangan` | 2 Hari (172800 detik) | `{ cached_at, total, periode }` |
 
 ---
 
