@@ -141,6 +141,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
     registrationDateLabel: activePeriode.tanggal_pendaftaran,
     gladi: activePeriode.jadwal_gladi,
     wagLink: activePeriode.wagLink || activePeriode.waglink,
+    linkPengumuman: activePeriode.linkPengumuman || activePeriode.link_pengumuman,
     themeImage: activePeriode.themeImage || activePeriode.theme,
     statusColor: activePeriode.statusColor || activePeriode.status_color
   } : {} as Period;
@@ -420,6 +421,13 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                   <QrCode size={15} />
                   Lihat Undangan Wisuda
                 </button>
+              )}
+              {p.linkPengumuman && (
+                <a href={p.linkPengumuman} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-sm font-bold transition-all w-full">
+                  <Megaphone size={15} />
+                  Link Pengumuman Resmi
+                </a>
               )}
               {p.wagLink && (
                 <a href={p.wagLink} target="_blank" rel="noopener noreferrer"

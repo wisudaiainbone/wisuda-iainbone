@@ -191,6 +191,17 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
           />
         </div>
 
+        <div>
+          <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Link Pengumuman Resmi (Opsional)</label>
+          <input
+            type="url"
+            value={formData.link_pengumuman || ''}
+            onChange={(e) => setFormData({ ...formData, link_pengumuman: e.target.value })}
+            placeholder="Contoh: https://iainbone.ac.id/pengumuman-wisuda"
+            className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-orange-500/50 outline-none"
+          />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">URL Gambar Tema (Opsional)</label>
