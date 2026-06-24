@@ -209,9 +209,30 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
               formattedDate = `${year}-${month}-${day}`;
             } else if (typeof row.tanggal_yudisium === 'string') {
                const str = row.tanggal_yudisium.trim();
-               const parts = str.split(/[-/]/);
+               const idMonths: Record<string, string> = {
+                 'januari': '01', 'jan': '01',
+                 'februari': '02', 'feb': '02',
+                 'maret': '03', 'mar': '03',
+                 'april': '04', 'apr': '04',
+                 'mei': '05',
+                 'juni': '06', 'jun': '06',
+                 'juli': '07', 'jul': '07',
+                 'agustus': '08', 'agu': '08', 'ags': '08',
+                 'september': '09', 'sep': '09',
+                 'oktober': '10', 'okt': '10',
+                 'november': '11', 'nov': '11',
+                 'desember': '12', 'des': '12'
+               };
+               
+               const parts = str.split(/[-/\s]+/);
                if (parts.length === 3) {
-                   if (parts[2].length === 4) { 
+                   const monthName = parts[1].toLowerCase();
+                   if (idMonths[monthName]) {
+                       const d = parts[0].padStart(2, '0');
+                       const m = idMonths[monthName];
+                       const y = parts[2];
+                       formattedDate = `${y}-${m}-${d}`;
+                   } else if (parts[2].length === 4) { 
                      // Asumsi DD-MM-YYYY atau MM/DD/YYYY
                      formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
                    } else if (parts[0].length === 4) {
