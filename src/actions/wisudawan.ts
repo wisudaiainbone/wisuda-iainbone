@@ -710,6 +710,27 @@ export async function importWisudawanBatch(data: any[]) {
         continue;
       }
 
+      if (!item.nama_mahasiswa?.toString().trim()) {
+        failedRows.push({ nim, nama, reason: 'Nama mahasiswa wajib diisi' });
+        continue;
+      }
+      if (!item.predikat?.toString().trim()) {
+        failedRows.push({ nim, nama, reason: 'Predikat wajib diisi' });
+        continue;
+      }
+      if (!item.fakultas?.toString().trim()) {
+        failedRows.push({ nim, nama, reason: 'Fakultas wajib diisi' });
+        continue;
+      }
+      if (!item.prodi?.toString().trim()) {
+        failedRows.push({ nim, nama, reason: 'Prodi wajib diisi' });
+        continue;
+      }
+      if (!item.tanggal_yudisium) {
+        failedRows.push({ nim, nama, reason: 'Tanggal yudisium wajib diisi' });
+        continue;
+      }
+
       // Validasi unit_kerja jika role = admin_unit
       if (role === 'admin_unit') {
         if (!unitKerja) {

@@ -127,6 +127,24 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
           } else if (existingNims.includes(nimStr)) {
             isValid = false;
             reason = 'NIM Sudah Terdaftar';
+          } else if (!row.nama_mahasiswa?.toString().trim()) {
+            isValid = false;
+            reason = 'Nama Kosong';
+          } else if (row.ipk === undefined || row.ipk === null || row.ipk === '') {
+            isValid = false;
+            reason = 'IPK Kosong';
+          } else if (!row.predikat?.toString().trim()) {
+            isValid = false;
+            reason = 'Predikat Kosong';
+          } else if (!row.fakultas?.toString().trim()) {
+            isValid = false;
+            reason = 'Fakultas Kosong';
+          } else if (!row.prodi?.toString().trim()) {
+            isValid = false;
+            reason = 'Prodi Kosong';
+          } else if (!row.tanggal_yudisium) {
+            isValid = false;
+            reason = 'Tgl Yudisium Kosong';
           } else if (userRole === 'admin_unit' && unitKerja) {
             const f = row.fakultas ? row.fakultas.toString().toLowerCase().trim() : '';
             if (f !== unitKerja.toLowerCase().trim()) {
