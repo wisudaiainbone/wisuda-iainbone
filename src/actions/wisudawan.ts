@@ -754,7 +754,7 @@ export async function importWisudawanBatch(data: any[]) {
         predikat: item.predikat,
         fakultas: item.fakultas,
         prodi: item.prodi,
-        toga: null,
+        toga: item.toga || null,
         tanggal_yudisium: item.tanggal_yudisium,
         terdaftar: null,
         periode: namaPeriodeAktif,
