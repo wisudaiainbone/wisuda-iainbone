@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { updatePeriodePengaturan, createPeriode } from "@/actions/periode";
-import { Save, AlertCircle } from "lucide-react";
+import { Save } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
 
 export default function PeriodeForm({ initialData }: { initialData: any }) {
   const [formData, setFormData] = useState<any>(initialData);
   const [isLoading, setIsLoading] = useState(false);
-  const [msg, setMsg] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const { showToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setMsg(null);
 
     try {
       const { id, created_at, updated_at, stats, title, date, location, venue, day, session1, session2, gladi, ...cleanData } = formData;
@@ -25,16 +25,16 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
       }
 
       if (res.success) {
-        setMsg({ type: 'success', text: formData.id ? 'Pengaturan berhasil disimpan!' : 'Periode berhasil ditambahkan!' });
+        showToast(formData.id ? 'Berhasil Disimpan' : 'Berhasil Ditambahkan', 'success', formData.id ? 'Pengaturan berhasil disimpan!' : 'Periode berhasil ditambahkan!');
         if (!formData.id && (res as any).id) {
           // Redirect ke halaman edit jika baru dibuat
           window.location.href = `/admin/periode/${(res as any).id}`;
         }
       } else {
-        setMsg({ type: 'error', text: res.error || 'Terjadi kesalahan.' });
+        showToast('Gagal', 'error', res.error || 'Terjadi kesalahan.');
       }
     } catch (err: any) {
-      setMsg({ type: 'error', text: err.message });
+      showToast('Error', 'error', err.message);
     } finally {
       setIsLoading(false);
     }
@@ -44,13 +44,6 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {msg && (
-        <div className={`p-4 rounded-xl flex items-center gap-3 ${msg.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
-          <AlertCircle size={20} />
-          <span>{msg.text}</span>
-        </div>
-      )}
-
       <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 space-y-4">
         <div>
           <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Nama Periode / Judul</label>
