@@ -776,8 +776,19 @@ export async function importWisudawanBatch(data: any[]) {
     }
 
     // Invalidate cache
-    await redis.del('wisudawan_list');
-    await redis.del('dashboard:stats:all');
+    try {
+      if (rowsToInsert.length > 0) {
+        const pipeline = redis.pipeline();
+        rowsToInsert.forEach(row => {
+          pipeline.del(`wisudawan:${row.nim}`);
+        });
+        await pipeline.exec();
+      }
+      await redis.del('wisudawan_list');
+      await redis.del('dashboard:stats:all');
+    } catch (err) {
+      console.error("Redis del error:", err);
+    }
     revalidatePath('/admin/wisudawan');
     revalidatePath('/admin');
     
@@ -824,7 +835,14 @@ export async function deleteWisudawan(nim: string) {
     }
 
     // Invalidate cache
-    await redis.del('dashboard:stats:all');
+    try {
+      await redis.del(`wisudawan:${nim}`);
+      await redis.del('dashboard:stats:all');
+    } catch (err) {
+      console.error("Redis del error:", err);
+    }
+    revalidatePath(`/admin/wisudawan/${nim}`);
+    revalidatePath(`/wisudawan/${nim}`);
     revalidatePath('/admin/wisudawan');
     revalidatePath('/admin');
     
@@ -890,6 +908,10 @@ export async function deleteWisudawanBulk(nims: string[]) {
       console.error("Redis del pipeline error:", err);
     }
 
+    nims.forEach(nim => {
+      revalidatePath(`/admin/wisudawan/${nim}`);
+      revalidatePath(`/wisudawan/${nim}`);
+    });
     revalidatePath('/admin/wisudawan');
     revalidatePath('/admin');
     
