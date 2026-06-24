@@ -8,6 +8,8 @@ import { useToast } from "@/components/ui/Toast";
 export default function PeriodeForm({ initialData }: { initialData: any }) {
   const [formData, setFormData] = useState<any>(initialData);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadText, setUploadText] = useState('');
   const { showToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -15,7 +17,23 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
     setIsLoading(true);
 
     try {
+      let finalLink = formData.link_pengumuman;
+
+      if (selectedFile) {
+        setUploadText('Mengunggah File...');
+        const { uploadGeneralFileToGDrive } = await import('@/lib/uploadFoto');
+        const res = await uploadGeneralFileToGDrive(
+          selectedFile,
+          `Pengumuman_${formData.nama_periode?.replace(/[^a-zA-Z0-9]/g, '_') || 'Wisuda'}.pdf`,
+          'application/pdf',
+          formData.link_pengumuman
+        );
+        finalLink = res.fileUrl;
+        setUploadText('');
+      }
+
       const { id, created_at, updated_at, stats, title, date, location, venue, day, session1, session2, gladi, ...cleanData } = formData;
+      cleanData.link_pengumuman = finalLink;
       
       let res;
       if (formData.id) {
@@ -192,14 +210,29 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Link Pengumuman Resmi (Opsional)</label>
-          <input
-            type="url"
-            value={formData.link_pengumuman || ''}
-            onChange={(e) => setFormData({ ...formData, link_pengumuman: e.target.value })}
-            placeholder="Contoh: https://iainbone.ac.id/pengumuman-wisuda"
-            className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-orange-500/50 outline-none"
-          />
+          <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">File Pengumuman Resmi (Opsional, PDF)</label>
+          <div className="flex flex-col gap-2">
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setSelectedFile(e.target.files[0]);
+                }
+              }}
+              className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-orange-500/50 outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-orange-50 dark:file:bg-orange-500/10 file:text-orange-700 dark:file:text-orange-400 hover:file:bg-orange-100 dark:hover:file:bg-orange-500/20"
+            />
+            {formData.link_pengumuman && !selectedFile && (
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                ✅ File sudah diunggah: <a href={formData.link_pengumuman} target="_blank" className="underline hover:text-emerald-700 dark:hover:text-emerald-300" rel="noreferrer">Lihat File Saat Ini</a>
+              </p>
+            )}
+            {selectedFile && (
+              <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                File baru terpilih: {selectedFile.name} (Akan diunggah saat disimpan)
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -233,7 +266,7 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
           className="flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-all disabled:opacity-50"
         >
           <Save size={18} />
-          {isLoading ? 'Menyimpan...' : 'Simpan Perubahan'}
+          {isLoading ? (uploadText || 'Menyimpan...') : 'Simpan Perubahan'}
         </button>
       </div>
     </form>

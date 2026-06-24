@@ -76,7 +76,7 @@ export function getOptimizedGDriveUrl(url: string | null | undefined): string {
 /**
  * Convert File atau Blob ke Base64 string (tanpa prefix data URL).
  */
-function fileToBase64(file: File | Blob): Promise<string> {
+export function fileToBase64(file: File | Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -88,6 +88,49 @@ function fileToBase64(file: File | Blob): Promise<string> {
     reader.onerror = () => reject(new Error("Gagal membaca file."));
     reader.readAsDataURL(file);
   });
+}
+
+/**
+ * Upload file umum (seperti PDF) ke Google Drive via GAS Web App.
+ */
+export async function uploadGeneralFileToGDrive(
+  file: File | Blob,
+  namaFile: string,
+  mimeType: string,
+  oldFileUrl?: string | null
+): Promise<{ fileId: string; fileUrl: string }> {
+  const gasUrl = process.env.NEXT_PUBLIC_GAS_WEBAPP_URL;
+  if (!gasUrl) throw new Error("Konfigurasi GAS Web App URL tidak ditemukan.");
+
+  // Hapus file lama jika ada
+  if (oldFileUrl) {
+    const oldFileId = extractGDriveFileId(oldFileUrl);
+    if (oldFileId) await deleteFotoFromGDrive(oldFileId);
+  }
+
+  const base64Data = await fileToBase64(file);
+
+  const payload = {
+    action: "upload",
+    base64_data: base64Data,
+    nama_file: namaFile,
+    mime_type: mimeType
+  };
+
+  const response = await fetch(gasUrl, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error(`Upload gagal: HTTP ${response.status}`);
+  const result = await response.json();
+  if (result.status !== "success") throw new Error(result.message || "Upload gagal");
+
+  return {
+    fileId: result.fileId,
+    fileUrl: result.fileUrl
+  };
 }
 
 /**
