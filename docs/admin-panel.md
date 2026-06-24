@@ -80,6 +80,7 @@ Pengelolaan periode wisuda aktif, membaca dari tabel `periode_wisuda`:
 - Jadwal & Tanggal (pendaftaran, pelaksanaan, gladi)
 - Tempat Pelaksanaan, Sesi, Jam Sesi
 - Pengumuman Tambahan (ditampilkan di profil wisudawan)
+- **File Pengumuman Resmi (PDF)** — admin dapat mengunggah file PDF yang otomatis tersimpan ke Google Drive, dan wisudawan dapat mengunduhnya melalui tombol oranye di profil mereka.
 - Catatan Pendaftaran (`hint_pendaftaran`) — ditampilkan dengan warna merah di halaman publik dan di kartu Jadwal Wisuda profil
 - Link Grup WhatsApp
 
@@ -200,6 +201,8 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
 - **Import Batch via Excel**: Unggah file `.xlsx` untuk memasukkan data massal.
   - Template mencakup auto-fill data contoh dan *sheet* Master Fakultas.
   - Dilengkapi fitur **Fuzzy-Match Validation** untuk mencocokkan & memperbaiki otomatis ejaan Fakultas/Prodi.
+  - **Validasi Wajib Isi**: Sistem menolak baris yang kosong pada kolom esensial (NIM, Nama, IPK, Predikat, Fakultas, Prodi, Tanggal Yudisium). Kolom Ukuran Toga bersifat opsional.
+  - **Parsing Tanggal Cerdas**: Mendukung berbagai format teks tanggal bahasa Indonesia (contoh: "22 Januari 2026", "22-Jan-2026") selain format standar ISO.
 - **Export Excel**: Unduh seluruh data sebagai file `.xlsx` (termasuk filter yang sedang aktif).
 - **Kolom Aksi Cepat**:
   - 👁️ **Lihat Profil** — pratinjau profil.

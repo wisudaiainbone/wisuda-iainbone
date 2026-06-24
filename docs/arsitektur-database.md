@@ -73,7 +73,7 @@ Contoh: WISUDA-KE-XII_2026_001_20210001001
 ```
 
 ### `periode_wisuda`
-Menyimpan konfigurasi periode wisuda: status, kuota, jadwal, tempat, sesi, pengumuman, hint pendaftaran, link WAG. Dikelola admin dari `/admin/pengaturan`.
+Menyimpan konfigurasi periode wisuda: status, kuota, jadwal, tempat, sesi, pengumuman, hint pendaftaran, link WAG, dan link_pengumuman (File PDF di Google Drive). Dikelola admin dari `/admin/pengaturan`.
 
 ### `prodi`
 Menyimpan daftar master Fakultas, Prodi, Singkatan, dan Gelar. Digunakan untuk validasi import dan penentuan gelar otomatis.

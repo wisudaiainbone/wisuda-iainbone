@@ -17,12 +17,13 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
   - Dilengkapi fitur *Interactive Drill-down* otomatis (Universitas → Fakultas → Prodi) hanya dengan mengklik baris tabel.
   - Memiliki fitur **Export XLSX 12 Sheet** yang mengekspor seluruh rekapan statistik secara berurutan dan terstruktur sampai ke level Prodi.
 - **Feature Toggles Real-time**: Admin dapat mengaktifkan/menonaktifkan fitur (edit profil, tampilkan toga/undangan, izinkan perbaikan, dll.) yang langsung aktif di halaman wisudawan tanpa cache delay.
-- **Manajemen Wisudawan Lanjutan**: Halaman tabel interaktif dengan toolbar terpadu satu baris (pencarian + tombol aksi bergaya *Tag Cloud*), filter Fakultas/Prodi, import massal (beserta template cerdas dan validasi auto-correct *Fuzzy Match*), export Excel, **hapus data satuan maupun massal** (otomatis bersihkan foto di Drive dan cache Redis), edit data lengkap, dan reset password.
+- **Manajemen Wisudawan Lanjutan**: Halaman tabel interaktif dengan toolbar terpadu satu baris (pencarian + tombol aksi bergaya *Tag Cloud*), filter Fakultas/Prodi, import massal (beserta template cerdas, validasi auto-correct *Fuzzy Match*, **validasi wajib isi**, dan **dukungan format tanggal Indonesia**), export Excel, **hapus data satuan maupun massal** (otomatis bersihkan foto di Drive dan cache Redis), edit data lengkap, dan reset password.
   - **Tampilan Responsif Mobile Terbaik**: Mengganti tabel horizontal dengan barisan **Card View** padat dan efisien untuk layar *smartphone*. Info ringkasan data ditampilkan rapat tanpa jeda berlebih, ditambah dukungan klik langsung pada Card untuk navigasi profil yang instan. Tombol aksi (Tambah, Export, Sesi, dll.) berubah menjadi deretan ikon ringkas bergaya *Tag Cloud* atau **Panel Aksi Mengambang (Floating Action Bar)** di bawah layar untuk kenyamanan sentuhan jempol (*thumb-zone*).
   - **Manajemen Admin Lanjutan**: Daftar admin tersusun rapi berdasarkan hierarki otorisasi otomatis (Superadmin → Admin Institut → Admin Unit).
   - **Filter Collapsible (Mobile)**: Seluruh dropdown filter otomatis diciutkan dalam grup "Filter Data" pada tampilan *mobile* agar rapi dan tidak memenuhi layar.
   - **Tabel Interaktif**: Baris tabel dapat diklik untuk membuka **Halaman Detail Profil Admin** yang minimalis dengan panel aksi terpusat.
   - **Filter Dinamis**: Tersedia filter Status Toga yang memunculkan kolom `Uk Toga`, dan filter **Sesi** yang memunculkan kolom `Sesi` di tabel secara otomatis ketika diaktifkan. Tombol reset (✕) muncul ketika ada filter aktif.
+- **Pengumuman Resmi Periode (PDF)** *(Baru)*: Admin dapat mengunggah file PDF pengumuman resmi saat mengedit Periode Wisuda. Tombol unduh otomatis muncul di profil setiap wisudawan yang terdaftar di periode tersebut.
 - **Export Daftar Wisudawan (XLSX)** — Tombol teal **Daftar** mengekspor data wisudawan *terdaftar* ke file `.xlsx` dengan 3 tab (Sesi Satu, Sesi Dua, dan **Rekap**). Tab Rekap menyajikan rekapitulasi data otomatis (Total Wisudawan, Ukuran Toga, Jenis Kelamin, dan Distribusi IPK) per Fakultas & Prodi. Proses 100% *client-side*.
 - **Generate Slide PPTX** *(Diperbarui)* — Tombol violet **Slide** menghasilkan presentasi PowerPoint (`.pptx`) berukuran 1080×1920px (portrait) untuk layar LED. Slide di-generate per Fakultas, berisi foto wisudawan, nomor urut, nama (Title Case), NIM, Prodi, IPK, dan Predikat (dalam label warna pastel). Dihiasi fitur desain pintar: **Badge Bundar (5 cm)** di sudut kiri atas foto, ornamen teks pembatas `◈ ━━━━━━ ◈`, dan bingkai kustom otomatis menyesuaikan fakultas dari pengaturan *app_settings*.
 - **Generate Buku Album Wisudawan** *(Baru)* — Tombol indigo **Album** menghasilkan dokumen berformat tiga kolom (Area Foto | Data: Nama/NIM/Fakultas/Prodi | Area Tanda Tangan) dengan tiga pilihan format ekspor:
@@ -171,19 +172,20 @@ Aplikasi ini telah dirombak untuk menangani lalu lintas pendaftaran wisuda seren
    | `UPSTASH_REDIS_REST_TOKEN` | Token Upstash Redis |
    | `NEXT_PUBLIC_GAS_WEBAPP_URL` | URL Google Apps Script Web App |
 
-4. **Setup Database Supabase**
-   - Jalankan `supabase_schema.sql` di SQL Editor Supabase.
-   - Jalankan `db_migration.sql` di SQL Editor Supabase (tabel `admin_users` + RLS + tabel `app_settings`).
-   - Jalankan `perbaikan_migration.sql` di SQL Editor Supabase (tabel `perbaikan_data` + setting `allow_perbaikan`).
-   - Tambahkan kolom `sesi` di tabel `prodi` (jalankan `add_sesi_to_prodi.sql`).
-   - Tambahkan kolom `urutan` di tabel `prodi` (jalankan `add_urutan_to_prodi.sql`).
-   - Hapus kolom `created_at` dari tabel `prodi` jika ada (jalankan `remove_created_at_from_prodi.sql`).
-   - Jalankan migration kolom toga untuk `periode_wisuda`:
-     ```sql
-     ALTER TABLE public.periode_wisuda
-       ADD COLUMN IF NOT EXISTS waktu_pengambilan_toga JSONB DEFAULT '{}'::jsonb,
-       ADD COLUMN IF NOT EXISTS tempat_pengambilan_toga TEXT;
-     ```
+   - Setup Database Supabase
+     - Jalankan `supabase_schema.sql` di SQL Editor Supabase.
+     - Jalankan `db_migration.sql` di SQL Editor Supabase (tabel `admin_users` + RLS + tabel `app_settings`).
+     - Jalankan `perbaikan_migration.sql` di SQL Editor Supabase (tabel `perbaikan_data` + setting `allow_perbaikan`).
+     - Tambahkan kolom `sesi` di tabel `prodi` (jalankan `add_sesi_to_prodi.sql`).
+     - Tambahkan kolom `urutan` di tabel `prodi` (jalankan `add_urutan_to_prodi.sql`).
+     - Hapus kolom `created_at` dari tabel `prodi` jika ada (jalankan `remove_created_at_from_prodi.sql`).
+     - Jalankan migration kolom toga dan link pengumuman untuk `periode_wisuda`:
+       ```sql
+       ALTER TABLE public.periode_wisuda
+         ADD COLUMN IF NOT EXISTS waktu_pengambilan_toga JSONB DEFAULT '{}'::jsonb,
+         ADD COLUMN IF NOT EXISTS tempat_pengambilan_toga TEXT,
+         ADD COLUMN IF NOT EXISTS link_pengumuman TEXT;
+       ```
    - Tambahkan kolom scan ke tabel `wisudawan`:
      ```sql
      ALTER TABLE public.wisudawan
