@@ -23,6 +23,7 @@ interface WisudawanTableClientProps {
   showToga: boolean;
   adminSession: any;
   allowDeleteWisudawan: boolean;
+  onPageChange?: (page: number) => void;
 }
 
 export default function WisudawanTableClient({
@@ -35,6 +36,7 @@ export default function WisudawanTableClient({
   showToga,
   adminSession,
   allowDeleteWisudawan,
+  onPageChange,
 }: WisudawanTableClientProps) {
   const [selectedNims, setSelectedNims] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -309,6 +311,7 @@ export default function WisudawanTableClient({
           totalPages={totalPages}
           totalItems={totalItems}
           itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={onPageChange}
         />
       </div>
 
@@ -447,6 +450,7 @@ export default function WisudawanTableClient({
           totalPages={totalPages}
           totalItems={totalItems}
           itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={onPageChange}
         />
       </div>
 

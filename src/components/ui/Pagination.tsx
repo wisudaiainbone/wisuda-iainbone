@@ -9,9 +9,10 @@ interface PaginationProps {
   currentPage: number;
   totalItems: number;
   itemsPerPage: number;
+  onPageChange?: (page: number) => void;
 }
 
-export default function Pagination({ totalPages, currentPage, totalItems, itemsPerPage }: PaginationProps) {
+export default function Pagination({ totalPages, currentPage, totalItems, itemsPerPage, onPageChange }: PaginationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -21,6 +22,13 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
     const params = new URLSearchParams(searchParams);
     params.set('page', pageNumber.toString());
     return `${pathname}?${params.toString()}`;
+  };
+
+  const handlePageClick = (e: React.MouseEvent, pageNumber: number) => {
+    if (onPageChange) {
+      e.preventDefault();
+      onPageChange(pageNumber);
+    }
   };
 
   const startItem = (currentPage - 1) * itemsPerPage + 1;
@@ -49,6 +57,26 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
     return range;
   };
 
+  const renderLink = (page: number, children: React.ReactNode, className: string, ariaLabel?: string) => {
+    if (onPageChange) {
+      return (
+        <button
+          onClick={(e) => handlePageClick(e as any, page)}
+          className={className}
+          aria-label={ariaLabel}
+          type="button"
+        >
+          {children}
+        </button>
+      );
+    }
+    return (
+      <Link href={createPageURL(page)} className={className} aria-label={ariaLabel}>
+        {children}
+      </Link>
+    );
+  };
+
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 bg-[var(--color-surface)] border-t border-[var(--color-border)] text-sm">
       <div className="text-[var(--color-text-muted)] text-center sm:text-left">
@@ -56,20 +84,18 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
       </div>
 
       <div className="flex flex-wrap justify-center items-center gap-1.5">
-        <Link
-          href={createPageURL(1)}
-          className={`p-1.5 rounded-lg border border-[var(--color-border)] transition-colors ${currentPage <= 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-[var(--color-bg-secondary)]'}`}
-          aria-label="First page"
-        >
-          <ChevronsLeft size={16} />
-        </Link>
-        <Link
-          href={createPageURL(currentPage - 1)}
-          className={`p-1.5 rounded-lg border border-[var(--color-border)] transition-colors ${currentPage <= 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-[var(--color-bg-secondary)]'}`}
-          aria-label="Previous page"
-        >
-          <ChevronLeft size={16} />
-        </Link>
+        {renderLink(
+          1,
+          <ChevronsLeft size={16} />,
+          `p-1.5 rounded-lg border border-[var(--color-border)] transition-colors ${currentPage <= 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-[var(--color-bg-secondary)]'}`,
+          "First page"
+        )}
+        {renderLink(
+          currentPage - 1,
+          <ChevronLeft size={16} />,
+          `p-1.5 rounded-lg border border-[var(--color-border)] transition-colors ${currentPage <= 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-[var(--color-bg-secondary)]'}`,
+          "Previous page"
+        )}
 
         {getVisiblePages().map((page, index) => {
           if (page === '...') {
@@ -81,35 +107,29 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
           }
 
           const isCurrent = page === currentPage;
-          return (
-            <Link
-              key={page}
-              href={createPageURL(page)}
-              className={`min-w-[32px] h-8 flex items-center justify-center rounded-lg border text-xs font-semibold transition-colors ${
-                isCurrent
-                  ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
-                  : 'border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]'
-              }`}
-            >
-              {page}
-            </Link>
+          return renderLink(
+            page as number,
+            page,
+            `min-w-[32px] h-8 flex items-center justify-center rounded-lg border text-xs font-semibold transition-colors ${
+              isCurrent
+                ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                : 'border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]'
+            }`
           );
         })}
 
-        <Link
-          href={createPageURL(currentPage + 1)}
-          className={`p-1.5 rounded-lg border border-[var(--color-border)] transition-colors ${currentPage >= totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-[var(--color-bg-secondary)]'}`}
-          aria-label="Next page"
-        >
-          <ChevronRight size={16} />
-        </Link>
-        <Link
-          href={createPageURL(totalPages)}
-          className={`p-1.5 rounded-lg border border-[var(--color-border)] transition-colors ${currentPage >= totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-[var(--color-bg-secondary)]'}`}
-          aria-label="Last page"
-        >
-          <ChevronsRight size={16} />
-        </Link>
+        {renderLink(
+          currentPage + 1,
+          <ChevronRight size={16} />,
+          `p-1.5 rounded-lg border border-[var(--color-border)] transition-colors ${currentPage >= totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-[var(--color-bg-secondary)]'}`,
+          "Next page"
+        )}
+        {renderLink(
+          totalPages,
+          <ChevronsRight size={16} />,
+          `p-1.5 rounded-lg border border-[var(--color-border)] transition-colors ${currentPage >= totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-[var(--color-bg-secondary)]'}`,
+          "Last page"
+        )}
       </div>
     </div>
   );

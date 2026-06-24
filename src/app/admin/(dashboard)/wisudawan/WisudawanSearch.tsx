@@ -1,26 +1,28 @@
 "use client";
 
 import { Search, Filter, X, ChevronDown, ChevronUp } from "lucide-react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useTransition, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
-export default function WisudawanSearch({ fakultasList, prodiList, statusList = [], children }: { fakultasList: string[], prodiList: string[], statusList?: string[], children?: React.ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+interface WisudawanSearchProps {
+  fakultasList: string[];
+  prodiList: string[];
+  statusList?: string[];
+  onSearch?: (filters: any) => void;
+  children?: React.ReactNode;
+}
+
+export default function WisudawanSearch({ fakultasList, prodiList, statusList = [], onSearch, children }: WisudawanSearchProps) {
   const [showFilters, setShowFilters] = useState(false);
   
-  const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
-  const [fakultas, setFakultas] = useState(searchParams.get("fakultas") || "");
-  const [prodi, setProdi] = useState(searchParams.get("prodi") || "");
-  const [status, setStatus] = useState(searchParams.get("status") || "");
-  const [toga, setToga] = useState(searchParams.get("toga") || "");
-  const [hadir, setHadir] = useState(searchParams.get("hadir") || "");
-  const [ambilToga, setAmbilToga] = useState(searchParams.get("ambil_toga") || "");
-  const [sesi, setSesi] = useState(searchParams.get("sesi") || "");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [fakultas, setFakultas] = useState("");
+  const [prodi, setProdi] = useState("");
+  const [status, setStatus] = useState("");
+  const [toga, setToga] = useState("");
+  const [hadir, setHadir] = useState("");
+  const [ambilToga, setAmbilToga] = useState("");
+  const [sesi, setSesi] = useState("");
 
-  // Gunakan useRef untuk mencegah efek berjalan pada render pertama
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -28,45 +30,36 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
       isFirstRender.current = false;
       return;
     }
-
-    const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
-      
-      const currentQ = searchParams.get("q") || "";
-      const currentF = searchParams.get("fakultas") || "";
-      const currentP = searchParams.get("prodi") || "";
-      const currentS = searchParams.get("status") || "";
-      const currentToga = searchParams.get("toga") || "";
-      const currentHadir = searchParams.get("hadir") || "";
-      const currentAmbilToga = searchParams.get("ambil_toga") || "";
-      const currentSesi = searchParams.get("sesi") || "";
-
-      if (searchTerm === currentQ && fakultas === currentF && prodi === currentP && status === currentS && toga === currentToga && hadir === currentHadir && ambilToga === currentAmbilToga && sesi === currentSesi) {
-        return;
-      }
-
-      if (searchTerm) params.set("q", searchTerm); else params.delete("q");
-      if (fakultas) params.set("fakultas", fakultas); else params.delete("fakultas");
-      if (prodi) params.set("prodi", prodi); else params.delete("prodi");
-      if (status) params.set("status", status); else params.delete("status");
-      if (toga) params.set("toga", toga); else params.delete("toga");
-      if (hadir) params.set("hadir", hadir); else params.delete("hadir");
-      if (ambilToga) params.set("ambil_toga", ambilToga); else params.delete("ambil_toga");
-      if (sesi) params.set("sesi", sesi); else params.delete("sesi");
-      
-      // Reset page to 1 when filters change
-      params.delete("page");
-      
-      // Keep existing sort params if any
-      
-      startTransition(() => {
-        router.replace(`?${params.toString()}`);
+    
+    if (onSearch) {
+      onSearch({
+        q: searchTerm,
+        fakultas,
+        prodi,
+        status,
+        toga,
+        hadir,
+        ambilToga,
+        sesi
       });
-    }, 300);
-
-    return () => clearTimeout(timer);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, fakultas, prodi, status, toga, hadir, ambilToga, sesi]);
+  }, [fakultas, prodi, status, toga, hadir, ambilToga, sesi]);
+
+  const handleApply = () => {
+    if (onSearch) {
+      onSearch({
+        q: searchTerm,
+        fakultas,
+        prodi,
+        status,
+        toga,
+        hadir,
+        ambilToga,
+        sesi
+      });
+    }
+  };
 
   const handleReset = () => {
     setSearchTerm("");
@@ -77,9 +70,18 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
     setHadir("");
     setAmbilToga("");
     setSesi("");
-    startTransition(() => {
-      router.replace(pathname);
-    });
+    if (onSearch) {
+      onSearch({
+        q: "",
+        fakultas: "",
+        prodi: "",
+        status: "",
+        toga: "",
+        hadir: "",
+        ambilToga: "",
+        sesi: ""
+      });
+    }
   };
 
   return (
@@ -88,15 +90,27 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
         <div className="flex items-center gap-2 flex-1 w-full">
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className={`h-4 w-4 ${isPending ? 'text-emerald-500 animate-pulse' : 'text-[var(--color-text-muted)]'}`} />
+              <Search className="h-4 w-4 text-[var(--color-text-muted)]" />
             </div>
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleApply();
+                }
+              }}
               placeholder="Cari NIM atau Nama..."
-              className="w-full pl-9 pr-4 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all outline-none h-10"
+              className="w-full pl-9 pr-12 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all outline-none h-10"
             />
+            <button
+              onClick={handleApply}
+              title="Cari"
+              className="absolute inset-y-1 right-1 w-8 flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors shadow-sm"
+            >
+              <Search size={14} />
+            </button>
           </div>
           {(searchTerm || fakultas || prodi || status || toga || hadir || ambilToga || sesi) && (
             <button
@@ -221,3 +235,4 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
     </div>
   );
 }
+

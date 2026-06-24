@@ -152,12 +152,13 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
 - **Pencarian Real-time**: Cari berdasarkan NIM atau Nama. Tombol Reset (✕) muncul otomatis saat ada filter aktif.
 - **Tampilan Card View Mobile yang Padat**: Khusus pengguna *smartphone*, tabel data dirender sebagai barisan **Kartu (Card)** interaktif yang merangkum seluruh informasi profil dan aksi tanpa perlu *scroll horizontal*, dengan desain padding dan gap minimum agar hemat ruang layar. Mengklik area manapun pada kartu akan mengarah secara instan ke profil wisudawan bersangkutan berkat fitur prefetch otomatis.
 - **Panel Aksi Mengambang (Floating Action Bar)**: Untuk aksi penyimpanan yang penting (seperti menyimpan urutan Fakultas, Setelan Toga, atau mode Scan Tamu), tombol aksi dan pemberitahuan (`hint`) akan ditampilkan mengambang di bawah layar tepat di atas menu navigasi utama agar mudah diakses jempol.
-- **Filter Dinamis Multi-Kolom**:
+- **Filter Dinamis SPA (Single Page Application)** *(Baru)*:
   - Di layar *mobile*, seluruh filter dropdown secara cerdas dikelompokkan dalam satu tombol toggle **Filter Data** (*collapsible*) dengan status default tertutup.
-  - Fakultas, Prodi, Status
+  - Proses pencarian dan filter berjalan 100% di *client-side* tanpa memicu *loading* server atau perubahan URL parameter, sehingga navigasi sangat instan dan beban memori server (Vercel) serta database Supabase berkurang drastis.
+  - **Fakultas, Prodi, Status, Kehadiran, Ambil Toga** — pemilihan langsung berefek seketika pada tabel tanpa harus menekan tombol Cari.
+  - **Tombol Cari Khusus Teks** — input teks NIM atau Nama membutuhkan penekanan *Enter* atau klik tombol "Cari" di dalam input agar mencegah penundaan (*stuttering*) saat admin mengetik kata yang panjang.
   - **Status Toga** — memunculkan kolom `Uk Toga` di tabel secara dinamis ketika diaktifkan.
   - **Filter Sesi** (`Sesi Satu` / `Sesi Dua` / `Tanpa Sesi`) — memunculkan kolom `Sesi` di tabel secara dinamis ketika diaktifkan.
-  - Kehadiran, Ambil Toga
 - **Pengaturan Sesi per Fakultas** (tombol ungu `Sesi`):
   - Admin dapat menetapkan `Sesi Satu` atau `Sesi Dua` untuk setiap Fakultas.
   - Perubahan disimpan dengan tombol **Simpan** (bukan auto-save).
