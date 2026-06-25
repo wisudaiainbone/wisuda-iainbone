@@ -2,7 +2,9 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useTransition, useState } from 'react';
+import { clearAllSystemCache } from '@/actions/dashboard';
 import type { DashboardStats } from '@/actions/dashboard';
+import { useToast } from '@/components/ui/Toast';
 import SummaryCards from './charts/SummaryCards';
 import PeriodeChart from './charts/PeriodeChart';
 import SebaranChart from './charts/SebaranChart';
@@ -18,7 +20,7 @@ import PrestasiChart from './charts/PrestasiChart';
 import SurveiChart from './charts/SurveiChart';
 import TrenHarianChart from './charts/TrenHarianChart';
 import ExportStatsButton from './charts/ExportStatsButton';
-import { RefreshCw, LayoutDashboard, Filter, ChevronRight, X } from 'lucide-react';
+import { RefreshCw, LayoutDashboard, Filter, ChevronRight, X, Trash2 } from 'lucide-react';
 
 type Props = {
   stats: DashboardStats;
@@ -31,11 +33,30 @@ type Props = {
 export default function DashboardClient({ stats, periodeOptions, selectedPeriode, adminName }: Props) {
   const router = useRouter();
   const pathname = usePathname();
+  const { showToast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const [isClearing, setIsClearing] = useState(false);
 
   // Drilldown state — null = tampil per Fakultas, string = tampil Prodi dari Fakultas tersebut
   const [drillFakultas, setDrillFakultas] = useState<string | null>(null);
   const [drillProdi, setDrillProdi] = useState<string | null>(null);
+
+  const handleClearCache = async () => {
+    if (!confirm('Anda yakin ingin menghapus seluruh cache sistem (Upstash)? Aksi ini mungkin membuat load pertama sedikit lambat.')) return;
+    setIsClearing(true);
+    try {
+      const success = await clearAllSystemCache();
+      if (success) {
+        showToast('Cache Dibersihkan', 'success', 'Seluruh cache sistem berhasil dihapus dari server.');
+      } else {
+        showToast('Gagal', 'error', 'Gagal membersihkan cache sistem.');
+      }
+    } catch (err: any) {
+      showToast('Error', 'error', err.message || 'Terjadi kesalahan saat membersihkan cache.');
+    } finally {
+      setIsClearing(false);
+    }
+  };
 
   const updateParams = (key: string, value: string | undefined) => {
     const params = new URLSearchParams();
@@ -217,10 +238,18 @@ export default function DashboardClient({ stats, periodeOptions, selectedPeriode
               ))}
             </select>
           </div>
-          <div className="shrink-0 flex">
+          <div className="shrink-0 flex gap-2">
+            <button
+              onClick={handleClearCache}
+              disabled={isClearing}
+              className="flex items-center justify-center w-10 h-10 sm:h-9 sm:w-9 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed shrink-0"
+              title="Bersihkan Semua Cache Sistem"
+            >
+              <Trash2 size={16} className={isClearing ? 'animate-pulse' : ''} />
+            </button>
             <ExportStatsButton stats={stats} periode={selectedPeriode} />
           </div>
-          {isPending && <RefreshCw size={16} className="text-emerald-600 animate-spin shrink-0" />}
+          {(isPending || isClearing) && <RefreshCw size={16} className="text-emerald-600 animate-spin shrink-0" />}
         </div>
       </div>
 

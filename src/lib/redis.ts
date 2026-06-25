@@ -44,3 +44,17 @@ export async function invalidateAllDashboardCache() {
     console.error('Redis invalidateAllDashboardCache error:', err);
   }
 }
+
+/**
+ * Menghapus SELURUH cache di Redis (Flush DB).
+ * Gunakan dengan hati-hati.
+ */
+export async function clearAllCache() {
+  try {
+    await redis.flushdb();
+    return true;
+  } catch (err) {
+    console.error('Redis flushdb error:', err);
+    return false;
+  }
+}

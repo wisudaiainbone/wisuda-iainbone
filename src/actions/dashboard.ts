@@ -2,6 +2,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { redis, invalidateAllDashboardCache } from '@/lib/redis';
+import { revalidatePath } from 'next/cache';
 
 const DASHBOARD_CACHE_TTL = 900; // 15 menit
 
@@ -540,6 +541,15 @@ export async function getDashboardStats(periode?: string): Promise<DashboardStat
 
 export async function invalidateDashboardCache() {
   await invalidateAllDashboardCache();
+}
+
+export async function clearAllSystemCache() {
+  const { clearAllCache } = await import('@/lib/redis');
+  const success = await clearAllCache();
+  if (success) {
+    revalidatePath('/', 'layout');
+  }
+  return success;
 }
 
 function getEmptyStats(): DashboardStats {
