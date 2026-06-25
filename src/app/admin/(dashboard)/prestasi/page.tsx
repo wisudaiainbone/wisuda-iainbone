@@ -132,7 +132,7 @@ export default async function AdminPrestasiPage(props: PageProps) {
         />
       }
       organisasiContentNode={
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px]">
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden p-8 flex flex-col items-center justify-center min-h-[300px]">
           <Trophy size={48} className="text-[var(--color-text-muted)] opacity-20 mb-4" />
           <p className="text-[var(--color-text-muted)] font-medium text-sm">Data pengalaman organisasi belum tersedia.</p>
         </div>

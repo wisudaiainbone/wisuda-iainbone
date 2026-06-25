@@ -226,7 +226,7 @@ export default function DashboardClient({ stats, periodeOptions, selectedPeriode
 
       {/* Drilldown Breadcrumb */}
       {isDrillingFakultas && (
-        <div className="sticky top-[72px] mt-4 z-30 flex flex-wrap items-center gap-2 px-4 py-2.5 bg-emerald-50/90 dark:bg-emerald-900/60 backdrop-blur-md border border-emerald-200 dark:border-emerald-800/50 rounded-xl shadow-sm">
+        <div className="sticky top-[72px] mt-4 z-30 flex flex-wrap items-center gap-2 px-4 py-2.5 bg-emerald-50/90 dark:bg-emerald-900/60 backdrop-blur-md border border-emerald-200 dark:border-emerald-800/50 rounded-xl">
           <button
             onClick={handleDrillUpFakultas}
             className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:underline"

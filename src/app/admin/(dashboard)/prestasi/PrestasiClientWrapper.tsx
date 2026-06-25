@@ -48,8 +48,8 @@ export default function PrestasiClientWrapper({
               onClick={() => handleTabChange("akademik")}
               className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${
                 activeTab === "akademik"
-                  ? "bg-emerald-600 text-white shadow-md"
-                  : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] border sm:border-transparent border-[var(--color-border)]"
               }`}
             >
               <span className="hidden sm:inline">Prestasi Akademik</span>
@@ -59,8 +59,8 @@ export default function PrestasiClientWrapper({
               onClick={() => handleTabChange("organisasi")}
               className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${
                 activeTab === "organisasi"
-                  ? "bg-emerald-600 text-white shadow-md"
-                  : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm sm:shadow-none border sm:border-transparent border-[var(--color-border)]"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] border sm:border-transparent border-[var(--color-border)]"
               }`}
             >
               <span className="hidden sm:inline">Pengalaman Organisasi</span>

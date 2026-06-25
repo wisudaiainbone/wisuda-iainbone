@@ -28,7 +28,7 @@ export default function ConfirmDialog({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
-        className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-sm shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col"
+        className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-sm animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 text-center flex flex-col items-center">
@@ -55,10 +55,10 @@ export default function ConfirmDialog({
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all shadow-md ${
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all ${
               isDestructive
-                ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-900/20'
-                : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-900/20'
+                ? 'bg-rose-600 hover:bg-rose-700-rose-900/20'
+                : 'bg-emerald-600 hover:bg-emerald-700-emerald-900/20'
             } disabled:opacity-60`}
           >
             {isLoading && <Loader2 size={16} className="animate-spin" />}

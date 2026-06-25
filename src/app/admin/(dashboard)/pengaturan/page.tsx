@@ -249,7 +249,7 @@ export default function AdminPengaturanPage() {
       <div className="w-full lg:w-[90%] flex-1">
         {activeTab === 'general' && (
           <form onSubmit={handleSave} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-24 sm:pb-0">
-            <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
+            <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden flex flex-col">
 
               {/* Password Default */}
               <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
@@ -340,7 +340,7 @@ export default function AdminPengaturanPage() {
                     onChange={(e) => setAllowEditProfile(e.target.checked)}
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${allowEditProfile ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowEditProfile ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${allowEditProfile ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>
@@ -365,7 +365,7 @@ export default function AdminPengaturanPage() {
                     onChange={(e) => setAllowEditToga(e.target.checked)}
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${allowEditToga ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowEditToga ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${allowEditToga ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>
@@ -390,7 +390,7 @@ export default function AdminPengaturanPage() {
                     onChange={(e) => setShowTogaInfo(e.target.checked)}
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${showTogaInfo ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${showTogaInfo ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${showTogaInfo ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>
@@ -415,7 +415,7 @@ export default function AdminPengaturanPage() {
                     onChange={(e) => setShowUndanganInfo(e.target.checked)}
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${showUndanganInfo ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${showUndanganInfo ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${showUndanganInfo ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>
@@ -444,7 +444,7 @@ export default function AdminPengaturanPage() {
                     onChange={(e) => setAllowPerbaikan(e.target.checked)}
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${allowPerbaikan ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowPerbaikan ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${allowPerbaikan ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>
@@ -473,7 +473,7 @@ export default function AdminPengaturanPage() {
                     onChange={(e) => setAllowAbsensiLogin(e.target.checked)}
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${allowAbsensiLogin ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowAbsensiLogin ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${allowAbsensiLogin ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>
@@ -502,7 +502,7 @@ export default function AdminPengaturanPage() {
                     onChange={(e) => setShowPrestasiCard(e.target.checked)}
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${showPrestasiCard ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${showPrestasiCard ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${showPrestasiCard ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>
@@ -531,7 +531,7 @@ export default function AdminPengaturanPage() {
                     onChange={(e) => setAllowDeleteWisudawan(e.target.checked)}
                   />
                   <div className={`relative w-12 h-6 rounded-full transition-colors ${allowDeleteWisudawan ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${allowDeleteWisudawan ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${allowDeleteWisudawan ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
                 </div>
               </label>
@@ -544,7 +544,7 @@ export default function AdminPengaturanPage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all shadow-md shadow-emerald-900/20 active:scale-95"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all-emerald-900/20 active:scale-95"
                 >
                   {isSaving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                   {isSaving ? "Menyimpan..." : "Simpan Perubahan"}
@@ -556,7 +556,7 @@ export default function AdminPengaturanPage() {
 
         {activeTab === 'prestasi' && (
           <form onSubmit={handleSavePrestasi} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-24 sm:pb-0">
-            <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
+            <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden flex flex-col">
 
               {/* === Background Upload === */}
 
@@ -573,7 +573,7 @@ export default function AdminPengaturanPage() {
                   {/* Preview + Actions */}
                   <div className="flex flex-col items-center gap-3 shrink-0">
                     {certBgUrl ? (
-                      <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 shadow-md group">
+                      <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 group">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={certBgUrl}
@@ -655,7 +655,7 @@ export default function AdminPengaturanPage() {
                 <div className="w-full sm:w-auto shrink-0 flex flex-col items-center gap-3">
                   <div className="relative group">
                     {certTtdUrl ? (
-                      <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 shadow-sm group bg-[var(--color-bg)] bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3C%2Fsvg%3E')]">
+                      <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 group bg-[var(--color-bg)] bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3C%2Fsvg%3E')]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={certTtdUrl} alt="Preview TTD" className="w-full h-full object-contain" />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
@@ -854,7 +854,7 @@ export default function AdminPengaturanPage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all shadow-md shadow-emerald-900/20 active:scale-95"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all-emerald-900/20 active:scale-95"
                 >
                   {isSaving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                   {isSaving ? "Menyimpan..." : "Simpan Pengaturan Prestasi"}
@@ -869,7 +869,7 @@ export default function AdminPengaturanPage() {
             {activePeriode ? (
               <TogaSettingsForm activePeriode={activePeriode} />
             ) : (
-              <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm p-12 flex flex-col items-center justify-center">
+              <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden p-12 flex flex-col items-center justify-center">
                 <AlertCircle size={40} className="text-[var(--color-text-muted)] opacity-50 mb-4" />
                 <p className="text-[var(--color-text-muted)] text-sm font-medium text-center">Tidak ada periode wisuda yang sedang aktif.<br />Silakan aktifkan periode terlebih dahulu di menu Periode.</p>
               </div>

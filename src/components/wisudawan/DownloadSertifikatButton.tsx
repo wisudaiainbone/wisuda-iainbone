@@ -98,7 +98,7 @@ export default function DownloadSertifikatButton({ w }: Props) {
     <button
       onClick={handleDownload}
       disabled={isGenerating}
-      className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-md w-full sm:w-auto"
+      className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all w-full sm:w-auto"
     >
       {isGenerating ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
       <span>{isGenerating ? "Menyiapkan PDF..." : "Download Sertifikat PDF"}</span>

@@ -33,7 +33,7 @@ export default async function AdminInformasiPage() {
         {sorted.slice(0, 2).map((periode) => (
           <div
             key={periode.id}
-            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm flex flex-col"
+            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden flex flex-col"
           >
             {/* Card Header */}
             <div className="px-5 py-4 border-b border-[var(--color-border)] flex items-center gap-2">

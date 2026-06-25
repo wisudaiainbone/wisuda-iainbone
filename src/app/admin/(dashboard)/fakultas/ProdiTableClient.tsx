@@ -76,7 +76,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
   };
 
   return (
-    <div className="bg-transparent md:bg-[var(--color-surface)] md:rounded-2xl border-none md:border md:border-[var(--color-border)] shadow-none md:shadow-sm overflow-hidden flex flex-col gap-4 md:gap-0">
+    <div className="bg-transparent md:bg-[var(--color-surface)] md:rounded-2xl border-none md:border md:border-[var(--color-border)] overflow-hidden flex flex-col gap-4 md:gap-0">
       {/* Sticky Save/Cancel Bar (Desktop) */}
       {isDirty && (
         <div className="hidden md:flex bg-emerald-50 dark:bg-emerald-900/20 border-b border border-emerald-100 dark:border-emerald-800/30 p-3 items-center justify-between animate-in slide-in-from-top-2 rounded-t-2xl">
@@ -108,7 +108,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
       {/* Floating Action Bar (Mobile Only) */}
       <div className="md:hidden fixed bottom-20 left-0 right-0 px-4 z-50 pointer-events-none flex flex-col items-center justify-end gap-3">
         {isDirty && (
-          <div className="w-full bg-emerald-50 dark:bg-[#06241a]/90 backdrop-blur-md border border-emerald-200 dark:border-emerald-800/50 p-3.5 rounded-2xl shadow-xl pointer-events-auto animate-in slide-in-from-bottom-4">
+          <div className="w-full bg-emerald-50 dark:bg-[#06241a]/90 backdrop-blur-md border border-emerald-200 dark:border-emerald-800/50 p-3.5 rounded-2xl pointer-events-auto animate-in slide-in-from-bottom-4">
             <div className="text-sm font-medium text-emerald-800 dark:text-emerald-300 text-center">
               Urutan tabel telah diubah. Simpan perubahan?
             </div>
@@ -120,14 +120,14 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
               <button
                 onClick={handleCancel}
                 disabled={isPending}
-                className="flex-1 flex items-center justify-center px-5 h-[42px] text-sm font-bold rounded-full transition-colors bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-sm border border-[var(--color-border)]"
+                className="flex-1 flex items-center justify-center px-5 h-[42px] text-sm font-bold rounded-full transition-colors bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] border border-[var(--color-border)]"
               >
                 Batal
               </button>
               <button
                 onClick={handleSave}
                 disabled={isPending}
-                className="flex-1 flex items-center justify-center px-5 h-[42px] text-sm font-bold rounded-full transition-colors bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-95"
+                className="flex-1 flex items-center justify-center px-5 h-[42px] text-sm font-bold rounded-full transition-colors bg-emerald-600 hover:bg-emerald-700 text-white active:scale-95"
               >
                 {isPending ? <Loader2 size={16} className="animate-spin mr-1.5" /> : null}
                 Simpan
@@ -140,7 +140,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
             trigger={
               <button 
                 title="Tambah Data Prodi"
-                className={`${isDirty ? 'w-[42px] shrink-0' : 'w-14 shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30'} flex items-center justify-center ${isDirty ? 'h-[42px] rounded-full bg-emerald-600 hover:bg-emerald-700' : 'h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 transition-transform hover:scale-105'} text-white shadow-md active:scale-95 transition-colors`}
+                className={`${isDirty ? 'w-[42px] shrink-0' : 'w-14-[0_8px_30px_rgb(0,0,0,0.12)]-emerald-600/30'} flex items-center justify-center ${isDirty ? 'h-[42px] rounded-full bg-emerald-600 hover:bg-emerald-700' : 'h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 transition-transform hover:scale-105'} text-white active:scale-95 transition-colors`}
               >
                 <Plus size={isDirty ? 20 : 24} />
               </button>
@@ -156,7 +156,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
           trigger={
           <button 
             title="Tambah Data Prodi"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center-[0_8px_30px_rgb(0,0,0,0.12)]-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
           >
             <Plus size={24} />
           </button>
@@ -210,7 +210,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
           items.map((prodi, index) => (
             <div 
               key={prodi.id} 
-              className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 shadow-sm flex flex-col gap-2 relative cursor-grab active:cursor-grabbing"
+              className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 flex flex-col gap-2 relative cursor-grab active:cursor-grabbing"
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
               onDragOver={(e) => handleDragOver(e, index)}

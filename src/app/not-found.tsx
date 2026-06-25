@@ -29,12 +29,12 @@ export default function NotFound() {
               repeatType: "reverse",
               ease: "easeInOut"
             }}
-            className="mb-8 p-6 bg-emerald-100/50 dark:bg-emerald-900/20 rounded-full border border-emerald-200/50 dark:border-emerald-800/30 shadow-glow"
+            className="mb-8 p-6 bg-emerald-100/50 dark:bg-emerald-900/20 rounded-full border border-emerald-200/50 dark:border-emerald-800/30-glow"
           >
             <SearchX size={64} className="text-emerald-700 dark:text-emerald-400" />
           </motion.div>
 
-          <h1 className="text-8xl md:text-9xl font-bold font-[var(--font-outfit)] gradient-text select-none drop-shadow-sm mb-4">
+          <h1 className="text-8xl md:text-9xl font-bold font-[var(--font-outfit)] gradient-text select-none mb-4">
             404
           </h1>
           
@@ -54,14 +54,14 @@ export default function NotFound() {
           >
             <button
               onClick={() => window.history.back()}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-surface)] text-[var(--color-text)] border border-[var(--color-border)] rounded-xl font-medium hover:bg-[var(--color-surface-hover)] transition-all duration-300 shadow-sm"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-surface)] text-[var(--color-text)] border border-[var(--color-border)] rounded-xl font-medium hover:bg-[var(--color-surface-hover)] transition-all duration-300"
             >
               <ArrowLeft size={18} />
               Kembali
             </button>
             <Link
               href="/"
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-medium transition-all duration-300 shadow-md shadow-emerald-900/20"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-medium transition-all duration-300-emerald-900/20"
             >
               <Home size={18} />
               Beranda Utama

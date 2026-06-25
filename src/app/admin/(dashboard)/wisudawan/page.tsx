@@ -36,7 +36,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
 
       {/* Stats Quick View */}
       <div className="grid grid-cols-3 gap-2 sm:gap-4">
-        <div className="bg-blue-50 border border-blue-100 dark:bg-blue-900/10 dark:border-blue-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4 shadow-sm">
+        <div className="bg-blue-50 border border-blue-100 dark:bg-blue-900/10 dark:border-blue-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4">
           <div className="hidden sm:flex w-10 h-10 rounded-lg bg-blue-500/10 text-blue-500 items-center justify-center shrink-0">
             <UserCheck size={20} />
           </div>
@@ -48,7 +48,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
             <p className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-300 font-mono">{allWisudawan.length}</p>
           </div>
         </div>
-        <div className="bg-emerald-50 border border-emerald-100 dark:bg-emerald-900/10 dark:border-emerald-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4 shadow-sm">
+        <div className="bg-emerald-50 border border-emerald-100 dark:bg-emerald-900/10 dark:border-emerald-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4">
           <div className="hidden sm:flex w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-500 items-center justify-center shrink-0">
             <GraduationCap size={20} />
           </div>
@@ -60,7 +60,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
             <p className="text-lg sm:text-xl font-bold text-emerald-700 dark:text-emerald-300 font-mono">{totalPendaftar}</p>
           </div>
         </div>
-        <div className="bg-amber-50 border border-amber-100 dark:bg-amber-900/10 dark:border-amber-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4 shadow-sm">
+        <div className="bg-amber-50 border border-amber-100 dark:bg-amber-900/10 dark:border-amber-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4">
           <div className="hidden sm:flex w-10 h-10 rounded-lg bg-amber-500/10 text-amber-500 items-center justify-center shrink-0">
             <Clock size={20} />
           </div>

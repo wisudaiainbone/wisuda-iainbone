@@ -127,7 +127,7 @@ export default async function AdminTogaPage(props: PageProps) {
       }
       rekapContentNode={
         <>
-          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-[var(--color-border)] bg-amber-50/50 dark:bg-amber-900/10 flex items-center gap-2">
               <AlertCircle size={16} className="text-amber-600 dark:text-amber-500" />
               <h2 className="text-sm font-bold text-amber-900 dark:text-amber-300">Progress Pengisian Data Toga</h2>

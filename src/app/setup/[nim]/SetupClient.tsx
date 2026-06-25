@@ -94,7 +94,7 @@ export default function SetupClient({ nim, nama, initialToga }: { nim: string; n
         transition={{ duration: 0.5 }}
         className="relative z-10 w-full max-w-md"
       >
-        <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-2xl rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+        <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-2xl rounded-3xl p-8 relative overflow-hidden">
           {/* Top accent bar */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-emerald-600" />
 
@@ -127,7 +127,7 @@ export default function SetupClient({ nim, nama, initialToga }: { nim: string; n
               {/* Header */}
               <div className="text-center mb-6">
                 <div className="flex items-center justify-center mb-4">
-                  <Image src="/logo.png" alt="Logo IAIN Bone" width={56} height={56} className="drop-shadow-sm" />
+                  <Image src="/logo.png" alt="Logo IAIN Bone" width={56} height={56} />
                 </div>
                 <h1 className="text-xl font-bold font-[var(--font-outfit)] text-[var(--color-text)] mb-1">
                   Lengkapi Akun Anda
@@ -251,7 +251,7 @@ export default function SetupClient({ nim, nama, initialToga }: { nim: string; n
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full mt-2 group relative flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 shadow-lg shadow-emerald-900/20 bg-emerald-800 hover:bg-emerald-900 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full mt-2 group relative flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 bg-emerald-800 hover:bg-emerald-900 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">

@@ -112,7 +112,7 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
             page,
             `min-w-[32px] h-8 flex items-center justify-center rounded-lg border text-xs font-semibold transition-colors ${
               isCurrent
-                ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                ? 'bg-emerald-600 border-emerald-600 text-white'
                 : 'border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]'
             }`
           );

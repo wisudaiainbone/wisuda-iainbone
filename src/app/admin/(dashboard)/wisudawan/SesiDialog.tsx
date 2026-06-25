@@ -91,7 +91,7 @@ export default function SesiDialog() {
       {/* Trigger Button */}
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-violet-900/20 whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-violet-900/20 whitespace-nowrap"
       >
         <Layers size={16} />
         Sesi
@@ -108,7 +108,7 @@ export default function SesiDialog() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 30, scale: 0.97 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="w-full sm:max-w-lg bg-[var(--color-bg)] rounded-t-2xl sm:rounded-2xl border border-[var(--color-border)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="w-full sm:max-w-lg bg-[var(--color-bg)] rounded-t-2xl sm:rounded-2xl border border-[var(--color-border)] overflow-hidden flex flex-col max-h-[90vh]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -177,7 +177,7 @@ export default function SesiDialog() {
                                 key={opt.value}
                                 onClick={() => handleSelect(row.fakultas, opt.value)}
                                 className={`flex items-center gap-1.5 px-3 h-9 rounded-lg text-xs font-semibold border transition-all ${isActive
-                                    ? "bg-violet-600 text-white border-violet-600 shadow-sm"
+                                    ? "bg-violet-600 text-white border-violet-600"
                                     : "bg-[var(--color-bg-secondary)] border-[var(--color-border)] text-[var(--color-text-subtle)] hover:text-[var(--color-text)] hover:border-violet-400"
                                   }`}
                               >
@@ -210,7 +210,7 @@ export default function SesiDialog() {
                 <button
                   onClick={handleSave}
                   disabled={isSaving || !hasChanges || isLoading}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
                 >
                   {isSaving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                   {isSaving ? "Menyimpan..." : "Simpan"}

@@ -82,7 +82,7 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: () => void
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.85, y: 12 }}
       transition={{ type: "spring", stiffness: 420, damping: 30 }}
-      className={`relative w-[290px] sm:w-[320px] rounded-2xl border shadow-2xl shadow-black/20 overflow-hidden ${cfg.cardBg} ${cfg.border}`}
+      className={`relative w-[290px] sm:w-[320px] rounded-2xl border-black/20 overflow-hidden ${cfg.cardBg} ${cfg.border}`}
     >
       {/* Close Button */}
       <button
@@ -95,7 +95,7 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: () => void
       {/* Content */}
       <div className="flex flex-col items-center text-center px-5 pt-6 pb-5 gap-3">
         {/* Icon circle */}
-        <div className={`w-14 h-14 rounded-full ${cfg.iconBg} ${cfg.iconColor} flex items-center justify-center shadow-lg`}>
+        <div className={`w-14 h-14 rounded-full ${cfg.iconBg} ${cfg.iconColor} flex items-center justify-center`}>
           {cfg.icon}
         </div>
 

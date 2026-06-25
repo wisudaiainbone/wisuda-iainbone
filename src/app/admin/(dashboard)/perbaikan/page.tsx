@@ -127,7 +127,7 @@ export default function AdminPerbaikanPage() {
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
-            className={`fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg text-sm font-bold ${toast.type === "success"
+            className={`fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold ${toast.type === "success"
               ? "bg-emerald-600 text-white"
               : "bg-rose-600 text-white"
               }`}
@@ -205,7 +205,7 @@ export default function AdminPerbaikanPage() {
                 className="group px-4 py-3 sm:px-5 sm:py-4 hover:bg-[var(--color-bg-secondary)] transition-colors flex items-center gap-4 cursor-pointer"
               >
                 {/* Avatar */}
-                <div className="shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
+                <div className="shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-sm group-hover:scale-105 transition-transform">
                   {(item.wisudawan?.nama_mahasiswa || item.nim).charAt(0).toUpperCase()}
                 </div>
 
@@ -249,7 +249,7 @@ export default function AdminPerbaikanPage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 30, scale: 0.97 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full sm:max-w-xl bg-[var(--color-bg)] rounded-t-2xl sm:rounded-2xl border border-[var(--color-border)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="w-full sm:max-w-xl bg-[var(--color-bg)] rounded-t-2xl sm:rounded-2xl border border-[var(--color-border)] overflow-hidden flex flex-col max-h-[90vh]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header Modal */}
@@ -350,7 +350,7 @@ export default function AdminPerbaikanPage() {
                       type="button"
                       onClick={() => handleAction("diterima")}
                       disabled={isSubmitting}
-                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-sm"
+                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors flex items-center gap-1.5"
                     >
                       {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
                       Terima Pengajuan

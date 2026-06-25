@@ -72,7 +72,7 @@ export default function AdminBottomNav({ role }: Props) {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           {/* Sidebar Panel */}
-          <div className="relative w-[75vw] max-w-[300px] bg-[var(--color-surface)] h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
+          <div className="relative w-[75vw] max-w-[300px] bg-[var(--color-surface)] h-full flex flex-col animate-in slide-in-from-left duration-300">
             <div className="flex-1 overflow-y-auto p-4 space-y-1 pb-20">
               {visibleLinks.map((link) => {
                 const isActive = link.exact
@@ -101,7 +101,7 @@ export default function AdminBottomNav({ role }: Props) {
       )}
 
       {/* Bottom Navigation Bar */}
-      <nav className={`md:hidden ${isScanTab ? 'hidden' : 'fixed'} bottom-0 left-0 right-0 h-16 md:h-[72px] bg-[var(--color-surface)] border-t border-[var(--color-border)] z-50 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.04)]`}>
+      <nav className={`md:hidden ${isScanTab ? 'hidden' : 'fixed'} bottom-0 left-0 right-0 h-16 md:h-[72px] bg-[var(--color-surface)] border-t border-[var(--color-border)] z-50 pb-safe-[0_-4px_24px_rgba(0,0,0,0.04)]`}>
         <div className="flex items-center h-[60px] max-w-md mx-auto relative px-1">
           
           {canManageWisudawan(role) && (
@@ -115,7 +115,7 @@ export default function AdminBottomNav({ role }: Props) {
               }`}
             >
               {isWisudawanActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full-[0_2px_8px_rgba(16,185,129,0.5)]" />
               )}
               <User size={20} className={isWisudawanActive ? "animate-in zoom-in duration-300" : ""} />
               <span className="text-[10px] font-semibold leading-none">Wisudawan</span>
@@ -133,7 +133,7 @@ export default function AdminBottomNav({ role }: Props) {
               }`}
             >
               {isPerbaikanActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full-[0_2px_8px_rgba(16,185,129,0.5)]" />
               )}
               <Hammer size={20} className={isPerbaikanActive ? "animate-in zoom-in duration-300" : ""} />
               <span className="text-[10px] font-semibold leading-none">Perbaikan</span>
@@ -151,7 +151,7 @@ export default function AdminBottomNav({ role }: Props) {
               }`}
             >
               {isPengaturanActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full-[0_2px_8px_rgba(16,185,129,0.5)]" />
               )}
               <Settings size={20} className={isPengaturanActive ? "animate-in zoom-in duration-300" : ""} />
               <span className="text-[10px] font-semibold leading-none">Pengaturan</span>
@@ -169,7 +169,7 @@ export default function AdminBottomNav({ role }: Props) {
               }`}
             >
               {isBerandaActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full shadow-[0_2px_8px_rgba(16,185,129,0.5)]" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full-[0_2px_8px_rgba(16,185,129,0.5)]" />
               )}
               <LayoutDashboard size={20} className={isBerandaActive ? "animate-in zoom-in duration-300" : ""} />
               <span className="text-[10px] font-semibold leading-none">Statistik</span>

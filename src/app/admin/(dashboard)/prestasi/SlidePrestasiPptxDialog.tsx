@@ -495,7 +495,7 @@ export default function SlidePrestasiPptxDialog({ data, prodiData }: Props) {
         onClick={() => setOpen(true)}
         disabled={!data.length}
         title="Generate Slide PPTX"
-        className="flex-auto sm:flex-none flex items-center justify-center sm:w-32 gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-indigo-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        className="flex-auto sm:flex-none flex items-center justify-center sm:w-32 gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-indigo-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
       >
         <MonitorPlay size={16} className="shrink-0" />
         <span className="inline">Slide</span>
@@ -504,7 +504,7 @@ export default function SlidePrestasiPptxDialog({ data, prodiData }: Props) {
       {/* Dialog Modal */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden">
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-md animate-in zoom-in-95 duration-200 overflow-hidden">
 
             {/* Header */}
             <div className="flex items-center justify-between p-5 border-b border-[var(--color-border)]">
@@ -569,7 +569,7 @@ export default function SlidePrestasiPptxDialog({ data, prodiData }: Props) {
               <button
                 onClick={handleGenerate}
                 disabled={targetWisudawan.length === 0 || isGenerating}
-                className="flex items-center gap-2 px-6 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white text-sm font-bold transition-colors shadow-md shadow-violet-900/20"
+                className="flex items-center gap-2 px-6 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white text-sm font-bold transition-colors-violet-900/20"
               >
                 {isGenerating ? (
                   <><Loader2 size={15} className="animate-spin" /> Memproses...</>

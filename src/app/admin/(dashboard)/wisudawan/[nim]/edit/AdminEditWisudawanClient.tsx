@@ -308,7 +308,7 @@ export default function AdminEditWisudawanClient({
         </div>
 
         {/* Footer Actions */}
-        <div className="sticky bottom-4 flex justify-end gap-3 p-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-xl shadow-black/5 z-40">
+        <div className="sticky bottom-4 flex justify-end gap-3 p-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl z-40">
           <a
             href={`/admin/wisudawan/${nim}`}
             className="px-5 py-2.5 rounded-xl font-semibold text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-colors text-sm"
@@ -318,7 +318,7 @@ export default function AdminEditWisudawanClient({
           <button
             type="submit"
             disabled={isPending}
-            className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm transition-all shadow-md shadow-blue-900/20 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isPending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             Simpan Perubahan

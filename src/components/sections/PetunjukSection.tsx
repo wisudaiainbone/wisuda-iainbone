@@ -21,7 +21,7 @@ export function PetunjukSection() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="w-full bg-gradient-to-r from-[#1e3a5f] to-[#1a2e4a] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-emerald-800/15 shadow-[0_8px_32px_rgba(30,58,95,0.15)]"
+          className="w-full bg-gradient-to-r from-[#1e3a5f] to-[#1a2e4a] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-emerald-800/15-[0_8px_32px_rgba(30,58,95,0.15)]"
         >
           <div className="flex items-center gap-4 text-center sm:text-left">
             <div className="w-12 h-12 rounded-full bg-emerald-800/15 flex items-center justify-center shrink-0 hidden sm:flex">
@@ -32,7 +32,7 @@ export function PetunjukSection() {
               <p className="text-white/60 text-sm mt-1">Unduh buku petunjuk format PDF untuk informasi lebih detail.</p>
             </div>
           </div>
-          <button className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-800 text-white font-semibold text-sm hover:bg-emerald-950 hover:shadow-[0_0_24px_rgba(16,185,129,0.35)] transition-all duration-300 w-full sm:w-auto justify-center">
+          <button className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-800 text-white font-semibold text-sm hover:bg-emerald-950 hover: transition-all duration-300 w-full sm:w-auto justify-center">
             <Download size={16} />
             Lihat & Unduh Buku Panduan
           </button>

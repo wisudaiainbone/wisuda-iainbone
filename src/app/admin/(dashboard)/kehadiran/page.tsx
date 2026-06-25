@@ -19,7 +19,7 @@ export default async function AdminKehadiranPage() {
     const { ShieldAlert } = await import('lucide-react');
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center h-[80vh] animate-in fade-in zoom-in-95 duration-500">
-        <div className="mb-6 p-6 bg-red-100/50 dark:bg-red-900/20 rounded-full border border-red-200/50 dark:border-red-800/30 shadow-sm">
+        <div className="mb-6 p-6 bg-red-100/50 dark:bg-red-900/20 rounded-full border border-red-200/50 dark:border-red-800/30">
           <ShieldAlert size={64} className="text-red-600 dark:text-red-400" />
         </div>
         <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-text)] mb-4 font-[var(--font-outfit)]">

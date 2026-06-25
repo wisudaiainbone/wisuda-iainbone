@@ -61,7 +61,7 @@ export default function NomorDialog() {
       {/* Trigger Button */}
       <button
         onClick={handleOpen}
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-amber-900/20 whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-amber-900/20 whitespace-nowrap"
       >
         <ListOrdered size={16} />
         Nomor
@@ -78,7 +78,7 @@ export default function NomorDialog() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 30, scale: 0.97 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="w-full sm:max-w-xl bg-[var(--color-bg)] rounded-t-2xl sm:rounded-2xl border border-[var(--color-border)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="w-full sm:max-w-xl bg-[var(--color-bg)] rounded-t-2xl sm:rounded-2xl border border-[var(--color-border)] overflow-hidden flex flex-col max-h-[90vh]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -275,7 +275,7 @@ export default function NomorDialog() {
                   {phase === "confirm" && (
                     <button
                       onClick={handleGenerate}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+                      className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-colors"
                     >
                       <Hash size={14} />
                       Lanjutkan
@@ -284,7 +284,7 @@ export default function NomorDialog() {
                   {phase === "result" && (
                     <button
                       onClick={() => { setPhase("confirm"); setResult(null); }}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+                      className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl transition-colors"
                     >
                       <Hash size={14} />
                       Generate Ulang

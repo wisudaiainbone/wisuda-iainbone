@@ -29,7 +29,7 @@ export default function CropModal({ isOpen, imageSrc, onClose, onApply }: CropMo
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]"
           >
             <div className="p-4 border-b border-[var(--color-border)] flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -67,13 +67,13 @@ export default function CropModal({ isOpen, imageSrc, onClose, onApply }: CropMo
               {/* Area Aman Overlay */}
               <div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
                 <div className="relative aspect-[3/4] h-[80%] max-h-[360px] flex flex-col items-center justify-center opacity-50">
-                  <svg viewBox="0 0 100 133" className="w-full h-full drop-shadow-md">
+                  <svg viewBox="0 0 100 133" className="w-full h-full">
                     {/* Kepala */}
                     <ellipse cx="50" cy="50" rx="18" ry="24" fill="none" stroke="#34d399" strokeWidth="1.5" strokeDasharray="4 4" />
                     {/* Pundak */}
                     <path d="M15 133 C 15 95, 85 95, 85 133" fill="none" stroke="#34d399" strokeWidth="1.5" strokeDasharray="4 4" />
                   </svg>
-                  <span className="absolute bottom-[15%] text-emerald-400 text-[9px] font-bold uppercase tracking-widest drop-shadow-md text-center px-2 bg-slate-900/40 rounded backdrop-blur-sm py-0.5">
+                  <span className="absolute bottom-[15%] text-emerald-400 text-[9px] font-bold uppercase tracking-widest text-center px-2 bg-slate-900/40 rounded backdrop-blur-sm py-0.5">
                     Area Wajah & Pundak
                   </span>
                 </div>
@@ -105,7 +105,7 @@ export default function CropModal({ isOpen, imageSrc, onClose, onApply }: CropMo
               </button>
               <button
                 onClick={() => onApply(croppedAreaPixels)}
-                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-sm font-bold transition-all shadow-md shadow-emerald-900/20"
+                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-sm font-bold transition-all-emerald-900/20"
               >
                 <CheckCircle2 size={16} />
                 Terapkan Foto

@@ -156,7 +156,7 @@ export default function TamuListClient({
   return (
     <div className="space-y-6">
       {/* Tabel */}
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)] text-[var(--color-text-muted)]">
@@ -187,7 +187,7 @@ export default function TamuListClient({
                   >
                     <td className="px-6 py-4">
                       <div
-                        className="w-12 h-12 bg-white p-1 rounded-lg border border-[var(--color-border)] shadow-sm shrink-0 flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+                        className="w-12 h-12 bg-white p-1 rounded-lg border border-[var(--color-border)] shrink-0 flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
                         onClick={() => setQrModalId(tamu.id)}
                         title="Perbesar QR Code"
                       >
@@ -264,7 +264,7 @@ export default function TamuListClient({
       <div className="hidden sm:flex fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50">
         <button
           onClick={() => handleOpenModal()}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center-[0_8px_30px_rgb(0,0,0,0.12)]-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
           title="Tambah Tamu"
         >
           <Plus size={24} />
@@ -274,7 +274,7 @@ export default function TamuListClient({
       {/* Modal Add/Edit */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[var(--color-surface)] w-full max-w-md rounded-2xl shadow-xl border border-[var(--color-border)] overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-[var(--color-surface)] w-full max-w-md rounded-2xl border border-[var(--color-border)] overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
               <h3 className="text-lg font-bold text-[var(--color-text)]">
                 {editingId ? "Edit Tamu" : "Tambah Tamu"}
@@ -379,7 +379,7 @@ export default function TamuListClient({
       {/* Delete Confirmation Modal */}
       {deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[var(--color-surface)] w-full max-w-sm rounded-2xl shadow-xl border border-[var(--color-border)] overflow-hidden animate-in zoom-in-95 duration-200 p-6 text-center">
+          <div className="bg-[var(--color-surface)] w-full max-w-sm rounded-2xl border border-[var(--color-border)] overflow-hidden animate-in zoom-in-95 duration-200 p-6 text-center">
             <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 mx-auto rounded-full flex items-center justify-center mb-4">
               <Trash2 size={32} />
             </div>
@@ -420,7 +420,7 @@ export default function TamuListClient({
           onClick={() => setQrModalId(null)}
         >
           <div
-            className="bg-white p-6 rounded-2xl shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center relative"
+            className="bg-white p-6 rounded-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center relative"
             onClick={(e) => e.stopPropagation()}
           >
             <button

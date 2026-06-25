@@ -323,7 +323,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
         {/* ─── Info Badges (Selalu Tampil) ─── */}
         <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center justify-center gap-2 pointer-events-none w-full px-4">
           {meta && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full border border-white/20">
               <CheckCircle2 size={14} className="text-emerald-400" />
               <span className="text-white text-xs font-medium">
                 {meta.total} data
@@ -341,7 +341,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
         <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:left-4 lg:translate-x-0 z-30">
           <button
             onClick={() => window.dispatchEvent(new CustomEvent("switchTogaTab", { detail: "rekapitulasi" }))}
-            className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white shadow-lg rounded-full font-bold text-sm transition-colors whitespace-nowrap"
+            className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-bold text-sm transition-colors whitespace-nowrap"
           >
             Rekapitulasi Data
           </button>
@@ -393,13 +393,13 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
               value={nimInput}
               onChange={(e) => setNimInput(e.target.value)}
               placeholder="Ketik NIM..."
-              className="flex-1 w-0 px-4 py-3.5 text-sm font-mono bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 shadow-xl placeholder:text-[var(--color-text-muted)]"
+              className="flex-1 w-0 px-4 py-3.5 text-sm font-mono bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-[var(--color-text-muted)]"
               onKeyDown={(e) => { if (e.key === 'Enter') handleNimSubmit(); }}
             />
             <button
               onClick={handleNimSubmit}
               disabled={!nimInput.trim() || isProcessing}
-              className="px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-2xl font-bold text-sm shadow-xl transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-1.5 shrink-0"
+              className="px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-2xl font-bold text-sm transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-1.5 shrink-0"
               title="Cari"
             >
               <Search size={18} />
@@ -407,14 +407,14 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
             </button>
             <button
               onClick={() => setShowHistory(true)}
-              className="lg:hidden px-4 py-3.5 bg-[var(--color-surface)] border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text)] rounded-2xl font-bold shadow-xl text-sm transition-all active:scale-95 flex items-center justify-center shrink-0"
+              className="lg:hidden px-4 py-3.5 bg-[var(--color-surface)] border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text)] rounded-2xl font-bold text-sm transition-all active:scale-95 flex items-center justify-center shrink-0"
               title="Riwayat"
             >
               <ClipboardList size={18} className="text-emerald-600" />
             </button>
             <button
               onClick={() => setIsCameraActive(false)}
-              className="px-4 py-3.5 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-2xl font-bold shadow-xl text-sm transition-all active:scale-95 flex items-center justify-center gap-1.5 shrink-0"
+              className="px-4 py-3.5 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-2xl font-bold text-sm transition-all active:scale-95 flex items-center justify-center gap-1.5 shrink-0"
               title="Matikan Kamera"
             >
               <CameraOff size={18} />
@@ -428,7 +428,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
               <button
                 onClick={handleWarmUp}
                 disabled={isWarmingUp}
-                className="flex items-center justify-center gap-2 px-5 py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-2xl font-bold shadow-xl text-sm transition-all active:scale-95 disabled:opacity-70 flex-1"
+                className="flex items-center justify-center gap-2 px-5 py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-2xl font-bold text-sm transition-all active:scale-95 disabled:opacity-70 flex-1"
               >
                 <Database size={16} />
                 <span className="hidden sm:inline">{isWarmingUp ? "Loading" : "Cache"}</span>
@@ -437,7 +437,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
               {/* Tombol Riwayat (Mobile) */}
               <button
                 onClick={() => setShowHistory(true)}
-                className="lg:hidden flex items-center justify-center gap-2 px-4 py-3.5 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text)] rounded-2xl font-bold shadow-xl text-sm transition-all active:scale-95"
+                className="lg:hidden flex items-center justify-center gap-2 px-4 py-3.5 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text)] rounded-2xl font-bold text-sm transition-all active:scale-95"
                 title="Riwayat Scan Toga"
               >
                 <ClipboardList size={16} className="text-emerald-600" />
@@ -446,7 +446,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
               {/* Tombol Scan (Aktifkan Kamera) */}
               <button
                 onClick={() => setIsCameraActive(true)}
-                className="flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-2xl font-bold shadow-xl text-sm transition-all active:scale-95 flex-1"
+                className="flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-2xl font-bold text-sm transition-all active:scale-95 flex-1"
               >
                 <Camera size={16} />
                 <span className="hidden sm:inline">Scan</span>
@@ -460,7 +460,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
       {(scanResult || isProcessing) && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center p-6 pointer-events-none lg:w-1/2 gap-4">
           <div
-            className={`w-full max-w-sm pointer-events-auto rounded-3xl shadow-2xl border-2 p-6 flex flex-col items-center text-center animate-in zoom-in-90 duration-200 ${isProcessing
+            className={`w-full max-w-sm pointer-events-auto rounded-3xl border-2 p-6 flex flex-col items-center text-center animate-in zoom-in-90 duration-200 ${isProcessing
               ? 'bg-[var(--color-surface)] border-[var(--color-border)]'
               : scanResult?.status === 'success'
                 ? 'bg-emerald-50 border-emerald-300 dark:bg-emerald-900/95 dark:border-emerald-500'
@@ -510,7 +510,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
           {!isProcessing && scanResult && (
             <button
               onClick={() => setScanResult(null)}
-              className={`pointer-events-auto px-6 py-2.5 rounded-full font-bold text-sm shadow-xl transition-all active:scale-95 animate-in slide-in-from-bottom-4 duration-200 flex items-center justify-center gap-2 ${
+              className={`pointer-events-auto px-6 py-2.5 rounded-full font-bold text-sm transition-all active:scale-95 animate-in slide-in-from-bottom-4 duration-200 flex items-center justify-center gap-2 ${
                 scanResult.status === 'success'
                   ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
                   : scanResult.status === 'warning'
@@ -526,7 +526,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
       )}
 
       {/* ─── Area Kanan (Daftar Hadir - Desktop) ─── */}
-      <div className="hidden lg:flex flex-col w-1/2 h-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-xl overflow-hidden">
+      <div className="hidden lg:flex flex-col w-1/2 h-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
         <div className="p-4 border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)] flex justify-between items-center">
           <h3 className="font-bold text-[var(--color-text)] flex items-center gap-2">
             <Camera size={18} className="text-emerald-600" />
@@ -549,7 +549,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
         </div>
         <div className="flex-1 overflow-y-auto p-0 scrollbar-thin">
           <table className="w-full text-left border-collapse text-sm">
-            <thead className="sticky top-0 bg-[var(--color-surface)] text-[var(--color-text-muted)] text-xs uppercase z-10 border-b border-[var(--color-border)] shadow-sm">
+            <thead className="sticky top-0 bg-[var(--color-surface)] text-[var(--color-text-muted)] text-xs uppercase z-10 border-b border-[var(--color-border)]">
               <tr>
                 <th className="px-4 py-3.5 font-bold">Waktu</th>
                 <th className="px-4 py-3.5 font-bold">NIM</th>
@@ -590,7 +590,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
       {showHistory && (
         <div className="fixed inset-0 z-50 flex flex-col justify-end lg:hidden">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowHistory(false)} />
-          <div className="relative w-full h-[80vh] bg-[var(--color-surface)] rounded-t-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-full duration-300">
+          <div className="relative w-full h-[80vh] bg-[var(--color-surface)] rounded-t-3xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-full duration-300">
             <div className="p-4 border-b border-[var(--color-border)] flex justify-between items-center bg-[var(--color-bg-secondary)]">
               <h3 className="font-bold text-[var(--color-text)] flex items-center gap-2">
                 <Shirt size={18} className="text-emerald-600" />
@@ -602,7 +602,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
             </div>
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-0 scrollbar-thin">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
-                <thead className="sticky top-0 bg-[var(--color-surface)] text-[var(--color-text-muted)] text-[10px] sm:text-xs uppercase z-10 border-b border-[var(--color-border)] shadow-sm">
+                <thead className="sticky top-0 bg-[var(--color-surface)] text-[var(--color-text-muted)] text-[10px] sm:text-xs uppercase z-10 border-b border-[var(--color-border)]">
                   <tr>
                     <th className="px-2 py-3 font-bold">Waktu</th>
                     <th className="px-2 py-3 font-bold">NIM</th>

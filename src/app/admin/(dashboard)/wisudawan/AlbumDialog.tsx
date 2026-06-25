@@ -355,7 +355,7 @@ export default function AlbumDialog({ data, prodiData }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-pink-600 hover:bg-pink-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-pink-900/20 whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-pink-600 hover:bg-pink-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-pink-900/20 whitespace-nowrap"
       >
         <BookOpen size={18} />
         <span>Album</span>
@@ -363,7 +363,7 @@ export default function AlbumDialog({ data, prodiData }: Props) {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-md animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-bold text-[var(--color-text)] flex items-center gap-2">
                 <BookOpen className="text-indigo-600" size={24} />

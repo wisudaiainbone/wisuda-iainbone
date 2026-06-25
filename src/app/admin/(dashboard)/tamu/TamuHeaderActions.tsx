@@ -97,7 +97,7 @@ export default function TamuHeaderActions({ data, settings, activePeriodes, curr
           onClick={generatePDF}
           disabled={isGeneratingPdf || data.length === 0}
           title="Print Undangan"
-          className="flex items-center justify-center w-10 sm:w-auto gap-1.5 px-0 sm:px-4 h-full rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-indigo-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          className="flex items-center justify-center w-10 sm:w-auto gap-1.5 px-0 sm:px-4 h-full rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-indigo-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
         >
           {isGeneratingPdf ? <Loader2 size={16} className="animate-spin shrink-0" /> : <Printer size={16} className="shrink-0" />}
           <span className="hidden sm:inline">{isGeneratingPdf ? 'Memproses...' : 'Print Undangan'}</span>
@@ -107,7 +107,7 @@ export default function TamuHeaderActions({ data, settings, activePeriodes, curr
           onClick={handleExportXlsx}
           disabled={isExporting || data.length === 0}
           title="Export XLSX"
-          className="flex items-center justify-center w-10 sm:w-auto gap-1.5 px-0 sm:px-4 h-full rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          className="flex items-center justify-center w-10 sm:w-auto gap-1.5 px-0 sm:px-4 h-full rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
         >
           {isExporting ? <Loader2 size={16} className="animate-spin shrink-0" /> : <FileSpreadsheet size={16} className="shrink-0" />}
           <span className="hidden sm:inline">{isExporting ? 'Mengekspor...' : 'Export'}</span>

@@ -351,7 +351,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
   const hasPengumuman = p.pengumuman && p.pengumuman.replace(/<[^>]*>?/gm, '').trim() !== "";
 
   const warningHint = hasPengumuman ? (
-    <motion.div {...up(0.05)} className="mb-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl shadow-sm backdrop-blur-xl relative overflow-hidden">
+    <motion.div {...up(0.05)} className="mb-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl backdrop-blur-xl relative overflow-hidden">
       <button
         onClick={() => setIsHintOpen(!isHintOpen)}
         className="w-full flex items-center justify-between p-4"
@@ -606,7 +606,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                           className="hidden md:flex flex-1 sm:flex-none flex-col items-center gap-2 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-[var(--color-border)] rounded-xl text-center cursor-pointer hover:border-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-all sm:w-[110px]"
                           onClick={() => setIsTogaOpen(true)}
                         >
-                          <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl shadow-sm flex items-center justify-center">
+                          <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center">
                             <QrCode size={24} className="text-emerald-600 dark:text-emerald-400" />
                           </div>
                           <div>
@@ -621,7 +621,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                           className="hidden md:flex flex-1 sm:flex-none flex-col items-center gap-2 p-4 bg-rose-50 dark:bg-rose-900/20 border border-[var(--color-border)] rounded-xl text-center cursor-pointer hover:border-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-all sm:w-[110px]"
                           onClick={() => setIsUndanganOpen(true)}
                         >
-                          <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl shadow-sm flex items-center justify-center">
+                          <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center">
                             <QrCode size={24} className="text-rose-600 dark:text-rose-400" />
                           </div>
                           <div>
@@ -726,7 +726,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                     e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                   }}
                   className={`px-4 h-9 rounded-full text-xs font-normal transition-all border whitespace-nowrap snap-center shrink-0 ${activeTab === "pelaksanaan"
-                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                    ? "bg-emerald-600 text-white border-emerald-600"
                     : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-subtle)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]"
                     }`}
                 >
@@ -738,7 +738,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                     e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                   }}
                   className={`px-4 h-9 rounded-full text-xs font-normal transition-all border whitespace-nowrap snap-center shrink-0 ${activeTab === "undangan"
-                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                    ? "bg-emerald-600 text-white border-emerald-600"
                     : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-subtle)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]"
                     }`}
                 >
@@ -750,7 +750,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                     e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                   }}
                   className={`px-4 h-9 rounded-full text-xs font-normal transition-all border whitespace-nowrap snap-center shrink-0 ${activeTab === "toga"
-                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                    ? "bg-emerald-600 text-white border-emerald-600"
                     : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-subtle)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]"
                     }`}
                 >
@@ -763,7 +763,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                     e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                   }}
                   className={`px-4 h-9 rounded-full text-xs font-normal transition-all border whitespace-nowrap snap-center shrink-0 ${activeTab === "perbaikan"
-                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                    ? "bg-emerald-600 text-white border-emerald-600"
                     : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-subtle)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]"
                     }`}
                 >
@@ -1071,7 +1071,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-colors shadow-sm disabled:opacity-70"
+                  className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-colors disabled:opacity-70"
                 >
                   {isSubmitting ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
@@ -1231,7 +1231,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
 
                   {/* Box Daftar Wisuda */}
                   {isAllRequiredFilled && (
-                    <div className="mt-2 p-[2px] rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-500 shadow-lg shadow-emerald-900/20">
+                    <div className="mt-2 p-[2px] rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-500">
                       <div className="flex flex-col sm:flex-row items-center gap-4 justify-between bg-emerald-50 dark:bg-emerald-950/80 rounded-[14px] px-5 py-5 h-full">
                         <div className="flex items-start gap-4">
                           <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shrink-0 mt-0.5">
@@ -1247,7 +1247,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                         {allowEditProfile ? (
                           <button
                             onClick={() => setIsDaftarDialogOpen(true)}
-                            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white rounded-xl text-sm font-bold transition-all shadow-md shadow-emerald-900/20"
+                            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white rounded-xl text-sm font-bold transition-all"
                           >
                             Daftar Wisuda
                           </button>
@@ -1355,7 +1355,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                 <motion.div {...up(0.05)}>
                   {!showTogaInfo ? (
                     <Card className="py-16 px-6 flex flex-col items-center justify-center text-center gap-4">
-                      <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-full flex items-center justify-center mb-2 shadow-inner">
+                      <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-full flex items-center justify-center mb-2">
                         <Lock className="w-8 h-8 text-slate-400 dark:text-slate-500" />
                       </div>
                       <div>
@@ -1372,7 +1372,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                         {/* QR Section */}
                         <div className="shrink-0 flex flex-col items-center gap-3">
                           <div
-                            className="rounded-xl p-2 bg-white cursor-pointer hover:opacity-80 transition-opacity shadow-sm"
+                            className="rounded-xl p-2 bg-white cursor-pointer hover:opacity-80 transition-opacity"
                             onClick={() => setIsTogaOpen(true)}
                           >
                             {w["QR TOGA"] || w["ID WISUDA"] ? (
@@ -1425,7 +1425,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                 <motion.div {...up(0.05)}>
                   {!showUndanganInfo ? (
                     <Card className="py-16 px-6 flex flex-col items-center justify-center text-center gap-4">
-                      <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-full flex items-center justify-center mb-2 shadow-inner">
+                      <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-full flex items-center justify-center mb-2">
                         <Lock className="w-8 h-8 text-slate-400 dark:text-slate-500" />
                       </div>
                       <div>
@@ -1442,7 +1442,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                         {/* QR Section */}
                         <div className="shrink-0 flex flex-col items-center gap-3">
                           <div
-                            className="rounded-xl p-2 bg-white cursor-pointer hover:opacity-80 transition-opacity shadow-sm"
+                            className="rounded-xl p-2 bg-white cursor-pointer hover:opacity-80 transition-opacity"
                             onClick={() => setIsUndanganOpen(true)}
                           >
                             {w["QR UNDANGAN"] || w["ID UNDANGAN"] ? (
@@ -1534,7 +1534,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                       ) : (
                         <button
                           onClick={() => setIsPerbaikanModalOpen(true)}
-                          className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-sm font-bold rounded-xl transition-all shadow-sm shadow-emerald-900/20"
+                          className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-sm font-bold rounded-xl transition-all"
                         >
                           <Plus size={16} /> Ajukan Perbaikan
                         </button>
@@ -1750,7 +1750,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
             <div className="flex-1" />
 
             {/* Tombol Kembali (Mobile) */}
-            <div className="sticky bottom-0 p-4 bg-white border-t border-red-50 sm:hidden z-10 w-full mt-auto shadow-[0_-10px_20px_rgba(255,255,255,0.9)]">
+            <div className="sticky bottom-0 p-4 bg-white border-t border-red-50 sm:hidden z-10 w-full mt-auto">
               <button
                 onClick={() => setIsUndanganOpen(false)}
                 className="w-full py-3.5 bg-rose-600 text-white font-bold rounded-xl active:bg-rose-700 transition-colors"
@@ -1851,7 +1851,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
             <div className="flex-1" />
 
             {/* Tombol Kembali (Mobile) */}
-            <div className="sticky bottom-0 p-4 bg-white border-t border-emerald-50 sm:hidden z-10 w-full mt-auto shadow-[0_-10px_20px_rgba(255,255,255,0.9)]">
+            <div className="sticky bottom-0 p-4 bg-white border-t border-emerald-50 sm:hidden z-10 w-full mt-auto">
               <button
                 onClick={() => setIsTogaOpen(false)}
                 className="w-full py-3.5 bg-emerald-700 text-white font-bold rounded-xl active:bg-emerald-800 transition-colors"
@@ -1998,7 +1998,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 30, scale: 0.97 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full sm:max-w-lg bg-[var(--color-bg)] rounded-t-2xl sm:rounded-2xl border border-[var(--color-border)] shadow-2xl overflow-hidden"
+              className="w-full sm:max-w-lg bg-[var(--color-bg)] rounded-t-2xl sm:rounded-2xl border border-[var(--color-border)] overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -2142,7 +2142,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
         if (navs.length < 2) return null;
 
         return (
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--color-bg)]/95 backdrop-blur-lg border-t border-[var(--color-border)] shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)] z-[45] pb-[env(safe-area-inset-bottom)]">
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--color-bg)]/95 backdrop-blur-lg border-t border-[var(--color-border)] z-[45] pb-[env(safe-area-inset-bottom)]">
             <div className="flex justify-around items-center h-[60px] px-2">
               {navs.map((nav) => (
                 <button

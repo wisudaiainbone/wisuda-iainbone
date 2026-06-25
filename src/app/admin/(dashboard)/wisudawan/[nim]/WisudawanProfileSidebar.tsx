@@ -60,7 +60,7 @@ export default function WisudawanProfileSidebar({
               />
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                <ZoomIn size={28} className="text-white drop-shadow" />
+                <ZoomIn size={28} className="text-white" />
               </div>
             </>
           ) : (
@@ -156,7 +156,7 @@ export default function WisudawanProfileSidebar({
             <X size={22} />
           </button>
           <div
-            className="relative max-h-[90vh] max-w-[80vw] rounded-2xl overflow-hidden shadow-2xl"
+            className="relative max-h-[90vh] max-w-[80vw] rounded-2xl overflow-hidden"
             style={{ aspectRatio: "3/4" }}
             onClick={(e) => e.stopPropagation()}
           >

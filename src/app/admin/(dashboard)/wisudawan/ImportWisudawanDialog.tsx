@@ -273,7 +273,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
     <>
       <button
         onClick={handleOpen}
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-emerald-900/20 whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-emerald-900/20 whitespace-nowrap"
       >
         <Plus size={16} />
         <span className="hidden sm:inline">Tambah</span>
@@ -281,7 +281,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-4xl shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-4xl animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex items-center justify-between p-6 border-b border-[var(--color-border)] shrink-0">
               <div>
                 <h2 className="text-xl font-bold text-[var(--color-text)]">Import Batch Wisudawan</h2>
@@ -331,7 +331,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
                 <h3 className="font-semibold text-[var(--color-text)]">Upload File Excel</h3>
                 <button
                   onClick={handleDownloadTemplate}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg)] text-sm font-semibold transition-colors shadow-sm"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg)] text-sm font-semibold transition-colors"
                 >
                   <Download size={16} />
                   Download Template
@@ -434,7 +434,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
               <button
                 onClick={handleSubmit}
                 disabled={loading || previewData.length === 0 || previewData.every(row => row._isValid === false)}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-all shadow-md shadow-emerald-900/20"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-all-emerald-900/20"
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                 {loading ? "Menyimpan Data..." : "Simpan Data"}
@@ -446,7 +446,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
 
       {resultData && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className={`w-full max-w-md p-6 rounded-2xl border shadow-2xl flex flex-col gap-4 animate-in zoom-in-95 duration-200 ${resultData.type === 'success'
+          <div className={`w-full max-w-md p-6 rounded-2xl border flex flex-col gap-4 animate-in zoom-in-95 duration-200 ${resultData.type === 'success'
               ? 'bg-emerald-50 dark:bg-emerald-900/95 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
               : resultData.type === 'warning'
                 ? 'bg-amber-50 dark:bg-amber-900/95 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800'
@@ -471,7 +471,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
             </div>
 
             {resultData.failedData && resultData.failedData.length > 0 && (
-              <div className="mt-2 flex flex-col gap-1 max-h-60 overflow-y-auto bg-white/60 dark:bg-black/40 p-3 rounded-xl border border-black/5 dark:border-white/10 text-xs font-mono shadow-inner">
+              <div className="mt-2 flex flex-col gap-1 max-h-60 overflow-y-auto bg-white/60 dark:bg-black/40 p-3 rounded-xl border border-black/5 dark:border-white/10 text-xs font-mono">
                 {resultData.failedData.map((fd: any, i: number) => (
                   <div key={i} className="flex gap-2 py-1 border-b border-black/5 dark:border-white/5 last:border-0">
                     <span className="font-bold w-20 shrink-0">{fd.nim}</span>

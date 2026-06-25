@@ -32,10 +32,6 @@
   --color-text-muted: #0f172a;
   --color-text-subtle: #384150;
 
-  /* Shadows */
-  --shadow-card: 0 2px 16px rgba(6, 78, 59, 0.06);
-  --shadow-md: 0 4px 24px rgba(6, 78, 59, 0.1);
-  --shadow-glow: 0 0 32px rgba(6, 78, 59, 0.2);
 
   /* Font */
   --font-body: var(--font-inter), system-ui, sans-serif;
@@ -57,9 +53,6 @@
   --color-text-muted: #cbd5e1;
   --color-text-subtle: #bababa;
 
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 40px rgba(6, 78, 59, 0.12);
 }
 
 /* ============================================================

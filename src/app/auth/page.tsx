@@ -100,7 +100,7 @@ export default function AuthPage() {
       <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50">
         <Link
           href="/"
-          className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border)] shadow-sm backdrop-blur-md"
+          className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border)] backdrop-blur-md"
         >
           <ArrowLeft size={16} />
           Kembali ke Beranda
@@ -115,7 +115,7 @@ export default function AuthPage() {
         className="relative z-10 w-full max-w-md px-6"
       >
         {/* Card Container */}
-        <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-2xl rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
+        <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-2xl rounded-3xl p-8 sm:p-10 relative overflow-hidden">
 
           {/* Decorative element */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-emerald-600" />
@@ -123,7 +123,7 @@ export default function AuthPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mx-auto mb-4">
-              <Image src="/logo.png" alt="Logo" width={56} height={56} className="drop-shadow-sm" />
+              <Image src="/logo.png" alt="Logo" width={56} height={56} />
             </div>
             <h1 className="text-2xl font-bold font-[var(--font-outfit)] text-[var(--color-text)] mb-2">
               Wisudawan IAIN Bone
@@ -173,7 +173,7 @@ export default function AuthPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-2 group relative flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 shadow-lg shadow-emerald-900/20 bg-emerald-800 hover:bg-emerald-900 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full mt-2 group relative flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300-emerald-900/20 bg-emerald-800 hover:bg-emerald-900 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
             >
               <span className="relative z-10 flex items-center gap-2">
                 {isLoading ? (
@@ -220,7 +220,7 @@ export default function AuthPage() {
       {/* Check NIM Modal / Toast Modal */}
       {showCheckModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-2xl shadow-2xl flex flex-col gap-4 animate-in zoom-in-95 duration-200">
+          <div className="w-full max-w-md bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-2xl flex flex-col gap-4 animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center border-b border-[var(--color-border)] pb-3">
               <h3 className="font-bold text-lg text-[var(--color-text)]">Cek Status Pendaftaran</h3>
               <button onClick={() => setShowCheckModal(false)} className="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 opacity-70 hover:opacity-100 transition-colors">

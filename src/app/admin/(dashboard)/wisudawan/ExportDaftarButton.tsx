@@ -128,7 +128,7 @@ export default function ExportDaftarButton({ data, filename = 'daftar-wisudawan'
       onClick={handleExport}
       disabled={loading || !data.length}
       title="Export Daftar Wisudawan"
-      className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors shadow-sm shadow-teal-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+      className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-teal-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
     >
       {loading ? (
         <Loader2 size={16} className="animate-spin" />

@@ -60,7 +60,7 @@ export default function ProdiDialog({ trigger, prodi, existingFakultas = [] }: P
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => !isPending && setIsOpen(false)}
           />
-          <div className="relative w-full max-w-md bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-xl overflow-hidden flex flex-col">
+          <div className="relative w-full max-w-md bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
               <h2 className="text-lg font-bold font-[var(--font-outfit)] text-[var(--color-text)]">
                 {isEdit ? "Edit Prodi" : "Tambah Prodi Baru"}

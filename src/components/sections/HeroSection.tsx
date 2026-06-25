@@ -247,13 +247,13 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                           <div className="mb-6">
                             <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 mb-4">
                               <div className="flex items-center gap-3">
-                                <span className={`inline-flex items-center self-start sm:self-auto px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shadow-sm shrink-0 ${period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
+                                <span className={`inline-flex items-center self-start sm:self-auto px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
                                   {period.status}
                                 </span>
 
                                 {/* Navigation Controls */}
                                 {graduationPeriods.length > 1 && (
-                                  <div className="hidden sm:flex items-center gap-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1 shadow-sm">
+                                  <div className="hidden sm:flex items-center gap-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1">
                                     <button
                                       onClick={() => setActivePeriodIdx(Math.max(0, activePeriodIdx - 1))}
                                       disabled={activePeriodIdx === 0}
@@ -294,7 +294,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 8, scale: 0.96 }}
                                         transition={{ duration: 0.18 }}
-                                        className="absolute right-0 top-full mt-2 w-[200px] sm:w-48 bg-[var(--color-surface)] backdrop-blur-xl rounded-xl border border-[var(--color-border)] p-1.5 text-sm text-left flex flex-col z-30 shadow-xl"
+                                        className="absolute right-0 top-full mt-2 w-[200px] sm:w-48 bg-[var(--color-surface)] backdrop-blur-xl rounded-xl border border-[var(--color-border)] p-1.5 text-sm text-left flex flex-col z-30"
                                       >
                                         <div className="px-3 py-1.5 text-xs font-bold text-[var(--color-text-subtle)] uppercase tracking-wider">
                                           Sesi Pertama (08.00)
@@ -445,7 +445,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                           <div className="flex flex-col gap-6 relative z-10 w-full">
                             {/* Header Card: Badge & Date */}
                             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
-                              <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shadow-sm shrink-0 ${period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
+                              <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
                                 Jadwal Pendaftaran
                               </span>
                               <p className="text-xs sm:text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider">
@@ -481,7 +481,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                 {period.statusColor === 'rose' ? (
                                   <button
                                     disabled
-                                    className="group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 shadow-lg w-full md:w-auto md:min-w-[200px] overflow-hidden bg-slate-700 opacity-50 cursor-not-allowed"
+                                    className="group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 w-full md:w-auto md:min-w-[200px] overflow-hidden bg-slate-700 opacity-50 cursor-not-allowed"
                                   >
                                     <span className="relative z-10 flex items-center gap-3">
                                       Daftar Sekarang
@@ -491,7 +491,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                 ) : (
                                   <a
                                     href="/auth"
-                                    className={`group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 shadow-lg w-full md:w-auto md:min-w-[200px] overflow-hidden ${period.statusColor === 'emerald' ? 'bg-emerald-800 hover:bg-emerald-900 shadow-emerald-900/20' : 'bg-slate-700 hover:bg-slate-800 shadow-slate-900/20'}`}
+                                    className={`group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 w-full md:w-auto md:min-w-[200px] overflow-hidden ${period.statusColor === 'emerald' ? 'bg-emerald-800 hover:bg-emerald-900-emerald-900/20' : 'bg-slate-700 hover:bg-slate-800-slate-900/20'}`}
                                   >
                                     <span className="relative z-10 flex items-center gap-3">
                                       Daftar Sekarang
@@ -507,7 +507,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
 
                         {/* Mobile Navigation Controls (Below Card) */}
                         {graduationPeriods.length > 1 && (
-                          <div className="flex sm:hidden items-center justify-center gap-1 mt-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1.5 shadow-sm w-max mx-auto">
+                          <div className="flex sm:hidden items-center justify-center gap-1 mt-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1.5 w-max mx-auto">
                             <button
                               onClick={() => setActivePeriodIdx(Math.max(0, activePeriodIdx - 1))}
                               disabled={activePeriodIdx === 0}
@@ -552,7 +552,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
           >
             <a
               href="/auth"
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-emerald-800 hover:bg-emerald-900 text-white text-sm font-bold transition-all shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-emerald-800 hover:bg-emerald-900 text-white text-sm font-bold transition-all-[0_8px_30px_rgba(0,0,0,0.2)]"
             >
               <GraduationCap size={18} />
               <span>Login Sekarang</span>

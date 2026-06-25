@@ -30,7 +30,7 @@ export default async function AdminPeriodePage() {
                 <div
                   key={periode.id}
                   className={`relative p-5 rounded-2xl border transition-all ${periode.status === 'Sedang Dibuka'
-                    ? 'bg-emerald-50/50 border-emerald-200 dark:bg-emerald-900/10 dark:border-emerald-800/50 shadow-sm'
+                    ? 'bg-emerald-50/50 border-emerald-200 dark:bg-emerald-900/10 dark:border-emerald-800/50'
                     : 'bg-[var(--color-surface)] border-[var(--color-border)] hover:border-emerald-300 dark:hover:border-emerald-800'
                     }`}
                 >
@@ -93,7 +93,7 @@ export default async function AdminPeriodePage() {
           </div>
 
           {/* Desktop View: Table */}
-          <div className="hidden md:block bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
+          <div className="hidden md:block bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
                 <thead className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
@@ -171,7 +171,7 @@ export default async function AdminPeriodePage() {
       <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50">
         <Link
           href="/admin/periode/tambah"
-          className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center-[0_8px_30px_rgb(0,0,0,0.12)]-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
           title="Tambah Periode"
         >
           <Plus size={24} />

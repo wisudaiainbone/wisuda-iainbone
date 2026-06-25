@@ -107,7 +107,7 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
             <button
               onClick={handleApply}
               title="Cari"
-              className="absolute inset-y-1 right-1 w-8 flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors shadow-sm"
+              className="absolute inset-y-1 right-1 w-8 flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors"
             >
               <Search size={14} />
             </button>
@@ -132,7 +132,7 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
       {/* Mobile Filter Toggle */}
       <button 
         onClick={() => setShowFilters(!showFilters)}
-        className="xl:hidden flex items-center justify-between w-full px-4 h-10 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-colors shadow-sm"
+        className="xl:hidden flex items-center justify-between w-full px-4 h-10 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-colors"
       >
         <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
           <Filter size={16} />

@@ -84,7 +84,7 @@ export function CountdownBadge({ registrationDateLabel, isActive }: Props) {
             {Object.entries(timeLeft).map(([unit, value], idx, arr) => (
               <div key={unit} className="flex items-center gap-2">
                 <div className="flex flex-col items-center">
-                  <div className={`w-12 h-11 rounded-lg flex items-center justify-center font-mono font-bold text-lg shadow-sm ${accent.box}`}>
+                  <div className={`w-12 h-11 rounded-lg flex items-center justify-center font-mono font-bold text-lg ${accent.box}`}>
                     {value.toString().padStart(2, '0')}
                   </div>
                   <span className="text-[9px] font-bold text-[var(--color-text-subtle)] uppercase tracking-widest mt-1">{unit}</span>

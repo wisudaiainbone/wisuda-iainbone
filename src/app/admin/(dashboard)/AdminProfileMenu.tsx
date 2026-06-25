@@ -45,7 +45,7 @@ export default function AdminProfileMenu({ namaAdmin, roleMeta }: Props) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-lg py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute right-0 mt-2 w-64 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
           <div className="px-4 py-3 border-b border-[var(--color-border)]">
             <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5">Login sebagai</p>
             <p className="text-sm font-bold text-[var(--color-text)] truncate">{namaAdmin}</p>

@@ -23,7 +23,7 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? "bg-[var(--color-bg)]/90 backdrop-blur-xl border-b border-[var(--color-border)] shadow-sm"
+          ? "bg-[var(--color-bg)]/90 backdrop-blur-xl border-b border-[var(--color-border)]"
           : "bg-transparent border-b border-transparent"
           }`}
       >
@@ -48,7 +48,7 @@ export function Navbar() {
               <ThemeToggle isScrolled={isScrolled} />
               <Link
                 href="/auth"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-emerald-900 text-white hover:bg-emerald-950 shadow-sm"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-emerald-900 text-white hover:bg-emerald-950"
               >
                 <GraduationCap size={16} className="-mr-0.5" />
                 Login

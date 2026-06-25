@@ -55,7 +55,7 @@ function AdminLoginForm() {
       <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50">
         <Link
           href="/"
-          className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border)] shadow-sm backdrop-blur-md"
+          className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border)] backdrop-blur-md"
         >
           <ArrowLeft size={16} />
           Kembali ke Beranda
@@ -70,14 +70,14 @@ function AdminLoginForm() {
         className="relative z-10 w-full max-w-md px-6"
       >
         {/* Card Container */}
-        <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-3xl rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
+        <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-3xl rounded-3xl p-8 sm:p-10 relative overflow-hidden">
 
           {/* Decorative stripe */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-slate-600 to-emerald-600" />
 
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-20 h-20 mx-auto mb-4 relative drop-shadow-sm">
+            <div className="w-20 h-20 mx-auto mb-4 relative">
               <Image
                 src="/logo.png"
                 alt="Logo IAIN Bone"
@@ -111,7 +111,7 @@ function AdminLoginForm() {
             <button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
+              className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <svg className="animate-spin h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

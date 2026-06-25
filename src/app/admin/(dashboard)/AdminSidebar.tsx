@@ -63,7 +63,7 @@ export default function AdminSidebar({ namaAdmin, role, roleMeta }: Props) {
             alt="Logo IAIN Bone"
             width={isCollapsed ? 28 : 24}
             height={isCollapsed ? 28 : 24}
-            className="shrink-0 drop-shadow-sm"
+            className="shrink-0"
           />
           {!isCollapsed && (
             <h2 className="text-base font-medium font-[var(--font-outfit)] truncate text-[var(--color-text)]">
@@ -103,7 +103,7 @@ export default function AdminSidebar({ namaAdmin, role, roleMeta }: Props) {
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           title={isCollapsed ? "Perluas Sidebar" : "Ciutkan Sidebar"}
-          className="w-8 h-8 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-md transition-transform hover:scale-110 active:scale-95"
+          className="w-8 h-8 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center text-white transition-transform hover:scale-110 active:scale-95"
         >
           {isCollapsed ? <ChevronRight size={16} className="ml-0.5" /> : <ChevronLeft size={16} className="mr-0.5" />}
         </button>

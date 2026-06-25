@@ -59,7 +59,7 @@ export default function SetupClient() {
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.97 }}
-              className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-3xl p-8 shadow-2xl relative overflow-hidden"
+              className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-3xl p-8 relative overflow-hidden"
             >
               {/* Stripe dekoratif atas */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-purple-500 to-emerald-500" />
@@ -154,7 +154,7 @@ export default function SetupClient() {
                   type="submit"
                   id="btn-setup-submit"
                   disabled={isLoading}
-                  className="w-full mt-2 flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold transition-colors shadow-lg shadow-emerald-900/20"
+                  className="w-full mt-2 flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold transition-colors-emerald-900/20"
                 >
                   {isLoading ? (
                     <>
@@ -176,7 +176,7 @@ export default function SetupClient() {
               key="success"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-[var(--color-bg-secondary)] border border-emerald-200 dark:border-emerald-800/50 rounded-3xl p-8 shadow-2xl text-center relative overflow-hidden"
+              className="bg-[var(--color-bg-secondary)] border border-emerald-200 dark:border-emerald-800/50 rounded-3xl p-8 text-center relative overflow-hidden"
             >
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-emerald-600" />
 
@@ -202,7 +202,7 @@ export default function SetupClient() {
               <button
                 onClick={() => router.push("/admin/login")}
                 id="btn-goto-login"
-                className="w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold transition-colors shadow-lg shadow-emerald-900/20"
+                className="w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold transition-colors-emerald-900/20"
               >
                 Lanjut ke Halaman Login Google
                 <ArrowRight size={16} />

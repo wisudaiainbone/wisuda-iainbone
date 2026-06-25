@@ -86,7 +86,7 @@ export default function WisudawanTableClient({
     <div className="space-y-4">
       {/* Floating Action Bar for Bulk Selection */}
       {selectedNims.length > 0 && canDelete && (
-        <div className="bg-rose-50 border border-rose-200 p-3 rounded-xl flex items-center justify-between shadow-sm sticky top-20 z-50 animate-in fade-in slide-in-from-top-4">
+        <div className="bg-rose-50 border border-rose-200 p-3 rounded-xl flex items-center justify-between sticky top-20 z-50 animate-in fade-in slide-in-from-top-4">
           <div className="flex items-center gap-3">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-500 text-white text-xs font-bold">
               {selectedNims.length}
@@ -105,7 +105,7 @@ export default function WisudawanTableClient({
             </button>
             <button
               onClick={() => setShowConfirmBulk(true)}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors disabled:opacity-50 shadow-sm"
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors disabled:opacity-50"
               disabled={isPending}
             >
               {isPending ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
@@ -116,7 +116,7 @@ export default function WisudawanTableClient({
       )}
 
       {/* Table Section (Desktop) */}
-      <div className="hidden md:block bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden shadow-sm">
+      <div className="hidden md:block bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
@@ -238,11 +238,11 @@ export default function WisudawanTableClient({
                     <td className="px-1 py-4">
                       <div className="flex justify-center">
                         {terdaftar ? (
-                          <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-sm">
+                          <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                             <Check size={12} strokeWidth={3} />
                           </div>
                         ) : (
-                          <div className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                          <div className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
                             <X size={12} strokeWidth={3} />
                           </div>
                         )}
@@ -251,11 +251,11 @@ export default function WisudawanTableClient({
                     <td className="px-1 py-4">
                       <div className="flex justify-center">
                         {Boolean(w.waktu_toga) ? (
-                          <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-sm">
+                          <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                             <Check size={12} strokeWidth={3} />
                           </div>
                         ) : (
-                          <div className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                          <div className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
                             <X size={12} strokeWidth={3} />
                           </div>
                         )}
@@ -264,11 +264,11 @@ export default function WisudawanTableClient({
                     <td className="px-1 py-4">
                       <div className="flex justify-center">
                         {Boolean(w.waktu_hadir) ? (
-                          <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-sm">
+                          <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                             <Check size={12} strokeWidth={3} />
                           </div>
                         ) : (
-                          <div className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                          <div className="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
                             <X size={12} strokeWidth={3} />
                           </div>
                         )}
@@ -318,7 +318,7 @@ export default function WisudawanTableClient({
       {/* Card Section (Mobile) */}
       <div className="md:hidden space-y-4">
         {canDelete && selectableList.length > 0 && (
-          <div className="bg-[var(--color-surface)] p-4 rounded-xl border border-[var(--color-border)] flex items-center justify-between shadow-sm">
+          <div className="bg-[var(--color-surface)] p-4 rounded-xl border border-[var(--color-border)] flex items-center justify-between">
             <span className="text-sm font-medium text-[var(--color-text)]">Pilih Semua (Belum Terdaftar)</span>
             <input
               type="checkbox"
@@ -338,14 +338,14 @@ export default function WisudawanTableClient({
             <WisudawanMobileCard 
               key={w.nim} 
               href={`/admin/wisudawan/${w.nim}`} 
-              className={`block bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4 shadow-sm hover:border-emerald-300 transition-colors group relative ${isSelected ? 'ring-2 ring-emerald-500 bg-emerald-50/20 dark:bg-emerald-900/10' : ''}`}
+              className={`block bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4 hover:border-emerald-300 transition-colors group relative ${isSelected ? 'ring-2 ring-emerald-500 bg-emerald-50/20 dark:bg-emerald-900/10' : ''}`}
             >
               <div className="flex gap-3">
                 {canDelete && !terdaftar && (
                   <div className="absolute top-4 right-4 z-10" onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
-                      className="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer shadow-sm"
+                      className="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                       checked={isSelected}
                       onChange={(e) => handleSelectRow(w.nim, e.target.checked)}
                     />

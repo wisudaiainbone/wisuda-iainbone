@@ -50,8 +50,8 @@ export default function AbsensiLogin() {
 
       {/* Top Bar */}
       <div className="absolute top-0 left-0 right-0 p-5 flex justify-between items-center z-50">
-        <div className="flex items-center gap-2.5 text-sm font-bold text-[var(--color-text)] bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border)] shadow-sm backdrop-blur-md">
-          <Image src="/logo.png" alt="Logo" width={18} height={18} className="drop-shadow-sm" />
+        <div className="flex items-center gap-2.5 text-sm font-bold text-[var(--color-text)] bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border)] backdrop-blur-md">
+          <Image src="/logo.png" alt="Logo" width={18} height={18} />
           Presensi Wisuda IAIN Bone
         </div>
         <ThemeToggle isScrolled={false} />
@@ -60,14 +60,14 @@ export default function AbsensiLogin() {
       {/* Card — centered */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-6">
         <div className="w-full max-w-md">
-          <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-2xl rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
+          <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-2xl rounded-3xl p-8 sm:p-10 relative overflow-hidden">
             {/* Green accent bar */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-emerald-600" />
 
             {/* Header */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-center mx-auto mb-4">
-                <Image src="/logo.png" alt="Logo IAIN Bone" width={56} height={56} className="drop-shadow-sm" />
+                <Image src="/logo.png" alt="Logo IAIN Bone" width={56} height={56} />
               </div>
               <h1 className="text-2xl font-bold font-[var(--font-outfit)] text-[var(--color-text)] mb-2">
                 Presensi Wisuda IAIN Bone
@@ -102,7 +102,7 @@ export default function AbsensiLogin() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-2 group relative flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 shadow-lg shadow-emerald-900/20 bg-emerald-800 hover:bg-emerald-900 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full mt-2 group relative flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300-emerald-900/20 bg-emerald-800 hover:bg-emerald-900 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   {isLoading ? (

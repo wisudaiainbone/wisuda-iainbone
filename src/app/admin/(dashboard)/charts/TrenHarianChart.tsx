@@ -13,7 +13,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   const date = new Date(label + 'T00:00:00');
   const formatted = date.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
   return (
-    <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-3 py-2 shadow-lg text-xs">
+    <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-3 py-2 text-xs">
       <p className="font-bold text-[var(--color-text)] mb-1">{formatted}</p>
       <p className="text-emerald-600 dark:text-emerald-400">
         Pendaftar: <span className="font-bold">{payload[0].value}</span>
@@ -37,7 +37,7 @@ export default function TrenHarianChart({ data }: Props) {
       <div className="px-5 py-3.5 border-b border-[var(--color-border)] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TrendingUp size={15} className="text-[var(--color-text-subtle)]" />
-          <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-subtle)]">Tren Pendaftaran Harian</h2>
+          <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-subtle)]">Tren Pendaftaran</h2>
         </div>
         <span className="text-xs text-[var(--color-text-muted)]">
           Total: <span className="font-bold text-emerald-600 dark:text-emerald-400">{totalTerdaftar}</span> wisudawan terdaftar

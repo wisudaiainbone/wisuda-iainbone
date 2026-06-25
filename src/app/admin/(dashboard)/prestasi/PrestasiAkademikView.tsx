@@ -14,7 +14,7 @@ export default function PrestasiAkademikView({
   // ─── Empty state jika belum pernah di-generate ────────────────────────────
   if (!isGenerated) {
     return (
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm p-12 flex flex-col items-center justify-center min-h-[360px] gap-5">
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden p-12 flex flex-col items-center justify-center min-h-[360px] gap-5">
         <div className="w-20 h-20 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
           <Zap size={40} className="text-violet-500" />
         </div>
@@ -119,7 +119,7 @@ export default function PrestasiAkademikView({
 
   if (parsedData.length === 0) {
     return (
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px]">
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden p-8 flex flex-col items-center justify-center min-h-[300px]">
         <Award size={48} className="text-[var(--color-text-muted)] opacity-20 mb-4" />
         <p className="text-[var(--color-text-muted)] font-medium text-sm">Belum ada data wisudawan terdaftar di periode ini.</p>
       </div>
@@ -155,7 +155,7 @@ export default function PrestasiAkademikView({
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {bestOverall && (
-        <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+        <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-6 relative overflow-hidden">
           <div className="absolute top-4 right-4 z-20">
             {role !== 'admin_unit' && (
               <SwitchWisudawanButton
@@ -173,7 +173,7 @@ export default function PrestasiAkademikView({
             <Medal size={120} className="text-amber-600" />
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-5 relative z-10">
-            <div className="w-16 h-16 bg-amber-100 dark:bg-amber-900/50 rounded-full flex items-center justify-center shrink-0 border border-amber-300 dark:border-amber-700/50 shadow-inner">
+            <div className="w-16 h-16 bg-amber-100 dark:bg-amber-900/50 rounded-full flex items-center justify-center shrink-0 border border-amber-300 dark:border-amber-700/50">
               <Medal className="text-amber-500" size={32} />
             </div>
             <div className="flex-1">
@@ -205,7 +205,7 @@ export default function PrestasiAkademikView({
         </div>
       )}
 
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)] text-[var(--color-text-muted)]">
@@ -226,7 +226,7 @@ export default function PrestasiAkademikView({
               {topFakultas.map(f => (
                 <Fragment key={f.fakultas}>
                   <tr className="bg-[var(--color-bg-secondary)]/30">
-                    <td colSpan={8} className="px-5 py-3 font-bold text-emerald-700 dark:text-emerald-400 text-xs uppercase tracking-wider border-y border-[var(--color-border)] shadow-sm">
+                    <td colSpan={8} className="px-5 py-3 font-bold text-emerald-700 dark:text-emerald-400 text-xs uppercase tracking-wider border-y border-[var(--color-border)]">
                       {f.fakultas}
                     </td>
                   </tr>

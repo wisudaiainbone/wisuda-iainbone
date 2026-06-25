@@ -63,13 +63,13 @@ export default function TogaSettingsForm({ activePeriode }: { activePeriode: any
   return (
     <form onSubmit={handleSave} className="w-full space-y-8 pb-24 sm:pb-0">
       {message && (
-        <div className={`p-4 rounded-xl flex items-center gap-2 text-sm font-bold shadow-sm ${message.type === 'success' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800'}`}>
+        <div className={`p-4 rounded-xl flex items-center gap-2 text-sm font-bold ${message.type === 'success' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800'}`}>
           <AlertCircle size={16} />
           {message.text}
         </div>
       )}
 
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden flex flex-col">
         {/* Tempat Pengambilan */}
         <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
           <div className="flex-1">
@@ -120,7 +120,7 @@ export default function TogaSettingsForm({ activePeriode }: { activePeriode: any
           <button
             type="submit"
             disabled={isLoading}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all shadow-md shadow-emerald-900/20 active:scale-95"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all-emerald-900/20 active:scale-95"
           >
             {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             {isLoading ? "Menyimpan..." : "Simpan Pengaturan Toga"}

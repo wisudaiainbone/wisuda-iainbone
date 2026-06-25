@@ -216,7 +216,7 @@ export default function ManajemenAdminClient({
       {/* Form Tambah Admin Modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-xl shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl w-full max-w-xl animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex items-center justify-between p-6 border-b border-[var(--color-border)] shrink-0">
               <h2 className="text-xl font-bold text-[var(--color-text)]">
                 {editingAdminId ? "Edit Admin" : "Tambah Admin Baru"}
@@ -306,7 +306,7 @@ export default function ManajemenAdminClient({
                 <button
                   type="submit"
                   disabled={formLoading}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-colors shadow-md shadow-emerald-900/20"
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-colors-emerald-900/20"
                 >
                   {formLoading ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
                   {formLoading ? "Menyimpan..." : "Simpan Admin"}
@@ -318,7 +318,7 @@ export default function ManajemenAdminClient({
       )}
 
       {/* Tabel Admin */}
-      <div className="bg-transparent md:bg-[var(--color-surface)] md:rounded-2xl border-none md:border md:border-[var(--color-border)] shadow-none md:shadow-sm overflow-hidden flex flex-col gap-4 md:gap-0">
+      <div className="bg-transparent md:bg-[var(--color-surface)] md:rounded-2xl border-none md:border md:border-[var(--color-border)] overflow-hidden flex flex-col gap-4 md:gap-0">
         <div className="overflow-x-auto hidden md:block">
           <table className="w-full text-sm">
             <thead className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
@@ -459,7 +459,7 @@ export default function ManajemenAdminClient({
             sortedAdmins.map((admin) => {
               const meta = ROLE_META[admin.role as AdminRole] ?? ROLE_META.admin_unit;
               return (
-                <div key={admin.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 shadow-sm flex flex-col gap-2 relative">
+                <div key={admin.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 flex flex-col gap-2 relative">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex flex-col">
                       <div className="font-bold text-[var(--color-text)] flex items-center gap-2">
@@ -544,7 +544,7 @@ export default function ManajemenAdminClient({
         <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50">
           <button
             onClick={openAddForm}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center-[0_8px_30px_rgb(0,0,0,0.12)]-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
             title="Tambah Admin"
           >
             <Plus size={24} />

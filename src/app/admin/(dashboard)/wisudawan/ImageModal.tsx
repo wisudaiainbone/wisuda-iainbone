@@ -22,7 +22,7 @@ export default function ImageModal({
 
   if (!src) {
     return (
-      <div className="w-9 h-12 rounded-md bg-emerald-600 flex items-center justify-center text-white shadow-sm">
+      <div className="w-9 h-12 rounded-md bg-emerald-600 flex items-center justify-center text-white">
         <User size={20} />
       </div>
     );
@@ -37,7 +37,7 @@ export default function ImageModal({
         alt={alt}
         referrerPolicy="no-referrer"
         onClick={() => setIsOpen(true)}
-        className="w-9 h-12 rounded-md object-cover bg-emerald-600 cursor-pointer hover:opacity-80 transition-opacity shadow-sm"
+        className="w-9 h-12 rounded-md object-cover bg-emerald-600 cursor-pointer hover:opacity-80 transition-opacity"
         onError={(e) => {
           // Fallback ke src asli jika gagal
           (e.target as HTMLImageElement).src = src;
@@ -68,7 +68,7 @@ export default function ImageModal({
                 src={optimizedSrc}
                 alt={alt}
                 referrerPolicy="no-referrer"
-                className="max-w-full max-h-[90vh] rounded-xl object-contain shadow-2xl"
+                className="max-w-full max-h-[90vh] rounded-xl object-contain"
                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the image itself
                 onError={(e) => {
                   // Fallback ke src asli jika gagal

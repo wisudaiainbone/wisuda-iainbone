@@ -125,7 +125,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
 
   return (
     <form onSubmit={handleSave} className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-24 sm:pb-0">
-      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden flex flex-col">
 
         {/* === Upload Latar Depan === */}
         <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-start justify-between gap-6 hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
@@ -139,7 +139,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
           <div className="w-full sm:w-auto shrink-0 flex flex-col items-center gap-3">
             <div className="relative group">
               {tamuBgDepanUrl ? (
-                <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 shadow-md group">
+                <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={tamuBgDepanUrl} alt="Preview Background Depan" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
@@ -176,7 +176,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
           <div className="w-full sm:w-auto shrink-0 flex flex-col items-center gap-3">
             <div className="relative group">
               {tamuBgBelakangUrl ? (
-                <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 shadow-md group">
+                <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={tamuBgBelakangUrl} alt="Preview Background Belakang" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
@@ -213,7 +213,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
           <div className="w-full sm:w-auto shrink-0 flex flex-col items-center gap-3">
             <div className="relative group">
               {tamuTtdUrl ? (
-                <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 shadow-sm group bg-[var(--color-bg)] bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3C%2Fsvg%3E')]">
+                <div className="relative w-48 h-32 rounded-xl overflow-hidden border-2 border-emerald-400 group bg-[var(--color-bg)] bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3C%2Fsvg%3E')]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={tamuTtdUrl} alt="Preview TTD" className="w-full h-full object-contain p-2" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
@@ -340,7 +340,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
           <button
             type="submit"
             disabled={isSaving}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all shadow-md shadow-emerald-900/20 active:scale-95"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 h-[42px] sm:h-auto sm:py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 text-white rounded-full sm:rounded-xl text-sm font-bold transition-all-emerald-900/20 active:scale-95"
           >
             {isSaving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
             {isSaving ? "Menyimpan..." : "Simpan Pengaturan Tamu"}

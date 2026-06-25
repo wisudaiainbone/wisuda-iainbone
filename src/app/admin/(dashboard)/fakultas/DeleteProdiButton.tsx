@@ -36,7 +36,7 @@ export default function DeleteProdiButton({ id, prodiName }: Props) {
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => !isPending && setIsOpen(false)}
           />
-          <div className="relative w-full max-w-sm bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-xl p-5 text-center flex flex-col items-center">
+          <div className="relative w-full max-w-sm bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 text-center flex flex-col items-center">
             <div className="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-rose-500 mb-4">
               <AlertTriangle size={24} />
             </div>
