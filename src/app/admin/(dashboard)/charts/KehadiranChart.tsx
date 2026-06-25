@@ -53,8 +53,8 @@ export default function KehadiranChart({ data, isDrilling, drillFakultas }: Prop
               data={pieData} 
               cx="50%" 
               cy="50%" 
-              innerRadius={45}
-              outerRadius={80} 
+              innerRadius="55%"
+              outerRadius="80%" 
               dataKey="value" 
               labelLine={false}
             >

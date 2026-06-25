@@ -89,7 +89,7 @@ export default function SebaranChart({ data, isDrillingFakultas, isDrillingProdi
           </div>
         )}
       </div>
-      <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+      <div className="p-4 grid grid-cols-1 md:grid-cols-[40%_60%] sm:grid-cols-2 gap-4 items-center">
         {/* Donut */}
         <ResponsiveContainer width="100%" height={260}>
           <PieChart>

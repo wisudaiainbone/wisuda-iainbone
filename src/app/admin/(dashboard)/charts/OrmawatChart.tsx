@@ -52,7 +52,7 @@ export default function OrmawatChart({ data, isDrilling, drillFakultas }: Props)
           Total: {totalAll.toLocaleString('id-ID')}
         </span>
       </div>
-      <div className="p-4 grid grid-cols-2 gap-4">
+      <div className="p-4 grid grid-cols-[40%_60%] sm:grid-cols-2 gap-4">
         {/* Pie Aktif vs Tidak */}
         <div>
           <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Aktif vs Tidak</p>

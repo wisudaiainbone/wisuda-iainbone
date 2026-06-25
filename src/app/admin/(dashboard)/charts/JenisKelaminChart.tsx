@@ -50,15 +50,15 @@ export default function JenisKelaminChart({ data, isDrilling, drillFakultas }: P
           Total: {totalAll.toLocaleString('id-ID')}
         </span>
       </div>
-      <div className="p-4 grid grid-cols-2 items-center gap-2">
+      <div className="p-4 grid grid-cols-[40%_60%] sm:grid-cols-2 items-center gap-2">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
             <Pie
               data={pieData}
               cx="50%"
               cy="50%"
-              innerRadius={45}
-              outerRadius={80}
+              innerRadius="55%"
+              outerRadius="80%"
               dataKey="value"
               labelLine={false}
               label={renderCustomLabel}
