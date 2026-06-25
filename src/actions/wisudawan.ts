@@ -56,43 +56,58 @@ function mapToLegacyFormat(row: any): Record<string, any> | null {
 
 // Reverse mapping for saving data
 function mapToSupabaseFormat(legacy: any) {
-  return {
-    nim: legacy["NIM"],
-    nama_mahasiswa: legacy["NAMA MAHASISWA"] || legacy["NAMA LENGKAP"],
-    nama_gelar: legacy["NAMA GELAR"],
-    ttl: legacy["TTL"],
-    jenis_kelamin: legacy["JENIS KELAMIN"],
-    email: legacy["EMAIL"],
-    password: legacy["PASSWORD"],
-    fakultas: legacy["FAKULTAS"],
-    prodi: legacy["PRODI"],
-    prodi_singkat: legacy["PRODI SINGKAT"],
-    ipk: legacy["IPK"] ? parseFloat(legacy["IPK"]) : null,
-    predikat: legacy["PREDIKAT"],
-    tanggal_yudisium: legacy["TANGGAL YUDISIUM"],
-    judul_skripsi: legacy["JUDUL SKRIPSI / TESIS"],
-    ormawa: legacy["ORMAWA"],
-    jabatan_dalam_ormawa: legacy["JABATAN DALAM ORMAWA"],
-    prestasi_akd: legacy["PRESTASI AKD"],
-    prestasi_org: legacy["PRESTASI ORG"],
-    periode: legacy["PERIODE"],
-    status: legacy["STATUS"],
-    sesi: legacy["SESI"],
-    id_wisuda: legacy["ID WISUDA"],
-    urut: legacy["URUT"] ? parseInt(legacy["URUT"]) : null,
-    waktu_hadir: legacy["WAKTU HADIR"],
-    id_undangan: legacy["ID UNDANGAN"],
-    qr_undangan: legacy["QR UNDANGAN"],
-    toga: legacy["TOGA"],
-    waktu_toga: legacy["WAKTU TOGA"],
-    qr_toga: legacy["QR TOGA"],
-    foto: legacy["FOTO"],
-    sertifikat: legacy["SERTIFIKAT"],
-    timestamp: legacy["TIMESTAMP"],
-    terdaftar: legacy["TERDAFTAR"],
-    survei: legacy["SURVEI"],
-    log_status: legacy["LOG STATUS"],
+  const map: Record<string, string> = {
+    "NIM": "nim",
+    "NAMA MAHASISWA": "nama_mahasiswa",
+    "NAMA LENGKAP": "nama_mahasiswa",
+    "NAMA GELAR": "nama_gelar",
+    "TTL": "ttl",
+    "JENIS KELAMIN": "jenis_kelamin",
+    "EMAIL": "email",
+    "PASSWORD": "password",
+    "FAKULTAS": "fakultas",
+    "PRODI": "prodi",
+    "PRODI SINGKAT": "prodi_singkat",
+    "PREDIKAT": "predikat",
+    "TANGGAL YUDISIUM": "tanggal_yudisium",
+    "JUDUL SKRIPSI / TESIS": "judul_skripsi",
+    "ORMAWA": "ormawa",
+    "JABATAN DALAM ORMAWA": "jabatan_dalam_ormawa",
+    "PRESTASI AKD": "prestasi_akd",
+    "PRESTASI ORG": "prestasi_org",
+    "PERIODE": "periode",
+    "STATUS": "status",
+    "SESI": "sesi",
+    "ID WISUDA": "id_wisuda",
+    "WAKTU HADIR": "waktu_hadir",
+    "ID UNDANGAN": "id_undangan",
+    "QR UNDANGAN": "qr_undangan",
+    "TOGA": "toga",
+    "WAKTU TOGA": "waktu_toga",
+    "QR TOGA": "qr_toga",
+    "FOTO": "foto",
+    "SERTIFIKAT": "sertifikat",
+    "TIMESTAMP": "timestamp",
+    "TERDAFTAR": "terdaftar",
+    "SURVEI": "survei",
+    "LOG STATUS": "log_status",
   };
+
+  const data: any = {};
+  for (const [legacyKey, supabaseKey] of Object.entries(map)) {
+    if (legacyKey in legacy && legacy[legacyKey] !== undefined) {
+      data[supabaseKey] = legacy[legacyKey];
+    }
+  }
+
+  if ("IPK" in legacy && legacy["IPK"] !== undefined) {
+    data.ipk = legacy["IPK"] ? parseFloat(legacy["IPK"]) : null;
+  }
+  if ("URUT" in legacy && legacy["URUT"] !== undefined) {
+    data.urut = legacy["URUT"] ? parseInt(legacy["URUT"]) : null;
+  }
+
+  return data;
 }
 
 export async function getWisudawanByNim(nim: string, skipCache: boolean = false) {
@@ -283,7 +298,26 @@ export async function checkExistingNims(nims: string[]) {
 
 export async function updateWisudawan(nim: string, updates: Record<string, any>) {
   const admin = await getAdminSession();
-  if (!admin) return { success: false, error: 'Unauthorized' };
+  
+  if (!admin) {
+    const allowedFields = [
+      "EMAIL", "TOGA", "TTL", "JENIS KELAMIN", "JUDUL SKRIPSI / TESIS", 
+      "ORMAWA", "JABATAN DALAM ORMAWA", "FOTO", "SURVEI"
+    ];
+    
+    const filteredUpdates: Record<string, any> = {};
+    for (const key of allowedFields) {
+      if (key in updates) {
+        filteredUpdates[key] = updates[key];
+      }
+    }
+    
+    if (Object.keys(filteredUpdates).length === 0) {
+      return { success: false, error: 'Tidak ada data yang diizinkan untuk diubah.' };
+    }
+    
+    updates = filteredUpdates;
+  }
 
   const validation = updateWisudawanSchema.safeParse({ nim, updates });
   if (!validation.success) return { success: false, error: validation.error.issues[0].message };
@@ -354,8 +388,8 @@ export async function saveFotoWisudawan(nim: string, fotoUrl: string) {
  * mengisi kolom `terdaftar` dengan timestamp sekarang, dan mengappend
  * entry baru ke kolom `log_status`.
  */
-export async function daftarWisuda(nim: string, newPassword: string) {
-  const validation = daftarWisudaSchema.safeParse({ nim, newPassword });
+export async function daftarWisuda(nim: string) {
+  const validation = daftarWisudaSchema.safeParse({ nim });
   if (!validation.success) throw new Error(validation.error.issues[0].message);
 
   const getMakassarTime = () => {
@@ -434,9 +468,6 @@ export async function daftarWisuda(nim: string, newPassword: string) {
   // Generate QR Code URL
   const qrTogaUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(idWisuda)}`;
 
-  // 5. Hash password baru
-  const hashedPassword = bcrypt.hashSync(newPassword, 10);
-
   // 6. Buat entry baru dan append ke log lama
   let currentLog: any[] = [];
   if (Array.isArray(existing.log_status)) {
@@ -463,7 +494,6 @@ export async function daftarWisuda(nim: string, newPassword: string) {
       terdaftar: now,
       id_wisuda: idWisuda,
       qr_toga: qrTogaUrl,
-      password: hashedPassword,
       log_status: updatedLog,
       nama_gelar: namaGelarBaru,
       prodi_singkat: prodiSingkatBaru,
@@ -493,8 +523,7 @@ export async function daftarWisuda(nim: string, newPassword: string) {
     terdaftar: now,
     id_wisuda: idWisuda,
     nama_gelar: namaGelarBaru,
-    prodi_singkat: prodiSingkatBaru,
-    password_hash: hashedPassword
+    prodi_singkat: prodiSingkatBaru
   };
 }
 

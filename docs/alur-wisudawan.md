@@ -95,8 +95,9 @@ Banner merah **"Masa Pendaftaran & Edit Data Telah Ditutup oleh Admin"** muncul 
 Menampilkan judul *"Wisuda Program Sarjana dan Magister [Periode] IAIN Bone"* beserta:
 - Periode, Pelaksanaan, Tempat, Sesi, Nomor Urut, Jam Sesi.
 - Catatan Pendaftaran (`hint_pendaftaran`) tampil **di atas tombol Lihat Undangan Wisuda** jika diisi admin — sebagai pengingat bahwa jadwal dapat berubah sewaktu-waktu.
-- Tombol **Lihat Undangan Wisuda** (merah) — membuka Tiket E-Undangan digital.
-- Tombol Gabung WhatsApp Group (jika ada link WAG).
+- Tombol **Lihat Undangan Wisuda** (merah) — membuka Tiket E-Undangan digital (disembunyikan untuk Calon Wisudawan).
+- Tombol **Link Pengumuman Resmi** (oranye) — tetap tampil meskipun status masih Calon Wisudawan.
+- Tombol Gabung WhatsApp Group (disembunyikan untuk Calon Wisudawan).
 
 ### Tab Konten — Wisudawan Aktif (Status: Terdaftar)
 | Tab | Isi |
@@ -131,7 +132,7 @@ Wisudawan juga wajib mengunggah pas foto berlatar merah. Sistem mendukung:
 
 ### Proses Pendaftaran Akhir (Daftar Wisuda)
 Setelah semua data wajib dan foto terisi, kartu **"Daftar Wisuda"** muncul. Saat diklik:
-1. Wisudawan melihat konfirmasi final.
+1. Wisudawan melihat konfirmasi final pendaftaran di periode aktif.
 2. Sistem men-generate **ID Wisuda** unik: `[PERIODE]_[TAHUN]_[URUTAN-3-DIGIT]_[NIM]` (digunakan untuk background QR generator tiket toga).
 3. Gelar akademik otomatis di-generate dari `prodi.json`.
 4. Status wisudawan berubah menjadi **Terdaftar** dan entry baru dicatat di `log_status`.

@@ -13,8 +13,7 @@ export const loginWisudawanSchema = z.object({
 });
 
 export const daftarWisudaSchema = z.object({
-  nim: z.string().min(1, "NIM wajib diisi"),
-  newPassword: z.string().min(6, "Password minimal 6 karakter")
+  nim: z.string().min(1, "NIM wajib diisi")
 });
 
 export const setupAkunSchema = z.object({

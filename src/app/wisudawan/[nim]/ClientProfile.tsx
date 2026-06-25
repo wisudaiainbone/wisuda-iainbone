@@ -162,8 +162,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
   const [isJabatanLainnya, setIsJabatanLainnya] = useState(false);
   const [isDaftarDialogOpen, setIsDaftarDialogOpen] = useState(false);
   const [isDaftarLoading, setIsDaftarLoading] = useState(false);
-  const [daftarPassword, setDaftarPassword] = useState("");
-  const [daftarPasswordConfirm, setDaftarPasswordConfirm] = useState("");
+
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
@@ -296,15 +295,20 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
       return;
     }
 
+    formData["TTL"] = `${tempatLahir}, ${tanggalLahir}`;
+
     setIsSubmitting(true);
     try {
-      await updateWisudawan(nim, formData);
+      const res = await updateWisudawan(nim, formData);
+      if (res && res.success === false) {
+        throw new Error(res.error || "Gagal menyimpan perubahan.");
+      }
       setW((prev) => ({ ...prev, ...formData }));
       setIsEditing(false);
       showToast("✓ Perubahan berhasil disimpan!", "success");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      showToast("Gagal menyimpan perubahan.", "error");
+      showToast(err.message || "Gagal menyimpan perubahan.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -407,38 +411,36 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               </div>
             ))}
           </div>
-          {w["STATUS"] !== "Calon Wisudawan" && (
-            <div className="px-4 pb-4 pt-1 flex flex-col gap-2.5">
-              {p.hint_pendaftaran && (
-                <div className="px-3 py-2.5 my-0.5 rounded-xl border border-red-200 dark:border-red-800/30 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 text-xs font-medium whitespace-pre-wrap leading-relaxed text-center">
-                  {p.hint_pendaftaran}
-                </div>
-              )}
-              {showUndanganInfo && (
-                <button
-                  onClick={() => setIsUndanganOpen(true)}
-                  className="flex items-center justify-center gap-2 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-sm font-bold transition-all w-full"
-                >
-                  <QrCode size={15} />
-                  Lihat Undangan Wisuda
-                </button>
-              )}
-              {p.linkPengumuman && (
-                <a href={p.linkPengumuman} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-sm font-bold transition-all w-full">
-                  <Megaphone size={15} />
-                  Link Pengumuman Resmi
-                </a>
-              )}
-              {p.wagLink && (
-                <a href={p.wagLink} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm font-bold transition-all w-full">
-                  <MessageCircle size={15} />
-                  Gabung WhatsApp Group
-                </a>
-              )}
-            </div>
-          )}
+          <div className="px-4 pb-4 pt-1 flex flex-col gap-2.5">
+            {p.hint_pendaftaran && (
+              <div className="px-3 py-2.5 my-0.5 rounded-xl border border-red-200 dark:border-red-800/30 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 text-xs font-medium whitespace-pre-wrap leading-relaxed text-center">
+                {p.hint_pendaftaran}
+              </div>
+            )}
+            {w["STATUS"] !== "Calon Wisudawan" && showUndanganInfo && (
+              <button
+                onClick={() => setIsUndanganOpen(true)}
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-sm font-bold transition-all w-full"
+              >
+                <QrCode size={15} />
+                Lihat Undangan Wisuda
+              </button>
+            )}
+            {p.linkPengumuman && (
+              <a href={p.linkPengumuman} target="_blank" rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-sm font-bold transition-all w-full">
+                <Megaphone size={15} />
+                Link Pengumuman Resmi
+              </a>
+            )}
+            {w["STATUS"] !== "Calon Wisudawan" && p.wagLink && (
+              <a href={p.wagLink} target="_blank" rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm font-bold transition-all w-full">
+                <MessageCircle size={15} />
+                Gabung WhatsApp Group
+              </a>
+            )}
+          </div>
         </Card>
       </motion.div>
     </div>
@@ -1912,17 +1914,9 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
         isOpen={isDaftarDialogOpen}
         onClose={() => setIsDaftarDialogOpen(false)}
         onConfirm={async () => {
-          if (!daftarPassword || daftarPassword.length < 6) {
-            showToast("Password harus minimal 6 karakter.", "error");
-            return;
-          }
-          if (daftarPassword !== daftarPasswordConfirm) {
-            showToast("Konfirmasi password tidak cocok.", "error");
-            return;
-          }
           setIsDaftarLoading(true);
           try {
-            const result = await daftarWisuda(nim, daftarPassword);
+            const result = await daftarWisuda(nim);
             setW((prev) => ({
               ...prev,
               "STATUS": "Terdaftar",
@@ -1932,8 +1926,6 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               "PRODI SINGKAT": result.prodi_singkat as any,
             }));
             setIsDaftarDialogOpen(false);
-            setDaftarPassword("");
-            setDaftarPasswordConfirm("");
             setActiveTab("pelaksanaan");
             showToast("✓ Selamat! Pendaftaran wisuda berhasil.", "success");
           } catch (e: any) {
@@ -1952,24 +1944,6 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                 {activePeriode?.nama_periode || w["PERIODE"] || "-"}
               </span> ?
             </p>
-            {/* Password Field */}
-            <div className="flex flex-col gap-2 mt-1">
-              <label className="text-xs font-bold text-[var(--color-text)]">Buat Password Login <span className="text-rose-500">✱</span></label>
-              <input
-                type="password"
-                value={daftarPassword}
-                onChange={(e) => setDaftarPassword(e.target.value)}
-                placeholder="Minimal 6 karakter"
-                className="w-full px-3 py-2 text-sm bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none"
-              />
-              <input
-                type="password"
-                value={daftarPasswordConfirm}
-                onChange={(e) => setDaftarPasswordConfirm(e.target.value)}
-                placeholder="Konfirmasi password"
-                className="w-full px-3 py-2 text-sm bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none"
-              />
-            </div>
           </div>
         }
         confirmText="Ya, Daftar Wisuda"
