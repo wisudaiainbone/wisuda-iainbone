@@ -1,12 +1,11 @@
 'use server'
 
 import { supabase } from '@/lib/supabase';
-import { redis } from '@/lib/redis';
+import { redis, loginRateLimit, invalidateAllDashboardCache } from '@/lib/redis';
 import { revalidatePath } from 'next/cache';
 import { getAdminSession } from '@/actions/adminAuth';
 import bcrypt from 'bcryptjs';
 import { updateWisudawanSchema, loginWisudawanSchema, daftarWisudaSchema, setupAkunSchema, changePasswordSchema } from '@/lib/validations';
-import { Ratelimit } from "@upstash/ratelimit";
 
 const CACHE_TTL = 3600; // 1 hour
 
@@ -168,12 +167,7 @@ export async function loginWisudawan(nim: string, passwordInput: string) {
   const validation = loginWisudawanSchema.safeParse({ nim, passwordInput });
   if (!validation.success) return { success: false, error: validation.error.issues[0].message };
 
-  // Rate Limiting
-  const loginRateLimit = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(5, "1 m"),
-    analytics: true,
-  });
+  // Rate Limiting (menggunakan instance yang sudah dibuat di redis.ts)
   const { success: rateLimitSuccess } = await loginRateLimit.limit(`login_attempt:${nim}`);
   if (!rateLimitSuccess) {
     return { success: false, error: 'Terlalu banyak percobaan login. Silakan coba lagi nanti.' };
@@ -339,9 +333,8 @@ export async function updateWisudawan(nim: string, updates: Record<string, any>)
 
   // Invalidate cache
   try {
-    const cacheKey = `wisudawan:${nim}`;
-    await redis.del(cacheKey);
-    await redis.del('dashboard:stats:all');
+    await redis.del(`wisudawan:${nim}`);
+    await invalidateAllDashboardCache();
   } catch (err) {
     console.error("Redis del error:", err);
   }
@@ -507,9 +500,8 @@ export async function daftarWisuda(nim: string) {
 
   // 8. Invalidate cache
   try {
-    const cacheKey = `wisudawan:${nim}`;
-    await redis.del(cacheKey);
-    await redis.del('dashboard:stats:all');
+    await redis.del(`wisudawan:${nim}`);
+    await invalidateAllDashboardCache();
   } catch (err) {
     console.error('Redis del error:', err);
   }
@@ -836,8 +828,7 @@ export async function importWisudawanBatch(data: any[]) {
         });
         await pipeline.exec();
       }
-      await redis.del('wisudawan_list');
-      await redis.del('dashboard:stats:all');
+      await invalidateAllDashboardCache();
     } catch (err) {
       console.error("Redis del error:", err);
     }
@@ -889,7 +880,7 @@ export async function deleteWisudawan(nim: string) {
     // Invalidate cache
     try {
       await redis.del(`wisudawan:${nim}`);
-      await redis.del('dashboard:stats:all');
+      await invalidateAllDashboardCache();
     } catch (err) {
       console.error("Redis del error:", err);
     }
@@ -954,8 +945,8 @@ export async function deleteWisudawanBulk(nims: string[]) {
     try {
       const pipeline = redis.pipeline();
       nims.forEach(nim => pipeline.del(`wisudawan:${nim}`));
-      pipeline.del('dashboard:stats:all');
       await pipeline.exec();
+      await invalidateAllDashboardCache();
     } catch (err) {
       console.error("Redis del pipeline error:", err);
     }

@@ -1,7 +1,7 @@
 'use server';
 
 import { supabase } from '@/lib/supabase';
-import { redis } from '@/lib/redis';
+import { redis, invalidateAllDashboardCache } from '@/lib/redis';
 
 const DASHBOARD_CACHE_TTL = 900; // 15 menit
 
@@ -539,12 +539,7 @@ export async function getDashboardStats(periode?: string): Promise<DashboardStat
 }
 
 export async function invalidateDashboardCache() {
-  const keys = ['dashboard:stats:all'];
-  try {
-    await Promise.all(keys.map(k => redis.del(k)));
-  } catch (err) {
-    console.error('Redis del error (dashboard):', err);
-  }
+  await invalidateAllDashboardCache();
 }
 
 function getEmptyStats(): DashboardStats {

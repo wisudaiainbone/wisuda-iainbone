@@ -1,7 +1,7 @@
 'use server';
 
 import { supabase } from '@/lib/supabase';
-import { redis } from '@/lib/redis';
+import { redis, invalidateAllDashboardCache } from '@/lib/redis';
 import { revalidatePath } from 'next/cache';
 
 export interface ProdiResult {
@@ -155,8 +155,8 @@ export async function generateNomorUndangan(): Promise<GenerateNomorResult> {
       for (const u of updates) {
         pipeline.del(`wisudawan:${u.nim}`);
       }
-      pipeline.del('dashboard:stats:all');
       await pipeline.exec();
+      await invalidateAllDashboardCache();
     } catch (redisErr) {
       console.error('Redis pipeline error (non-fatal):', redisErr);
     }

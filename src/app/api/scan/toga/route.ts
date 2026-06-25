@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { redis } from '@/lib/redis';
+import { redis, invalidateAllDashboardCache } from '@/lib/redis';
 import { supabase } from '@/lib/supabase';
 
 function getMakassarTime() {
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Invalidasi dashboard cache secara background
-    redis.del('dashboard:stats:all').catch(() => {});
+    invalidateAllDashboardCache().catch(() => {});
 
     // 5. Return success
     return NextResponse.json({ 

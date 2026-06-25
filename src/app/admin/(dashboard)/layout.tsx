@@ -30,7 +30,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
         {/* Main Content */}
         <main className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 border-b border-[var(--color-border)] bg-[var(--color-surface)] flex items-center px-6 sticky top-0 z-10 gap-4">
+          <header className="h-14 border-b border-[var(--color-border)] bg-[var(--color-surface)] flex items-center px-6 sticky top-0 z-40 gap-4">
             {/* Mobile brand */}
             <div className="md:hidden font-medium text-[var(--color-text)] flex items-center gap-2">
               <Image src="/logo.png" alt="Logo" width={22} height={22} className="drop-shadow-sm" />
@@ -64,7 +64,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     return (
       <div className="min-h-screen bg-[var(--color-bg)] flex flex-col font-sans">
         <main className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 border-b border-[var(--color-border)] bg-[var(--color-surface)] flex items-center px-6 sticky top-0 z-10 gap-4">
+          <header className="h-14 border-b border-[var(--color-border)] bg-[var(--color-surface)] flex items-center px-6 sticky top-0 z-40 gap-4">
             <div className="font-bold text-[var(--color-text)] flex items-center gap-2">
               <Image src="/logo.png" alt="Logo" width={24} height={24} className="drop-shadow-sm" />
               <span className="hidden sm:inline">Presensi Wisuda IAIN Bone</span>
