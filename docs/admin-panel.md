@@ -203,7 +203,7 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
   - Template mencakup auto-fill data contoh dan *sheet* Master Fakultas.
   - Dilengkapi fitur **Fuzzy-Match Validation** untuk mencocokkan & memperbaiki otomatis ejaan Fakultas/Prodi.
   - **Validasi Wajib Isi**: Sistem menolak baris yang kosong pada kolom esensial (NIM, Nama, IPK, Predikat, Fakultas, Prodi, Tanggal Yudisium). Kolom Ukuran Toga bersifat opsional.
-  - **Parsing Tanggal Cerdas**: Mendukung berbagai format teks tanggal bahasa Indonesia (contoh: "22 Januari 2026", "22-Jan-2026") selain format standar ISO.
+  - **Parsing Tanggal Khusus**: Membaca file Excel dalam mode *Raw Text* secara ketat untuk kolom Tanggal Yudisium. Wajib berformat **`YYYY-MM-DD`** secara visual pada sel Excel (contoh: `2026-05-13`) untuk mencegah inkonsistensi zona waktu. Format lain akan ditolak secara otomatis.
 - **Export Excel**: Unduh seluruh data sebagai file `.xlsx` (termasuk filter yang sedang aktif).
 - **Kolom Aksi Cepat**:
   - 👁️ **Lihat Profil** — pratinjau profil.

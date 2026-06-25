@@ -107,11 +107,11 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
       try {
         setLoading(true);
         const data = e.target?.result;
-        // Set cellDates: true to parse dates as Date objects instead of raw numbers
-        const workbook = XLSX.read(data, { type: "binary", cellDates: true });
+        // Gunakan raw: false agar membaca teks persis seperti yang terlihat di Excel
+        const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: false, defval: "" });
 
         const nims = jsonData.map((row: any) => row.nim?.toString()).filter(Boolean);
         const existingNims = await checkExistingNims(nims);
@@ -142,9 +142,12 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
           } else if (!row.prodi?.toString().trim()) {
             isValid = false;
             reason = 'Prodi Kosong';
-          } else if (!row.tanggal_yudisium) {
+          } else if (!row.tanggal_yudisium || row.tanggal_yudisium.toString().trim() === '') {
             isValid = false;
             reason = 'Tgl Yudisium Kosong';
+          } else if (!/^\d{4}-\d{2}-\d{2}$/.test(row.tanggal_yudisium.toString().trim())) {
+            isValid = false;
+            reason = 'Format Tgl Yudisium harus YYYY-MM-DD';
           } else if (userRole === 'admin_unit' && unitKerja) {
             const f = row.fakultas ? row.fakultas.toString().toLowerCase().trim() : '';
             if (f !== unitKerja.toLowerCase().trim()) {
@@ -192,64 +195,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
               reason = 'Fakultas/Prodi tidak valid';
             }
           }
-          let formattedDate = null;
-          if (row.tanggal_yudisium) {
-            if (row.tanggal_yudisium instanceof Date) {
-              const d = row.tanggal_yudisium;
-              const year = d.getUTCFullYear();
-              const month = String(d.getUTCMonth() + 1).padStart(2, '0');
-              const day = String(d.getUTCDate()).padStart(2, '0');
-              formattedDate = `${year}-${month}-${day}`;
-            } else if (typeof row.tanggal_yudisium === 'number') {
-              const excelEpoch = new Date(Date.UTC(1899, 11, 30));
-              const d = new Date(excelEpoch.getTime() + row.tanggal_yudisium * 86400000);
-              const year = d.getUTCFullYear();
-              const month = String(d.getUTCMonth() + 1).padStart(2, '0');
-              const day = String(d.getUTCDate()).padStart(2, '0');
-              formattedDate = `${year}-${month}-${day}`;
-            } else if (typeof row.tanggal_yudisium === 'string') {
-               const str = row.tanggal_yudisium.trim();
-               const idMonths: Record<string, string> = {
-                 'januari': '01', 'jan': '01',
-                 'februari': '02', 'feb': '02',
-                 'maret': '03', 'mar': '03',
-                 'april': '04', 'apr': '04',
-                 'mei': '05',
-                 'juni': '06', 'jun': '06',
-                 'juli': '07', 'jul': '07',
-                 'agustus': '08', 'agu': '08', 'ags': '08',
-                 'september': '09', 'sep': '09',
-                 'oktober': '10', 'okt': '10',
-                 'november': '11', 'nov': '11',
-                 'desember': '12', 'des': '12'
-               };
-               
-               const parts = str.split(/[-/\s]+/);
-               if (parts.length === 3) {
-                   const monthName = parts[1].toLowerCase();
-                   if (idMonths[monthName]) {
-                       const d = parts[0].padStart(2, '0');
-                       const m = idMonths[monthName];
-                       const y = parts[2];
-                       formattedDate = `${y}-${m}-${d}`;
-                   } else if (parts[2].length === 4) { 
-                     // Asumsi DD-MM-YYYY atau MM/DD/YYYY
-                     formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                   } else if (parts[0].length === 4) {
-                     // Asumsi YYYY-MM-DD
-                     formattedDate = `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
-                   }
-               }
-            }
-            
-            // Validasi apakah benar-benar tanggal yang valid
-            if (formattedDate) {
-              const d = new Date(formattedDate);
-              if (isNaN(d.getTime())) {
-                 formattedDate = null; 
-              }
-            }
-          }
+          let formattedDate = row.tanggal_yudisium ? row.tanggal_yudisium.toString().trim() : null;
 
           let formattedIpk = row.ipk;
           if (formattedIpk !== undefined && formattedIpk !== null && formattedIpk !== '') {
