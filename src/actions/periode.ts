@@ -47,6 +47,7 @@ export async function getActivePeriode() {
       statusColor: data.status_color,
       tempat_pengambilan_toga: data.tempat_pengambilan_toga,
       waktu_pengambilan_toga: data.waktu_pengambilan_toga,
+      link_pengumuman: data.link_pengumuman,
       stats: [
         { bg: "bg-emerald-800/20", icon: "Users", color: "text-emerald-700", label: "Kuota Total", value: data.kuota.toString() },
         { bg: "bg-blue-500/20", icon: "UserCheck", color: "text-blue-400", label: "Pendaftar", value: totalPendaftar.toString() },
@@ -113,7 +114,8 @@ export async function getActivePeriode() {
       hint_pendaftaran: p.hint_pendaftaran,
       wagLink: p.waglink,
       themeImage: p.theme,
-      statusColor: p.status_color
+      statusColor: p.status_color,
+      link_pengumuman: p.link_pengumuman
     };
   });
 
@@ -144,27 +146,28 @@ export async function createPeriode(data: any) {
     }
     const customId = `${year}-${randomPart}`;
 
-    const { data: inserted, error } = await supabase
-      .from('periode_wisuda')
-      .insert({
-        id: customId,
-        nama_periode: nama_periode || data.title || 'Periode Baru',
-        status: status || 'Sedang Dibuka',
-        kuota: parseInt(kuota) || 0,
-        tanggal_pendaftaran,
-        tanggal_pelaksanaan: tanggal_pelaksanaan || data.date,
-        tempat_pelaksanaan: tempat_pelaksanaan || data.location,
-        waktu_sesi_1: waktu_sesi_1 || data.session1,
-        waktu_sesi_2: waktu_sesi_2 || data.session2,
-        jadwal_gladi: jadwal_gladi || data.gladi,
-        pengumuman: pengumuman || data.pengumuman,
-        hint_pendaftaran: hint_pendaftaran || data.hint_pendaftaran,
-        waglink: data.waglink || data.wagLink,
-        theme: data.theme || data.themeImage,
-        status_color: data.status_color || data.statusColor
-      })
-      .select('id')
-      .single();
+      const { data: inserted, error } = await supabase
+        .from('periode_wisuda')
+        .insert({
+          id: customId,
+          nama_periode: nama_periode || data.title || 'Periode Baru',
+          status: status || 'Sedang Dibuka',
+          kuota: parseInt(kuota) || 0,
+          tanggal_pendaftaran,
+          tanggal_pelaksanaan: tanggal_pelaksanaan || data.date,
+          tempat_pelaksanaan: tempat_pelaksanaan || data.location,
+          waktu_sesi_1: waktu_sesi_1 || data.session1,
+          waktu_sesi_2: waktu_sesi_2 || data.session2,
+          jadwal_gladi: jadwal_gladi || data.gladi,
+          pengumuman: pengumuman || data.pengumuman,
+          hint_pendaftaran: hint_pendaftaran || data.hint_pendaftaran,
+          waglink: data.waglink || data.wagLink,
+          theme: data.theme || data.themeImage,
+          status_color: data.status_color || data.statusColor,
+          link_pengumuman: data.link_pengumuman
+        })
+        .select('id')
+        .single();
 
     if (error) throw error;
 
@@ -206,7 +209,8 @@ export async function updatePeriodePengaturan(id: string, updates: any) {
         hint_pendaftaran: hint_pendaftaran || updates.hint_pendaftaran,
         waglink: updates.waglink || updates.wagLink,
         theme: updates.theme || updates.themeImage,
-        status_color: updates.status_color || updates.statusColor
+        status_color: updates.status_color || updates.statusColor,
+        link_pengumuman: updates.link_pengumuman
       })
       .eq('id', id);
 

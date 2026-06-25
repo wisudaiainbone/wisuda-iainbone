@@ -279,8 +279,9 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
     const tempatLahir = formData["TEMPAT_LAHIR"] || (formData["TTL"] ? formData["TTL"].split(',')[0]?.trim() : "");
     const tanggalLahir = formData["TANGGAL_LAHIR"] || (formData["TTL"] ? formData["TTL"].split(',')[1]?.trim() : "");
 
-    if (!formData["TOGA"] || !formData["EMAIL"] || !tempatLahir || !tanggalLahir || !formData["JENIS KELAMIN"] || !formData["JUDUL SKRIPSI / TESIS"]) {
-      showToast("Gagal menyimpan! Mohon lengkapi semua field wajib (bertanda ✱).", "error");
+    const judul = typeof formData["JUDUL SKRIPSI / TESIS"] === "string" ? formData["JUDUL SKRIPSI / TESIS"].trim() : "";
+    if (!formData["TOGA"] || !formData["EMAIL"] || !tempatLahir || !tanggalLahir || !formData["JENIS KELAMIN"] || !judul || judul === "-" || judul.split(/\s+/).length < 5) {
+      showToast("Gagal menyimpan! Mohon lengkapi semua field wajib dan pastikan judul skripsi minimal 5 kata.", "error");
       return;
     }
 
@@ -443,12 +444,13 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
     </div>
   );
 
+  const judulSkripsi = typeof w["JUDUL SKRIPSI / TESIS"] === "string" ? w["JUDUL SKRIPSI / TESIS"].trim() : "";
   const isFormLengkap = !!(
-    w["EMAIL"] &&
-    w["TTL"] &&
-    w["JENIS KELAMIN"] &&
-    w["TOGA"] &&
-    w["JUDUL SKRIPSI / TESIS"]
+    w["EMAIL"]?.trim() &&
+    w["TTL"]?.trim() &&
+    w["JENIS KELAMIN"]?.trim() &&
+    w["TOGA"]?.trim() &&
+    judulSkripsi && judulSkripsi !== "-" && judulSkripsi.split(/\s+/).length >= 5
   );
 
   const isAllRequiredFilled = !!(
