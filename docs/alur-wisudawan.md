@@ -49,7 +49,7 @@ Setiap mahasiswa yang diimpor oleh admin otomatis menggunakan sandi bawaan (defa
 1. Saat mahasiswa **pertama kali login** menggunakan sandi bawaan, sistem akan mengenali (`isDefaultPassword: true`).
 2. Mahasiswa **wajib** melewati halaman `/setup/[nim]` untuk:
    - Menambahkan **Email Aktif**
-   - Memilih **Ukuran Toga**
+   - Memilih **Ukuran Toga** (Jika telah diatur admin, otomatis terisi dari database utama tanpa cache)
    - Membuat **Password Baru** (minimal 6 karakter)
 3. Setelah berhasil mengisi form setup, data email & toga disimpan, dan password baru di-hash (SHA-256).
 4. Wisudawan dikembalikan ke halaman `/auth` untuk login menggunakan sandi yang baru mereka buat.
@@ -116,6 +116,8 @@ Calon wisudawan **tidak** melihat sistem tab. Mereka langsung melihat area pengi
 ### Edit Data & Lengkapi Persyaratan
 Wisudawan wajib melengkapi persyaratan wisuda (Toga, Data Kontak, Judul Skripsi) dan dapat mengisi opsi tambahan (Organisasi & Prestasi). Terdapat validasi otomatis:
 - **Format Email**: Wajib format email yang valid.
+- **Validasi Judul Skripsi**: Wajib diisi dengan **minimal 5 kata**.
+- **Otomatisasi Toga**: Form Ukuran Toga akan **disembunyikan sepenuhnya** jika pengubahan toga dinonaktifkan oleh Admin.
 - **Tempat Lahir**: Otomatis dikoreksi menjadi *Title Case*.
 - **Otomatisasi Form**: Jika kolom Nama Organisasi (Ormawa) diisi, maka kolom Jabatan Ormawa otomatis wajib (required). Jika dikosongkan, kolom jabatan akan dinonaktifkan (disabled).
 - **Ganti Foto Cepat**: Tersedia antarmuka pengubahan foto secara langsung di bagian paling atas form tanpa perlu keluar dari mode edit.

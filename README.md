@@ -7,7 +7,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
 - **Desain Modern & Responsif**: Palet *emerald* dan *slate* premium dengan dukungan Dark Mode penuh.
 - **Autentikasi Wisudawan Aman**:
   - *Calon Wisudawan* → login pakai password default (dikonfigurasi admin).
-  - **Setup Akun Wajib (First-Time Login)**: Jika wisudawan login dengan password default, sistem mengarahkan ke halaman `/setup/[nim]` untuk mengisi **Email, Ukuran Toga, dan Password Baru** sebelum bisa masuk ke profil.
+  - **Setup Akun Wajib (First-Time Login)**: Jika wisudawan login dengan password default, sistem mengarahkan ke halaman `/setup/[nim]` untuk mengisi **Email, Ukuran Toga (otomatis terisi dari database utama tanpa cache), dan Password Baru** sebelum bisa masuk ke profil.
   - *Wisudawan Terdaftar* → login pakai password kustom yang di-**hash** (SHA-256 + salt).
   - Tombol **"Cek Status Pendaftaran kamu"** di halaman login untuk cek NIM tanpa perlu login.
 - **Autentikasi Admin Aman**: Login admin terpusat via **NextAuth.js (Google Provider)** — session menggunakan JWT. Akses dibatasi ketat berdasarkan kecocokan email Google dengan database `admin_users`. Terdapat jalur alternatif khusus **Token Presensi** (`absensi_token`) untuk panitia lapangan (Role Admin Absensi) agar dapat mengakses Scanner Kehadiran dan Scanner Tamu secara instan tanpa login Google.
@@ -86,6 +86,9 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
   - `log_status` mencatat setiap perubahan status sebagai rekaman append (tidak ditimpa).
 - **Dashboard Profil Dinamis**: Halaman profil wisudawan di `/wisudawan/[nim]` dengan state sync *real-time*, tab konten (Informasi, Undangan, Toga, Pendaftaran, **Perbaikan**).
   - Wisudawan bisa mengganti *Password* via Modal dan mengganti *Foto* langsung melalui form pengeditan data.
+  - Tampilan dinamis: jika Admin menonaktifkan pengubahan ukuran toga, blok form Toga akan **disembunyikan**.
+  - Validasi ketat: Judul skripsi wajib terdiri dari **minimal 5 kata**.
+  - Ketentuan foto: Diwajibkan memakai **Toga** (maksimal 1 MB).
 - **Fitur Perbaikan Data Akademik** *(Baru)*:
   - Wisudawan yang telah terdaftar dapat mengajukan permohonan perbaikan data akademik (Nama, NIM, Fakultas, Prodi, IPK, Toga, Predikat, Tgl Yudisium) langsung dari tab **Perbaikan** di halaman profil.
   - Sistem membatasi **satu pengajuan aktif** per wisudawan — pengajuan baru hanya bisa dilakukan setelah pengajuan sebelumnya berstatus *Diterima* atau *Ditolak*.

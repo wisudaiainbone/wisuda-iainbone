@@ -95,17 +95,19 @@ function mapToSupabaseFormat(legacy: any) {
   };
 }
 
-export async function getWisudawanByNim(nim: string) {
+export async function getWisudawanByNim(nim: string, skipCache: boolean = false) {
   const cacheKey = `wisudawan:${nim}`;
   
-  try {
-    // 1. Coba ambil dari Redis Cache
-    const cached = await redis.get(cacheKey);
-    if (cached) {
-      return typeof cached === 'string' ? JSON.parse(cached) : cached;
+  if (!skipCache) {
+    try {
+      // 1. Coba ambil dari Redis Cache
+      const cached = await redis.get(cacheKey);
+      if (cached) {
+        return typeof cached === 'string' ? JSON.parse(cached) : cached;
+      }
+    } catch (error) {
+      console.error("Redis get error:", error);
     }
-  } catch (error) {
-    console.error("Redis get error:", error);
   }
 
   // 2. Fetch dari Supabase jika tidak ada di cache

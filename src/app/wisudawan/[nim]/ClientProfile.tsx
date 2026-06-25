@@ -829,40 +829,36 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               </motion.div>
 
               {/* Row 1: Toga (Full Width) */}
-              <motion.div {...up(0.15)}>
-                <Card>
-                  <CardTitle icon={<GraduationCap size={13} />} title="Toga" isCompleted={!!formData["TOGA"]} />
-                  <div className="px-5 py-2 divide-y divide-[var(--color-border)]">
-                    <div className="flex flex-col sm:grid sm:grid-cols-[120px_1fr] gap-1 sm:gap-2 sm:items-center py-2.5 border-b border-[var(--color-border)] last:border-0">
-                      <span className="text-xs text-[var(--color-text-subtle)] font-medium">Ukuran Toga <span className="text-rose-500">✱</span></span>
-                      <div className="flex flex-col gap-2">
-                        <div className="flex flex-wrap gap-4 mt-1 sm:mt-0">
-                          {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
-                            <label key={size} className={`flex items-center gap-1.5 ${allowEditToga ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}>
-                              <input
-                                type="radio"
-                                name="toga_size"
-                                required
-                                value={size}
-                                checked={formData["TOGA"] === size}
-                                disabled={!allowEditToga}
-                                onChange={(e) => setFormData({ ...formData, "TOGA": e.target.value })}
-                                className="w-3.5 h-3.5 text-emerald-600 focus:ring-emerald-500 border-gray-300 dark:border-gray-600 bg-[var(--color-surface)] disabled:cursor-not-allowed"
-                              />
-                              <span className="text-sm font-semibold text-[var(--color-text)]">{size}</span>
-                            </label>
-                          ))}
+              {allowEditToga && (
+                <motion.div {...up(0.15)}>
+                  <Card>
+                    <CardTitle icon={<GraduationCap size={13} />} title="Toga" isCompleted={!!formData["TOGA"]} />
+                    <div className="px-5 py-2 divide-y divide-[var(--color-border)]">
+                      <div className="flex flex-col sm:grid sm:grid-cols-[120px_1fr] gap-1 sm:gap-2 sm:items-center py-2.5 border-b border-[var(--color-border)] last:border-0">
+                        <span className="text-xs text-[var(--color-text-subtle)] font-medium">Ukuran Toga <span className="text-rose-500">✱</span></span>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-wrap gap-4 mt-1 sm:mt-0">
+                            {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
+                              <label key={size} className="flex items-center gap-1.5 cursor-pointer">
+                                <input
+                                  type="radio"
+                                  name="toga_size"
+                                  required
+                                  value={size}
+                                  checked={formData["TOGA"] === size}
+                                  onChange={(e) => setFormData({ ...formData, "TOGA": e.target.value })}
+                                  className="w-3.5 h-3.5 text-emerald-600 focus:ring-emerald-500 border-gray-300 dark:border-gray-600 bg-[var(--color-surface)]"
+                                />
+                                <span className="text-sm font-semibold text-[var(--color-text)]">{size}</span>
+                              </label>
+                            ))}
+                          </div>
                         </div>
-                        {!allowEditToga && (
-                          <p className="text-xs text-amber-600 dark:text-amber-400 italic">
-                            * Pengubahan ukuran toga saat ini dinonaktifkan oleh Admin.
-                          </p>
-                        )}
                       </div>
                     </div>
-                  </div>
-                </Card>
-              </motion.div>
+                  </Card>
+                </motion.div>
+              )}
 
               {/* Row 2: Data Pendaftaran & Kontak */}
               <motion.div {...up(0.2)}>
@@ -1193,7 +1189,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                             <div className="bg-rose-50 dark:bg-rose-900/15 border border-rose-200 dark:border-rose-800/40 rounded-xl p-3">
                               <p className="text-xs font-black text-rose-700 dark:text-rose-400 uppercase tracking-wide mb-2">⚠ Sangat Penting</p>
                               <p className="text-xs text-rose-800 dark:text-rose-300 leading-relaxed font-medium">
-                                Foto ini akan dicetak di Ijazah seumur hidup. Pastikan mengikuti ketentuan berikut.
+                                Pastikan menggunakan pakaian Toga untuk Foto Wisuda
                               </p>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -1210,11 +1206,11 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                               <div className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-3 space-y-2">
                                 <div>
                                   <p className="font-bold text-[var(--color-text)] mb-0.5">👔 Pakaian Pria</p>
-                                  <p className="text-[var(--color-text-muted)] leading-snug">Kemeja Putih, Dasi Hitam, <strong className="text-[var(--color-text)]">Jas Hitam</strong> (bukan almamater).</p>
+                                  <p className="text-[var(--color-text-muted)] leading-snug">Menggunakan <strong className="text-[var(--color-text)]">Toga</strong>.</p>
                                 </div>
                                 <div>
                                   <p className="font-bold text-[var(--color-text)] mb-0.5">👘 Pakaian Wanita</p>
-                                  <p className="text-[var(--color-text-muted)] leading-snug">Kemeja Putih, Jilbab Hitam, <strong className="text-[var(--color-text)]">Blazer Hitam</strong> (bukan almamater).</p>
+                                  <p className="text-[var(--color-text-muted)] leading-snug">Menggunakan <strong className="text-[var(--color-text)]">Toga</strong>.</p>
                                 </div>
                                 <div>
                                   <p className="font-bold text-[var(--color-text)] mb-0.5">😊 Posisi & Wajah</p>

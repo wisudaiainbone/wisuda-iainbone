@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -10,11 +10,11 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const TOGA_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
 
-export default function SetupClient({ nim, nama }: { nim: string; nama: string }) {
+export default function SetupClient({ nim, nama, initialToga }: { nim: string; nama: string; initialToga?: string }) {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
-  const [toga, setToga] = useState("");
+  const [toga, setToga] = useState(initialToga?.trim().toUpperCase() || "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +22,13 @@ export default function SetupClient({ nim, nama }: { nim: string; nama: string }
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [isDone, setIsDone] = useState(false);
+
+  // Use effect to ensure state is synced, especially during fast refresh or if props change
+  useEffect(() => {
+    if (initialToga) {
+      setToga(initialToga.trim().toUpperCase());
+    }
+  }, [initialToga]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
