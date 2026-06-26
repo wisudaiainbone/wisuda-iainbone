@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import WisudawanSearch from "./WisudawanSearch";
 import WisudawanTableClient from "./WisudawanTableClient";
 import ImportWisudawanDialog from "./ImportWisudawanDialog";
-import ExportXlsxButton from "./ExportXlsxButton";
+import ExportDropdown from "./ExportDropdown";
 import ExportDaftarButton from "./ExportDaftarButton";
 import SlidePptxDialog from "./SlidePptxDialog";
 import AlbumDialog from "./AlbumDialog";
@@ -86,7 +86,7 @@ export default function WisudawanContainer({
           onSearch={handleSearch}
         >
           <ImportWisudawanDialog userRole={adminSession?.role || ''} unitKerja={adminSession?.unit_kerja} dbProdiList={dbProdiList} />
-          <ExportXlsxButton data={filteredList} filename="data-wisudawan" />
+          <ExportDropdown data={filteredList} filename="data-wisudawan" userRole={adminSession?.role} />
           <ExportDaftarButton data={filteredList} filename="daftar-wisudawan" />
           
           {adminSession?.role !== 'admin_unit' && (
