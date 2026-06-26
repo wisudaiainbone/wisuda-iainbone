@@ -66,13 +66,30 @@ export default function OrmawatChart({ data, isDrilling, drillFakultas }: Props)
               <Tooltip formatter={(value: any, name: any) => [value, name]} contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-surface)' }} />
             </PieChart>
           </ResponsiveContainer>
-          <div className="flex gap-3 justify-center mt-1">
-            {pieData.map(d => (
-              <div key={d.name} className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full" style={{ background: d.fill }} />
-                <span className="text-[10px] text-[var(--color-text-muted)]">{d.name}: <strong>{d.value}</strong></span>
-              </div>
-            ))}
+          <div className="w-full mt-4">
+            <table className="w-full text-xs">
+              <thead className="sticky top-0 bg-[var(--color-surface)] z-10">
+                <tr className="border-b border-[var(--color-border)]">
+                  <th className="text-left py-1 pr-3 font-semibold text-[var(--color-text-muted)]">Status</th>
+                  <th className="text-right py-1 font-semibold text-[var(--color-text-muted)]">Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--color-border)]">
+                {pieData.map((d, i) => (
+                  <tr key={i} className="hover:bg-emerald-50 dark:hover:bg-emerald-900/10 transition-colors">
+                    <td className="py-1.5 pr-3">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full shrink-0" style={{ background: d.fill }} />
+                        <span className="text-[var(--color-text)] break-words leading-snug">{d.name}</span>
+                      </div>
+                    </td>
+                    <td className="py-1.5 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                      {d.value.toLocaleString('id-ID')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 

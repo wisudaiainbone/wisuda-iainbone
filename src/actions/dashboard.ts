@@ -212,7 +212,7 @@ function computeStats(rows: any[], periodeKuota: Record<string, number>): Dashbo
       const rawIpk = r.ipk ? String(r.ipk).replace(',', '.') : '0';
       const ipk = !isNaN(Number(rawIpk)) ? Number(rawIpk) : 0;
       let ipkKey = 'baik';
-      if (ipk >= 3.50) ipkKey = 'cum laude';
+      if (ipk >= 3.50) ipkKey = 'pujian';
       else if (ipk >= 3.01) ipkKey = 'sangatMemuaskan';
       else if (ipk >= 2.76) ipkKey = 'memuaskan';
       else if (ipk >= 2.00) ipkKey = 'baik';
