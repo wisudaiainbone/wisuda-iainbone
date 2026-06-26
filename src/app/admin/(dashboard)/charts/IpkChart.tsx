@@ -32,7 +32,7 @@ export default function IpkChart({ data, isDrilling, drillFakultas }: Props) {
   const totalAll = totalPujian + totalSangatMemuaskan + totalMemuaskan + totalBaik;
 
   const pieData = [
-    { name: '3.50 - 4.00 (Pujian)', value: totalPujian, fill: '#059669' }, // emerald
+    { name: '3.50 - 4.00 (Cum Laude)', value: totalPujian, fill: '#059669' }, // emerald
     { name: '3.01 - 3.49 (Sangat Memuaskan)', value: totalSangatMemuaskan, fill: '#0ea5e9' }, // sky
     { name: '2.76 - 3.00 (Memuaskan)', value: totalMemuaskan, fill: '#f59e0b' }, // amber
     { name: '2.00 - 2.75 (Baik)', value: totalBaik, fill: '#94a3b8' }, // slate
@@ -53,7 +53,7 @@ export default function IpkChart({ data, isDrilling, drillFakultas }: Props) {
           Total: {totalAll.toLocaleString('id-ID')}
         </span>
       </div>
-      <div className="p-4 grid grid-cols-[40%_60%] sm:grid-cols-2 items-center gap-2">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-2">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
             <Pie

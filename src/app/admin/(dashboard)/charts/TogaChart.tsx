@@ -57,7 +57,7 @@ export default function TogaChart({ data, isDrilling, drillFakultas }: Props) {
           Total: {totalAll.toLocaleString('id-ID')}
         </span>
       </div>
-      <div className="p-4 grid grid-cols-[40%_60%] sm:grid-cols-2 items-center gap-2">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-2">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
             <Pie
@@ -81,7 +81,7 @@ export default function TogaChart({ data, isDrilling, drillFakultas }: Props) {
           </PieChart>
         </ResponsiveContainer>
         <div className="flex flex-col gap-2 justify-center pl-4">
-          <div className="grid grid-cols-[40%_60%] sm:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {pieData.map(d => (
               <div key={d.name} className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full shrink-0" style={{ background: d.fill }} />

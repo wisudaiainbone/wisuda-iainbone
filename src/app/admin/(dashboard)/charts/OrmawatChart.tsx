@@ -52,13 +52,13 @@ export default function OrmawatChart({ data, isDrilling, drillFakultas }: Props)
           Total: {totalAll.toLocaleString('id-ID')}
         </span>
       </div>
-      <div className="p-4 grid grid-cols-[40%_60%] sm:grid-cols-2 gap-4">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Pie Aktif vs Tidak */}
         <div>
           <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Aktif vs Tidak</p>
           <ResponsiveContainer width="100%" height={160}>
             <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" outerRadius={65} dataKey="value" labelLine={false}>
+              <Pie data={pieData} cx="50%" cy="50%" outerRadius="80%" dataKey="value" labelLine={false}>
                 {pieData.map((entry, i) => (
                   <Cell key={i} fill={entry.fill} />
                 ))}

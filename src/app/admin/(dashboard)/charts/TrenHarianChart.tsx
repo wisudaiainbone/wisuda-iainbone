@@ -37,7 +37,7 @@ export default function TrenHarianChart({ data }: Props) {
       <div className="px-5 py-3.5 border-b border-[var(--color-border)] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TrendingUp size={15} className="text-[var(--color-text-subtle)]" />
-          <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-subtle)]">Tren Pendaftaran</h2>
+          <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-subtle)]">Tren Pendaftaran Harian</h2>
         </div>
         <span className="text-xs text-[var(--color-text-muted)]">
           Total: <span className="font-bold text-emerald-600 dark:text-emerald-400">{totalTerdaftar}</span> wisudawan terdaftar

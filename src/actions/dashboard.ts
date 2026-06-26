@@ -84,7 +84,7 @@ export type IpkRow = {
 
 export type SesiSummary = {
   bySesi: { sesi: string; jumlah: number }[];
-  byLabel: { label: string; fakultas?: string; [sesi: string]: any }[];
+  byLabel: { label: string; fakultas?: string;[sesi: string]: any }[];
 };
 
 export type DashboardStats = {
@@ -196,7 +196,7 @@ function computeStats(rows: any[], periodeKuota: Record<string, number>): Dashbo
     const isRegistered = r.status === 'Terdaftar';
     const isHadir = !!r.waktu_hadir;
     const isAmbilToga = !!r.waktu_toga;
-    
+
     // Fakultas aggregates
     if (!fakMap[fak]) fakMap[fak] = { total: 0, terdaftar: 0 };
     fakMap[fak].total++;
@@ -212,16 +212,16 @@ function computeStats(rows: any[], periodeKuota: Record<string, number>): Dashbo
       const rawIpk = r.ipk ? String(r.ipk).replace(',', '.') : '0';
       const ipk = !isNaN(Number(rawIpk)) ? Number(rawIpk) : 0;
       let ipkKey = 'baik';
-      if (ipk >= 3.50) ipkKey = 'pujian';
+      if (ipk >= 3.50) ipkKey = 'cum laude';
       else if (ipk >= 3.01) ipkKey = 'sangatMemuaskan';
       else if (ipk >= 2.76) ipkKey = 'memuaskan';
       else if (ipk >= 2.00) ipkKey = 'baik';
-      
+
       const sesi = r.sesi ? String(r.sesi).trim() : 'Tanpa Sesi';
-      
-      const hasPrestasi = !!((r.prestasi_akd && r.prestasi_akd.trim() !== '-' && r.prestasi_akd.trim() !== '') || 
-                             (r.prestasi_org && r.prestasi_org.trim() !== '-' && r.prestasi_org.trim() !== ''));
-                             
+
+      const hasPrestasi = !!((r.prestasi_akd && r.prestasi_akd.trim() !== '-' && r.prestasi_akd.trim() !== '') ||
+        (r.prestasi_org && r.prestasi_org.trim() !== '-' && r.prestasi_org.trim() !== ''));
+
       const isSurvei = !!(r.survei && r.survei.trim() !== '');
 
       // JK

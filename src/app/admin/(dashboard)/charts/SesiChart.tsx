@@ -48,7 +48,7 @@ export default function SesiChart({ data, isDrilling, drillFakultas }: Props) {
           Total: {totalAll.toLocaleString('id-ID')}
         </span>
       </div>
-      <div className="p-4 grid grid-cols-[40%_60%] sm:grid-cols-2 items-center gap-2">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-2">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
             <Pie

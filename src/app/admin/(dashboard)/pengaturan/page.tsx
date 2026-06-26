@@ -536,6 +536,37 @@ export default function AdminPengaturanPage() {
                 </div>
               </label>
 
+              {/* Hapus Seluruh Cache Sistem */}
+              <div className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors border-t border-[var(--color-border)]">
+                <div className="flex-1">
+                  <h2 className="text-sm font-bold text-red-600 dark:text-red-400">
+                    Bersihkan Seluruh Cache Sistem (Upstash)
+                  </h2>
+                  <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
+                    Menghapus secara paksa seluruh data statistik, profil, dan temporary state dari cache. Data akan ditarik ulang secara real-time dari database. Gunakan fitur ini jika data statistik tidak sinkron dengan data asli (Misal: setelah import Excel manual).
+                  </p>
+                </div>
+                <div className="flex items-center justify-start shrink-0">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!confirm('Anda yakin ingin menghapus seluruh cache sistem? Proses ini akan membuat halaman meload data asli dan memakan waktu sedikit lebih lama untuk visitor pertama.')) return;
+                      const { clearAllSystemCache } = await import('@/actions/dashboard');
+                      const success = await clearAllSystemCache();
+                      if (success) {
+                        showToast('Berhasil', 'success', 'Seluruh cache sistem berhasil dibersihkan.');
+                      } else {
+                        showToast('Gagal', 'error', 'Gagal membersihkan cache.');
+                      }
+                    }}
+                    className="flex items-center justify-center gap-2 px-4 h-[38px] bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-xs font-bold transition-colors"
+                  >
+                    <AlertCircle size={14} />
+                    Hapus Semua Cache
+                  </button>
+                </div>
+              </div>
+
             </div>
 
             {/* Action Bar */}
