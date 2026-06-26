@@ -129,6 +129,7 @@ Wisudawan juga wajib mengunggah pas foto berlatar merah. Sistem mendukung:
 - **Client-side Cropping**: Rasio 3:4 dengan geser & zoom.
 - **Auto Red Background**: Transparan otomatis diisi warna merah.
 - **Auto Compression**: Dikompresi ≤500 KB.
+- **Auto Cleanup & Anti Double-Submit**: Menghapus file lama secara otomatis dari Google Drive saat re-upload (explicit delete-after-save), serta mengamankan form dari masalah klik ganda yang dapat memicu duplikasi file.
 
 ### Proses Pendaftaran Akhir (Daftar Wisuda)
 Setelah semua data wajib dan foto terisi, kartu **"Daftar Wisuda"** muncul. Saat diklik:

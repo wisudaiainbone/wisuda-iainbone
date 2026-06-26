@@ -122,7 +122,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
   - **Scan Kehadiran Tamu**: Scanner QR Code khusus tamu yang persis dengan Scan Kehadiran wisudawan, dilengkapi layout dua kolom (kamera di kiri & riwayat real-time di kanan) dan notifikasi visual 4-detik.
   - **Cetak Undangan (PDF)**: Tombol *Print Bulk* dan *Print Satuan* menghasilkan dokumen PDF 2 halaman per tamu (A4 Landscape) menggunakan `@react-pdf/renderer` (Halaman 1 untuk Latar Depan/Surat + QR Code, Halaman 2 untuk Latar Belakang/Susunan Acara). Latar dapat dikustomisasi admin di menu Pengaturan.
   - **Support Dark Mode**: Tampilan label "Sesi" dan *shape* warna pada tombol Aksi akan beradaptasi sempurna dengan sistem Dark/Light mode.
-- **Pemrosesan Foto Cerdas**: Crop 3:4 client-side, auto red background, kompresi otomatis (<500KB), dan area aman *safe margin*.
+- **Pemrosesan Foto Cerdas**: Crop 3:4 client-side, auto red background, kompresi otomatis (<500KB), area aman *safe margin*, penghapusan file lama otomatis saat re-upload (mencegah kebocoran file Google Drive), dan perlindungan *double-submit* cerdas.
 - **Animasi Halus**: Didukung `framer-motion`.
 - **Toast Notifikasi Global Terpusat**: Sistem notifikasi terpusat (`src/components/ui/Toast.tsx`) dengan tampilan modern di **tengah layar** — ikon besar, *progress bar* otomatis, *spring animation*, dan dukungan dark mode. Menggantikan seluruh toast lokal di setiap komponen.
 - **Reset Password Admin**: Admin dapat mereset password wisudawan ke default dari tabel wisudawan (ikon kunci), dengan catatan otomatis di `log_status`.
