@@ -2,6 +2,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { getAllPeriode } from "@/actions/periode";
 
+export const revalidate = 300; // Cache selama 5 menit (300 detik)
+
 export default async function HomePage() {
   const allPeriode = await getAllPeriode();
   

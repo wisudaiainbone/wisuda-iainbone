@@ -206,7 +206,7 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
   - Dilengkapi fitur **Fuzzy-Match Validation** untuk mencocokkan & memperbaiki otomatis ejaan Fakultas/Prodi.
   - **Validasi Wajib Isi**: Sistem menolak baris yang kosong pada kolom esensial (NIM, Nama, IPK, Predikat, Fakultas, Prodi, Tanggal Yudisium). Kolom Ukuran Toga bersifat opsional.
   - **Parsing Tanggal Khusus**: Membaca file Excel dalam mode *Raw Text* secara ketat untuk kolom Tanggal Yudisium. Wajib berformat **`YYYY-MM-DD`** secara visual pada sel Excel (contoh: `2026-05-13`) untuk mencegah inkonsistensi zona waktu. Format lain akan ditolak secara otomatis.
-- **Export Excel**: Unduh seluruh data sebagai file `.xlsx` (termasuk filter yang sedang aktif).
+- **Export Multi-format (Dropdown)**: Unduh seluruh data (termasuk filter yang sedang aktif) melalui menu dropdown cerdas yang menyediakan 4 pilihan format: `.xlsx`, `.csv`, `.sql` (perintah single-insert), dan `.json`. Pilihan CSV, SQL, dan JSON dilindungi otorisasi khusus dan hanya bisa diakses oleh role `superadmin` atau `admin_institut`.
 - **Kolom Aksi Cepat**:
   - 👁️ **Lihat Profil** — pratinjau profil.
   - 🔑 **Reset Password** — reset password ke default.
