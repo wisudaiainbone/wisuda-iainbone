@@ -7,9 +7,10 @@ import { notFound } from "next/navigation";
 export default async function Page({ params }: { params: Promise<{ nim: string }> }) {
   const resolvedParams = await params;
   const nim = resolvedParams.nim;
+  const decodedNim = decodeURIComponent(nim);
   
   const [data, activePeriode, allowEditTogaSetting, allowEditProfileSetting, showTogaInfoSetting, showUndanganInfoSetting, allowPerbaikanSetting, showPrestasiCardSetting] = await Promise.all([
-    getWisudawanByNim(nim),
+    getWisudawanByNim(decodedNim),
     getActivePeriode(),
     getSetting('allow_edit_toga', 'true', true),
     getSetting('allow_edit_profile', 'true', true),

@@ -8,9 +8,10 @@ import { getSetting } from "@/actions/settings";
 
 export default async function AdminWisudawanDetail({ params }: { params: Promise<{ nim: string }> }) {
   const { nim } = await params;
+  const decodedNim = decodeURIComponent(nim);
   const adminSession = await getAdminSession();
   const [data, allowDeleteSetting] = await Promise.all([
-    getWisudawanByNim(nim),
+    getWisudawanByNim(decodedNim),
     getSetting('allow_delete_wisudawan', 'false'),
   ]);
   const allowDeleteWisudawan = allowDeleteSetting === 'true';
