@@ -658,8 +658,6 @@ export default function AdminPengaturanPage() {
                 </div>
               </div>
 
-            </div>
-
               {/* Manajemen Akun Uji Coba (Dummy) */}
               <div className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
                 <div className="flex-1">
@@ -694,6 +692,8 @@ export default function AdminPengaturanPage() {
                   )}
                 </div>
               </div>
+
+            </div>
 
             {/* Action Bar */}
             <div className="fixed sm:static bottom-20 sm:bottom-auto left-0 right-0 sm:left-auto sm:right-auto px-4 sm:px-0 z-40 flex sm:block pointer-events-none sm:pointer-events-auto sm:mt-8 sm:pt-6 sm:border-t sm:border-[var(--color-border)]">
