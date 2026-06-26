@@ -113,13 +113,13 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: false, defval: "" });
 
-        const nims = jsonData.map((row: any) => row.nim?.toString()).filter(Boolean);
+        const nims = jsonData.map((row: any) => row.nim?.toString().replace(/\s+/g, '').trim()).filter(Boolean);
         const existingNims = await checkExistingNims(nims);
 
         const processedData = jsonData.map((row: any) => {
           let isValid = true;
           let reason = '';
-          const nimStr = row.nim?.toString();
+          const nimStr = row.nim?.toString().replace(/\s+/g, '').trim();
 
           if (!nimStr) {
             isValid = false;
@@ -208,7 +208,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
             }
           }
 
-          return { ...row, tanggal_yudisium: formattedDate, ipk: formattedIpk, _isValid: isValid, _reason: reason };
+          return { ...row, nim: nimStr, tanggal_yudisium: formattedDate, ipk: formattedIpk, _isValid: isValid, _reason: reason };
         });
 
         setPreviewData(processedData);
