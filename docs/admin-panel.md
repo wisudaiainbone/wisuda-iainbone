@@ -65,7 +65,7 @@ Halaman utama yang pertama kali dilihat oleh Admin, menyediakan ringkasan analit
   - Partisipasi Organisasi Mahasiswa
   - Status Pengisian Toga
   - Status Kehadiran
-  - Sebaran IPK (Pujian, Sangat Memuaskan, Memuaskan, Baik)
+  - Sebaran IPK (Cum Laude [≥3.50], Sangat Memuaskan, Memuaskan, Baik)
   - Keterisian Sesi Wisuda
   - Status Prestasi (Akademik & Organisasi)
   - Kepatuhan Pengisian Survei
@@ -99,6 +99,8 @@ Halaman Pengaturan menggunakan layout **2-kolom** (menu navigasi kiri 10% / kont
 | `show_undangan_info` | Menampilkan tab & informasi undangan di profil | `true` |
 | `allow_perbaikan` | Mengizinkan wisudawan mengajukan perbaikan data akademik | `true` |
 | `show_prestasi_card` | Menampilkan Kartu Prestasi Akademik di halaman profil publik wisudawan (hanya jika memiliki data `prestasi_akd`) | `true` |
+
+Di bagian paling bawah Menu General, terdapat fitur **Bersihkan Seluruh Cache Sistem (Upstash)**. Tombol ini berfungsi menghapus seluruh statistik, profil, dan temporary state secara paksa dari memori server agar disinkronkan kembali dari database asli.
 
 #### Menu Prestasi
 Menyimpan data yang akan tercetak di sertifikat penghargaan. Dibagi menjadi dua sub-bagian:

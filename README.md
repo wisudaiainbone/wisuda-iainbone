@@ -14,6 +14,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
 - **Panel Admin Terintegrasi**: Dashboard admin (`/admin`) untuk mengelola periode wisuda, data wisudawan, pengaturan sistem, dan akun admin. Header admin dilengkapi **tombol Keluar cepat** di samping ikon profil untuk logout instan tanpa membuka *dropdown*.
 - **Halaman Informasi Wisuda** (`/admin/informasi`): Halaman referensi cepat yang menampilkan detail jadwal wisuda semua periode untuk semua role admin — dilengkapi **Countdown Pendaftaran real-time** yang dihitung dari `tanggal_pendaftaran` periode aktif.
 - **Dashboard Statistik Canggih (3-Layer Drill-down)**: Halaman utama Admin menyajikan statistik komprehensif (Tren Pendaftaran, Jenis Kelamin, Predikat, Partisipasi Ormawa, Status Toga, Kehadiran, Sebaran IPK, Sesi, Prestasi, dan Kepatuhan Survei).
+  - Menggunakan tata letak grid responsif: pada layar *mobile*, setiap *pie chart* akan menumpuk rapi dengan *legend* berada di bawahnya, mencegah elemen terpotong.
   - Dilengkapi fitur *Interactive Drill-down* otomatis (Universitas → Fakultas → Prodi) hanya dengan mengklik baris tabel.
   - Memiliki fitur **Export XLSX 12 Sheet** yang mengekspor seluruh rekapan statistik secara berurutan dan terstruktur sampai ke level Prodi.
 - **Feature Toggles Real-time**: Admin dapat mengaktifkan/nonaktifkan fitur (edit profil, tampilkan toga/undangan, izinkan perbaikan, dll.) yang langsung aktif di halaman wisudawan tanpa cache delay.
