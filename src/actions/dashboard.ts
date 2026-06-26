@@ -507,7 +507,8 @@ export async function getDashboardStats(periode?: string): Promise<DashboardStat
   // Query Supabase — hanya kolom yang diperlukan
   const query = supabase
     .from('wisudawan')
-    .select('fakultas, prodi, status, jenis_kelamin, predikat, ormawa, toga, waktu_hadir, waktu_toga, terdaftar, periode, timestamp, ipk, sesi, prestasi_akd, prestasi_org, survei');
+    .select('fakultas, prodi, status, jenis_kelamin, predikat, ormawa, toga, waktu_hadir, waktu_toga, terdaftar, periode, timestamp, ipk, sesi, prestasi_akd, prestasi_org, survei')
+    .neq('nim', 'DUMMY999');
 
   const { data: rows, error } = periode
     ? await query.eq('periode', periode)
@@ -588,7 +589,8 @@ export async function getWisudawanListByProdi(prodi: string, periode?: string) {
   let query = supabase
     .from('wisudawan')
     .select('nim, nama_mahasiswa, fakultas, prodi, status, predikat, ipk, toga, terdaftar')
-    .eq('prodi', prodi);
+    .eq('prodi', prodi)
+    .neq('nim', 'DUMMY999');
 
   if (periode) {
     query = query.eq('periode', periode);

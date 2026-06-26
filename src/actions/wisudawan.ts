@@ -150,7 +150,7 @@ export async function getWisudawanByNim(nim: string, skipCache: boolean = false)
 }
 
 export async function getAllWisudawan(filterOptions?: { role?: string, unitKerja?: string | null }) {
-  let query = supabase.from('wisudawan').select('*');
+  let query = supabase.from('wisudawan').select('*').neq('nim', 'DUMMY999');
 
   if (filterOptions?.role === 'admin_unit' && filterOptions?.unitKerja) {
     query = query.eq('fakultas', filterOptions.unitKerja);
