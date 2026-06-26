@@ -40,7 +40,7 @@ export default function TrenHarianChart({ data }: Props) {
           <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-subtle)]">Tren Pendaftaran Harian</h2>
         </div>
         <span className="text-xs text-[var(--color-text-muted)]">
-          Total: <span className="font-bold text-emerald-600 dark:text-emerald-400">{totalTerdaftar}</span> wisudawan terdaftar
+          <span className="font-bold text-emerald-600 dark:text-emerald-400">{totalTerdaftar}</span> Terdaftar
         </span>
       </div>
       <div className="p-4">
