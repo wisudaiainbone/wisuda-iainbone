@@ -39,9 +39,15 @@ export interface FotoUploadMeta {
  *   - https://drive.google.com/uc?export=view&id=FILE_ID
  *   - https://drive.google.com/uc?id=FILE_ID
  *   - https://drive.google.com/file/d/FILE_ID/view
+ *   - https://lh3.googleusercontent.com/d/FILE_ID  ← format setelah transformasi getOptimizedGDriveUrl
  */
 export function extractGDriveFileId(url: string): string | null {
   if (!url) return null;
+
+  // ✅ Support format lh3.googleusercontent.com/d/FILE_ID
+  // URL ini terbentuk setelah getOptimizedGDriveUrl() mengubah URL Drive biasa
+  const lhMatch = url.match(/lh3\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
+  if (lhMatch) return lhMatch[1];
 
   try {
     const idParam = new URL(url).searchParams.get("id");

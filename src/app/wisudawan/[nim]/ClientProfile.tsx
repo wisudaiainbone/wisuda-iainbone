@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { updateWisudawan, saveFotoWisudawan, daftarWisuda } from "@/actions/wisudawan";
+import { updateWisudawan, saveFotoWisudawan, daftarWisuda, getLatestFotoUrl } from "@/actions/wisudawan";
 import { getPerbaikanByNim, createPerbaikan, type Perbaikan } from "@/actions/perbaikan";
 import {
   GraduationCap, BookOpen, Calendar, Clock, Users, Award,
@@ -1889,8 +1889,12 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
         <CropModal
           isOpen={isCropModalOpen}
           imageSrc={selectedImageSrc as string}
+          isLoading={uploadStatus === 'uploading'}
           onClose={() => setIsCropModalOpen(false)}
           onApply={async (croppedAreaPixels) => {
+            // Guard: tolak jika sedang uploading (cegah double submit)
+            if (uploadStatus === 'uploading') return;
+
             try {
               // Langkah 1: Crop foto
               const croppedFile = await getCroppedImg(selectedImageSrc as string, croppedAreaPixels, 0.9);
@@ -1903,10 +1907,12 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               setIsCropModalOpen(false);
               setUploadStatus('uploading');
 
-              // Langkah 2: Upload ke Google Drive via GAS
-              // Sertakan URL foto lama agar GAS bisa hapus file lama
-              // Nama file: FOTO_[timestamp]_[KODE_FAKULTAS]_[NIM].jpg
-              // Subfolder: Foto_[activePeriode.nama_periode] (dari DB periode_wisuda status='Sedang Dibuka')
+              // Langkah 2: Ambil URL foto lama LANGSUNG dari Supabase (bukan dari state React)
+              // Ini mencegah bug stale state dan memastikan old_file_id selalu akurat
+              const latestFotoUrl = await getLatestFotoUrl(nim);
+
+              // Langkah 3: Upload file BARU ke Google Drive (TANPA hapus lama dulu)
+              // Kita pisahkan penghapusan agar bisa dilakukan hanya jika Supabase sukses
               const result = await uploadFotoToGDrive(
                 croppedFile,
                 nim,
@@ -1914,13 +1920,25 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                   fakultas: w["FAKULTAS"] ?? "",
                   periode: activePeriode?.nama_periode ?? w["PERIODE"] ?? "",
                 },
-                w["FOTO"] || null
+                null // Jangan kirim old_file_id ke GAS — kita hapus manual setelah Supabase OK
               );
 
-              // Langkah 3: Simpan URL baru ke Supabase
+              // Langkah 4: Simpan URL baru ke Supabase
               await saveFotoWisudawan(nim, result.fileUrl);
 
-              // Langkah 4: Update state lokal agar foto tampil tanpa reload
+              // Langkah 5: Hapus file lama dari Drive HANYA setelah Supabase berhasil
+              // Ini mencegah kebocoran: jika Supabase gagal di langkah 4, file lama tidak ikut terhapus
+              if (latestFotoUrl) {
+                const { extractGDriveFileId, deleteFotoFromGDrive } = await import('@/lib/uploadFoto');
+                const oldFileId = extractGDriveFileId(latestFotoUrl);
+                if (oldFileId) {
+                  deleteFotoFromGDrive(oldFileId).catch((err) =>
+                    console.warn("[upload] Gagal hapus foto lama:", err)
+                  );
+                }
+              }
+
+              // Langkah 6: Update state lokal agar foto tampil tanpa reload
               setW((prev) => ({ ...prev, "FOTO": result.fileUrl }));
               setUploadStatus('success');
               showToast("✓ Foto berhasil diunggah!", "success");

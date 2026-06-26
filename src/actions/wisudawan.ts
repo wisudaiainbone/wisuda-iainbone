@@ -376,6 +376,22 @@ export async function saveFotoWisudawan(nim: string, fotoUrl: string) {
   return { success: true };
 }
 
+/**
+ * Ambil URL foto terbaru langsung dari Supabase (bypass Redis & React state).
+ * Digunakan sebelum upload foto baru agar old_file_id selalu akurat
+ * dan tidak bergantung pada state React yang bisa basi (stale).
+ */
+export async function getLatestFotoUrl(nim: string): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('wisudawan')
+    .select('foto')
+    .eq('nim', nim)
+    .single();
+
+  if (error || !data) return null;
+  return data.foto || null;
+}
+
 
 /**
  * Daftarkan wisudawan ke wisuda — mengubah status menjadi "Terdaftar",

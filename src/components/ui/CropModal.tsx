@@ -8,9 +8,10 @@ type CropModalProps = {
   imageSrc: string;
   onClose: () => void;
   onApply: (croppedAreaPixels: any) => void;
+  isLoading?: boolean;
 };
 
-export default function CropModal({ isOpen, imageSrc, onClose, onApply }: CropModalProps) {
+export default function CropModal({ isOpen, imageSrc, onClose, onApply, isLoading = false }: CropModalProps) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -104,11 +105,24 @@ export default function CropModal({ isOpen, imageSrc, onClose, onApply }: CropMo
                 Batal
               </button>
               <button
-                onClick={() => onApply(croppedAreaPixels)}
-                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-sm font-bold transition-all-emerald-900/20"
+                onClick={() => !isLoading && onApply(croppedAreaPixels)}
+                disabled={isLoading}
+                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-sm font-bold transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
               >
-                <CheckCircle2 size={16} />
-                Terapkan Foto
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                    </svg>
+                    Mengupload...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 size={16} />
+                    Terapkan Foto
+                  </>
+                )}
               </button>
             </div>
           </motion.div>
