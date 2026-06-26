@@ -156,7 +156,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
           trigger={
           <button 
             title="Tambah Data Prodi"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center-[0_8px_30px_rgb(0,0,0,0.12)]-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
           >
             <Plus size={24} />
           </button>
