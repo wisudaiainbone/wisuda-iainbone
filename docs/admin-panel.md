@@ -101,7 +101,9 @@ Halaman Pengaturan menggunakan layout **2-kolom** (menu navigasi kiri 10% / kont
 | `show_prestasi_card` | Menampilkan Kartu Prestasi Akademik di halaman profil publik wisudawan (hanya jika memiliki data `prestasi_akd`) | `true` |
 | `contoh_foto_url` | URL publik gambar contoh/referensi foto profil wisudawan bertoga (disimpan di Supabase `cert-assets`). Ditampilkan di halaman panduan upload profil wisudawan dengan fitur zoom (lightbox). | ` ` |
 
-Di bagian paling bawah Menu General, terdapat fitur **Bersihkan Seluruh Cache Sistem (Upstash)**. Tombol ini berfungsi menghapus seluruh statistik, profil, dan temporary state secara paksa dari memori server agar disinkronkan kembali dari database asli.
+Di bagian bawah Menu General, terdapat fitur tambahan:
+- **Bersihkan Seluruh Cache Sistem (Upstash)**: Menghapus seluruh statistik, profil, dan temporary state secara paksa dari memori server agar disinkronkan kembali dari database asli.
+- **Manajemen Akun Uji Coba (Dummy)**: Tombol pembuat akun simulasi (`DUMMY999`) yang dapat digunakan Admin untuk mencoba alur login, setup profil, edit toga, dan menu wisudawan. Akun simulasi ini secara otomatis dieksklusi dari statistik dasbor dan tabel admin agar tidak merusak data metrik.
 
 #### Menu Prestasi
 Menyimpan data yang akan tercetak di sertifikat penghargaan. Dibagi menjadi dua sub-bagian:
