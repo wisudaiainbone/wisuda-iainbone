@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { getSetting, updateSetting, getAllSettingsAdmin } from "@/actions/settings";
+import { getSetting, updateSetting, getAllSettingsAdmin, checkAkunDummy, createAkunDummy, deleteAkunDummy } from "@/actions/settings";
 import { getActivePeriode } from "@/actions/periode";
-import { KeyRound, CheckCircle2, AlertCircle, Loader2, Shirt, Upload, ImageIcon, X } from "lucide-react";
+import { KeyRound, CheckCircle2, AlertCircle, Loader2, Shirt, Upload, ImageIcon, X, UserPlus, UserMinus } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { uploadCertBackground, uploadCertSignature, extractSupabasePath, deleteCertAsset, uploadContohFoto } from "@/lib/uploadCertBg";
 import TogaSettingsForm from "./TogaSettingsForm";
@@ -29,6 +29,10 @@ export default function AdminPengaturanPage() {
   const [allSettingsMap, setAllSettingsMap] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState("general");
   const [activePeriode, setActivePeriode] = useState<any>(null);
+  
+  // Dummy Account States
+  const [hasDummyAccount, setHasDummyAccount] = useState(false);
+  const [isDummyLoading, setIsDummyLoading] = useState(false);
 
   // Prestasi Akademik States
   const [certAkdNomor, setCertAkdNomor] = useState("");
@@ -129,9 +133,10 @@ export default function AdminPengaturanPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const [allSettings, periodeAktif] = await Promise.all([
+        const [allSettings, periodeAktif, dummyStatus] = await Promise.all([
           getAllSettingsAdmin(),
-          getActivePeriode()
+          getActivePeriode(),
+          checkAkunDummy()
         ]);
         const settingsMap: Record<string, { value: string, description: string }> = {};
         allSettings.forEach((s: any) => {
@@ -178,6 +183,7 @@ export default function AdminPengaturanPage() {
         setContohFotoUrl(getVal('contoh_foto_url', ''));
 
         setActivePeriode(periodeAktif);
+        setHasDummyAccount(dummyStatus);
       } catch (err) {
         console.error('Gagal memuat pengaturan', err);
       } finally {
@@ -186,6 +192,30 @@ export default function AdminPengaturanPage() {
     }
     loadData();
   }, []);
+
+  const handleCreateDummy = async () => {
+    setIsDummyLoading(true);
+    const res = await createAkunDummy();
+    if (res.success) {
+      setHasDummyAccount(true);
+      showToast("Akun Uji Coba berhasil dibuat! Silakan login di /auth dengan NIM: DUMMY999", "success");
+    } else {
+      showToast(res.error || "Gagal membuat akun uji coba", "error");
+    }
+    setIsDummyLoading(false);
+  };
+
+  const handleDeleteDummy = async () => {
+    setIsDummyLoading(true);
+    const res = await deleteAkunDummy();
+    if (res.success) {
+      setHasDummyAccount(false);
+      showToast("Akun Uji Coba berhasil dihapus.", "success");
+    } else {
+      showToast(res.error || "Gagal menghapus akun uji coba", "error");
+    }
+    setIsDummyLoading(false);
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -629,6 +659,41 @@ export default function AdminPengaturanPage() {
               </div>
 
             </div>
+
+              {/* Manajemen Akun Uji Coba (Dummy) */}
+              <div className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
+                <div className="flex-1">
+                  <h2 className="text-sm font-bold text-[var(--color-text)]">
+                    Manajemen Akun Uji Coba (Dummy)
+                  </h2>
+                  <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
+                    Buat 1 akun mahasiswa bayangan untuk menguji coba fitur profil wisudawan secara langsung. Akun ini tidak akan mempengaruhi data nyata mahasiswa.
+                  </p>
+                </div>
+                <div className="flex items-center justify-start shrink-0">
+                  {hasDummyAccount ? (
+                    <button
+                      type="button"
+                      disabled={isDummyLoading}
+                      onClick={handleDeleteDummy}
+                      className="flex items-center justify-center gap-2 px-4 h-[38px] bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
+                    >
+                      {isDummyLoading ? <Loader2 size={14} className="animate-spin" /> : <UserMinus size={14} />}
+                      Hapus Akun Uji Coba
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={isDummyLoading}
+                      onClick={handleCreateDummy}
+                      className="flex items-center justify-center gap-2 px-4 h-[38px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
+                    >
+                      {isDummyLoading ? <Loader2 size={14} className="animate-spin" /> : <UserPlus size={14} />}
+                      Buat Akun Uji Coba
+                    </button>
+                  )}
+                </div>
+              </div>
 
             {/* Action Bar */}
             <div className="fixed sm:static bottom-20 sm:bottom-auto left-0 right-0 sm:left-auto sm:right-auto px-4 sm:px-0 z-40 flex sm:block pointer-events-none sm:pointer-events-auto sm:mt-8 sm:pt-6 sm:border-t sm:border-[var(--color-border)]">

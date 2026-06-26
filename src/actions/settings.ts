@@ -84,3 +84,74 @@ export async function updateSetting(key: string, value: string) {
     return { success: false, error: err.message || 'Terjadi kesalahan' };
   }
 }
+
+// ==========================================
+// MANAJEMEN AKUN UJI COBA (DUMMY)
+// ==========================================
+
+export async function checkAkunDummy() {
+  const supabaseAdmin = await createSupabaseAdminClient();
+  const { data } = await supabaseAdmin
+    .from('wisudawan')
+    .select('nim')
+    .eq('nim', 'DUMMY999')
+    .single();
+  
+  return !!data;
+}
+
+export async function createAkunDummy() {
+  try {
+    const supabaseAdmin = await createSupabaseAdminClient();
+    
+    // Ambil periode aktif
+    const { data: periodeAktif } = await supabaseAdmin
+      .from('periode_wisuda')
+      .select('nama_periode')
+      .eq('status', 'Sedang Dibuka')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (!periodeAktif) {
+      return { success: false, error: 'Tidak ada periode wisuda yang sedang aktif.' };
+    }
+
+    const { error } = await supabaseAdmin
+      .from('wisudawan')
+      .upsert({
+        nim: 'DUMMY999',
+        nama_mahasiswa: 'Wisudawan Uji Coba',
+        status: 'Calon Wisudawan',
+        fakultas: 'Dummy Fakultas',
+        prodi: 'Dummy Prodi',
+        password: null, // Agar harus lewat /setup dan isDefaultPassword = true
+        periode: periodeAktif.nama_periode
+      }, { onConflict: 'nim' });
+
+    if (error) throw error;
+    
+    revalidatePath('/admin/pengaturan');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Gagal membuat akun dummy' };
+  }
+}
+
+export async function deleteAkunDummy() {
+  try {
+    const supabaseAdmin = await createSupabaseAdminClient();
+    const { error } = await supabaseAdmin
+      .from('wisudawan')
+      .delete()
+      .eq('nim', 'DUMMY999');
+
+    if (error) throw error;
+    
+    revalidatePath('/admin/pengaturan');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Gagal menghapus akun dummy' };
+  }
+}
+
