@@ -84,6 +84,8 @@ export default function WisudawanContainer({
           prodiList={prodiList} 
           statusList={statusList}
           onSearch={handleSearch}
+          filteredItems={totalItems}
+          totalItems={allWisudawan.length}
         >
           <ImportWisudawanDialog userRole={adminSession?.role || ''} unitKerja={adminSession?.unit_kerja} dbProdiList={dbProdiList} />
           <ExportDropdown data={filteredList} filename="data-wisudawan" userRole={adminSession?.role} />

@@ -9,9 +9,11 @@ interface WisudawanSearchProps {
   statusList?: string[];
   onSearch?: (filters: any) => void;
   children?: React.ReactNode;
+  filteredItems?: number;
+  totalItems?: number;
 }
 
-export default function WisudawanSearch({ fakultasList, prodiList, statusList = [], onSearch, children }: WisudawanSearchProps) {
+export default function WisudawanSearch({ fakultasList, prodiList, statusList = [], onSearch, children, filteredItems, totalItems }: WisudawanSearchProps) {
   const [showFilters, setShowFilters] = useState(false);
   
   const [searchTerm, setSearchTerm] = useState("");
@@ -122,6 +124,17 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
             </button>
           )}
         </div>
+        
+        {/* Info Count (Desktop) */}
+        {filteredItems !== undefined && (
+          <div className="hidden xl:flex items-center gap-2 px-3 h-10 shrink-0 bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-xl">
+            <span className="text-sm font-semibold text-[var(--color-text)]">{filteredItems}</span>
+            <span className="text-xs text-[var(--color-text-muted)]">
+              data {totalItems && totalItems !== filteredItems ? `dari ${totalItems}` : ''}
+            </span>
+          </div>
+        )}
+
         {children && (
           <div className="hidden xl:flex flex-row flex-wrap items-center gap-2 shrink-0">
             {children}
@@ -137,6 +150,11 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
         <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
           <Filter size={16} />
           <span className="text-[var(--color-text)]">Filter Data</span>
+          {filteredItems !== undefined && (
+            <span className="ml-2 px-2 py-0.5 bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-md text-xs font-bold text-[var(--color-text)]">
+              {filteredItems}
+            </span>
+          )}
         </div>
         {showFilters ? <ChevronUp size={16} className="text-[var(--color-text-muted)]" /> : <ChevronDown size={16} className="text-[var(--color-text-muted)]" />}
       </button>
