@@ -11,6 +11,7 @@ import AdminBottomNav from "./AdminBottomNav";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { getPendingPerbaikanCount } from "@/actions/perbaikan";
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const adminSession = await getAdminSession();
@@ -23,10 +24,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     const roleMeta = ROLE_META[role];
     const namaAdmin = adminSession.nama ?? "Admin";
 
+    const pendingPerbaikanCount = await getPendingPerbaikanCount();
+
     return (
       <div className="min-h-screen bg-[var(--color-bg)] flex flex-col md:flex-row font-sans">
         {/* Sidebar — desktop only */}
-        <AdminSidebar namaAdmin={namaAdmin} role={role} roleMeta={roleMeta} />
+        <AdminSidebar namaAdmin={namaAdmin} role={role} roleMeta={roleMeta} pendingPerbaikanCount={pendingPerbaikanCount} />
 
         {/* Main Content */}
         <main className="flex-1 flex flex-col min-w-0">
@@ -53,7 +56,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         </main>
 
         {/* Bottom Nav — mobile only */}
-        <AdminBottomNav role={role} />
+        <AdminBottomNav role={role} pendingPerbaikanCount={pendingPerbaikanCount} />
       </div>
     );
   }

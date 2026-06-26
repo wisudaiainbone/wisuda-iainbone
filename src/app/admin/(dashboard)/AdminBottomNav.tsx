@@ -24,9 +24,10 @@ import Image from "next/image";
 
 type Props = {
   role: AdminRole;
+  pendingPerbaikanCount?: number;
 };
 
-export default function AdminBottomNav({ role }: Props) {
+export default function AdminBottomNav({ role, pendingPerbaikanCount }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function AdminBottomNav({ role }: Props) {
     { href: "/admin/prestasi", icon: Trophy, label: "Prestasi", show: canManageWisudawan(role) },
     { href: "/admin/kehadiran", icon: QrCode, label: "Kehadiran", show: canDoAbsensi(role) },
     { href: "/admin/tamu", icon: Ticket, label: "Tamu", show: canManageTamu(role) },
-    { href: "/admin/perbaikan", icon: Hammer, label: "Perbaikan", show: canManageWisudawan(role) },
+    { href: "/admin/perbaikan", icon: Hammer, label: "Perbaikan", show: canManageWisudawan(role), badge: pendingPerbaikanCount },
     { href: "/admin/fakultas", icon: Building2, label: "Fakultas", show: canManageFakultas(role) },
     { href: "/admin/manajemen-admin", icon: ShieldCheck, label: "Admin", show: canManageAdmins(role) },
     { href: "/admin/pengaturan", icon: Settings, label: "Pengaturan", show: canManagePengaturan(role) },
@@ -91,7 +92,12 @@ export default function AdminBottomNav({ role }: Props) {
                     }`}
                   >
                     <link.icon size={20} className={isActive ? "text-emerald-600 dark:text-emerald-400" : "opacity-70"} />
-                    <span>{link.label}</span>
+                    <span className="flex-1">{link.label}</span>
+                    {link.badge && link.badge > 0 ? (
+                      <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white shrink-0">
+                        {link.badge > 99 ? '99+' : link.badge}
+                      </span>
+                    ) : null}
                   </Link>
                 );
               })}
@@ -135,7 +141,14 @@ export default function AdminBottomNav({ role }: Props) {
               {isPerbaikanActive && (
                 <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-emerald-500 rounded-b-full-[0_2px_8px_rgba(16,185,129,0.5)]" />
               )}
-              <Hammer size={20} className={isPerbaikanActive ? "animate-in zoom-in duration-300" : ""} />
+              <div className="relative">
+                <Hammer size={20} className={isPerbaikanActive ? "animate-in zoom-in duration-300" : ""} />
+                {pendingPerbaikanCount && pendingPerbaikanCount > 0 ? (
+                  <span className="absolute -top-1.5 -right-2.5 flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-rose-500 px-1 text-[8px] font-bold text-white ring-2 ring-[var(--color-surface)]">
+                    {pendingPerbaikanCount > 99 ? '99+' : pendingPerbaikanCount}
+                  </span>
+                ) : null}
+              </div>
               <span className="text-[10px] font-semibold leading-none">Perbaikan</span>
             </Link>
           )}

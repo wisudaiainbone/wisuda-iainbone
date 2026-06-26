@@ -27,9 +27,10 @@ type Props = {
   namaAdmin: string;
   role: AdminRole;
   roleMeta: { label: string; description: string; color: string; icon: string; };
+  pendingPerbaikanCount?: number;
 };
 
-export default function AdminSidebar({ namaAdmin, role, roleMeta }: Props) {
+export default function AdminSidebar({ namaAdmin, role, roleMeta, pendingPerbaikanCount }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function AdminSidebar({ namaAdmin, role, roleMeta }: Props) {
     { href: "/admin/prestasi", icon: Trophy, label: "Prestasi", show: canManageWisudawan(role) },
     { href: "/admin/kehadiran", icon: QrCode, label: "Kehadiran", show: canDoAbsensi(role) },
     { href: "/admin/tamu", icon: Ticket, label: "Tamu", show: canManageTamu(role) },
-    { href: "/admin/perbaikan", icon: Hammer, label: "Perbaikan", show: canManageWisudawan(role) },
+    { href: "/admin/perbaikan", icon: Hammer, label: "Perbaikan", show: canManageWisudawan(role), badge: pendingPerbaikanCount },
     { href: "/admin/fakultas", icon: Building2, label: "Fakultas", show: canManageFakultas(role) },
     { href: "/admin/manajemen-admin", icon: ShieldCheck, label: "Admin", show: canManageAdmins(role) },
     { href: "/admin/pengaturan", icon: Settings, label: "Pengaturan", show: canManagePengaturan(role) },
@@ -91,8 +92,18 @@ export default function AdminSidebar({ namaAdmin, role, roleMeta }: Props) {
                 : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text)]'
                 } ${isCollapsed ? 'justify-center' : ''}`}
             >
-              <link.icon size={18} className="shrink-0" />
-              {!isCollapsed && <span className="truncate">{link.label}</span>}
+              <div className="relative flex items-center justify-center">
+                <link.icon size={18} className="shrink-0" />
+                {isCollapsed && link.badge && link.badge > 0 ? (
+                   <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white dark:ring-[var(--color-surface)]"></span>
+                ) : null}
+              </div>
+              {!isCollapsed && <span className="truncate flex-1">{link.label}</span>}
+              {!isCollapsed && link.badge && link.badge > 0 ? (
+                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white shrink-0">
+                  {link.badge > 99 ? '99+' : link.badge}
+                </span>
+              ) : null}
             </Link>
           );
         })}

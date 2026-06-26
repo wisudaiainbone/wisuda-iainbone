@@ -177,9 +177,43 @@ export async function updateStatusPerbaikan(
     }
 
     revalidatePath('/admin/perbaikan');
+    revalidatePath('/admin'); // Revalidate admin layout for sidebar badge
 
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message || 'Terjadi kesalahan.' };
   }
 }
+
+/**
+ * (Admin) Menghitung jumlah pengajuan perbaikan yang berstatus 'proses'.
+ * Mempertimbangkan hak akses (jika admin_unit, hanya menghitung di fakultasnya).
+ */
+export async function getPendingPerbaikanCount(): Promise<number> {
+  try {
+    const supabase = await createSupabaseAdminClient();
+    const session = await getAdminSession();
+
+    if (!session) return 0;
+
+    if (session.role === 'admin_unit' && session.unit_kerja) {
+      const { data } = await supabase
+        .from('perbaikan_data')
+        .select('id, wisudawan!inner(fakultas)')
+        .eq('status', 'proses')
+        .eq('wisudawan.fakultas', session.unit_kerja);
+      return data?.length || 0;
+    }
+
+    const { count } = await supabase
+      .from('perbaikan_data')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'proses');
+
+    return count || 0;
+  } catch (err) {
+    console.error('getPendingPerbaikanCount error:', err);
+    return 0;
+  }
+}
+
