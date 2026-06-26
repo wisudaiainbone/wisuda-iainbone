@@ -64,7 +64,6 @@ export default function TogaChart({ data, isDrilling, drillFakultas }: Props) {
               data={pieData}
               cx="50%"
               cy="50%"
-              innerRadius="55%"
               outerRadius="80%"
               dataKey="value"
               labelLine={false}

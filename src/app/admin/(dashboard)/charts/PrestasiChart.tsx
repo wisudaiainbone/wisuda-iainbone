@@ -46,15 +46,14 @@ export default function PrestasiChart({ data, isDrilling, drillFakultas }: Props
           Total: {totalAll.toLocaleString('id-ID')}
         </span>
       </div>
-      <div className="p-4 flex flex-col items-center">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-2">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
             <Pie 
               data={pieData} 
               cx="50%" 
               cy="50%" 
-              innerRadius="55%"
-              outerRadius="80%" 
+              outerRadius="80%"
               dataKey="value" 
               labelLine={false}
             >
@@ -65,18 +64,32 @@ export default function PrestasiChart({ data, isDrilling, drillFakultas }: Props
             <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </ResponsiveContainer>
-        <div className="flex gap-4 justify-center mt-2">
-          {pieData.map(d => (
-            <div key={d.name} className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: d.fill }} />
-              <div className="flex flex-col">
-                <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wide">{d.name}</span>
-                <span className="text-sm font-bold text-[var(--color-text)]">{d.value.toLocaleString('id-ID')}</span>
-              </div>
-            </div>
-          ))}
+        <div className="overflow-auto max-h-[260px] w-full pl-0 sm:pl-2 mt-4 sm:mt-0">
+          <table className="w-full text-xs">
+            <thead className="sticky top-0 bg-[var(--color-surface)] z-10">
+              <tr className="border-b border-[var(--color-border)]">
+                <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-muted)]">Status</th>
+                <th className="text-right py-2 font-semibold text-[var(--color-text-muted)] whitespace-nowrap">Total</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--color-border)]">
+              {pieData.map((d, i) => (
+                <tr key={i} className="hover:bg-emerald-50 dark:hover:bg-emerald-900/10 transition-colors">
+                  <td className="py-2 pr-3">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: d.fill }} />
+                      <span className="text-[var(--color-text)] break-words leading-snug">{d.name}</span>
+                    </div>
+                  </td>
+                  <td className="py-2 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                    {d.value.toLocaleString('id-ID')}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           {pieData.length === 0 && (
-            <p className="text-xs text-[var(--color-text-muted)]">Belum ada data</p>
+            <p className="text-center text-xs text-[var(--color-text-muted)] py-4">Belum ada data</p>
           )}
         </div>
       </div>

@@ -97,7 +97,6 @@ export default function SebaranChart({ data, isDrillingFakultas, isDrillingProdi
               data={pieData}
               cx="45%"
               cy="50%"
-              innerRadius={55}
               outerRadius={95}
               dataKey="value"
               labelLine={false}

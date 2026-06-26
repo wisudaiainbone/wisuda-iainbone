@@ -292,21 +292,25 @@ export default function DashboardClient({ stats, periodeOptions, selectedPeriode
         <PredikatChart data={predikatData} isDrilling={isDrillingActive} drillFakultas={activeDrillScope} />
       </div>
 
-      {/* Grid 2-col: Ormawa + Toga */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      {/* Grid 1-col: Ormawa */}
+      <div className="grid grid-cols-1 gap-4">
         <OrmawatChart data={ormawaData} isDrilling={isDrillingActive} drillFakultas={activeDrillScope} />
+      </div>
+
+      {/* Grid 2-col: Toga + Kehadiran */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <TogaChart data={togaData} isDrilling={isDrillingFakultas || isDrillingProdi} drillFakultas={drillFakultas} />
-      </div>
-
-      {/* Grid 2-col: Kehadiran + Ambil Toga */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <KehadiranChart data={kehadiranData} isDrilling={isDrillingFakultas || isDrillingProdi} drillFakultas={drillFakultas} />
-        <AmbilTogaChart data={ambilTogaData} isDrilling={isDrillingFakultas || isDrillingProdi} drillFakultas={drillFakultas} />
       </div>
 
-      {/* Grid 2-col: IPK + Sesi */}
+      {/* Grid 2-col: Ambil Toga + IPK */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <AmbilTogaChart data={ambilTogaData} isDrilling={isDrillingFakultas || isDrillingProdi} drillFakultas={drillFakultas} />
         <IpkChart data={ipkData} isDrilling={isDrillingFakultas || isDrillingProdi} drillFakultas={drillFakultas} />
+      </div>
+
+      {/* Grid 2-col: Sesi + Prestasi */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <SesiChart data={sesiData} isDrilling={isDrillingFakultas || isDrillingProdi} drillFakultas={drillFakultas} />
       </div>
 
