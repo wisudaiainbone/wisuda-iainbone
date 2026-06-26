@@ -88,6 +88,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
 - **Dashboard Profil Dinamis**: Halaman profil wisudawan di `/wisudawan/[nim]` dengan state sync *real-time*, tab konten (Informasi, Undangan, Toga, Pendaftaran, **Perbaikan**).
   - Wisudawan bisa mengganti *Password* via Modal dan mengganti *Foto* langsung melalui form pengeditan data.
   - Tampilan dinamis: jika Admin menonaktifkan pengubahan ukuran toga, blok form Toga akan **disembunyikan**.
+  - **Panduan Foto Interaktif**: Jika admin mengunggah referensi foto di Pengaturan, akan muncul panduan profil dengan fitur zoom/lightbox agar format terlihat jelas.
   - **Daftar Wisuda**: Wisudawan dapat mendaftar langsung (tanpa perlu membuat password lagi, karena sudah disetup di awal). Tombol informasi seperti "Link Pengumuman Resmi" tetap dapat diakses oleh semua status (termasuk Calon Wisudawan).
   - Validasi ketat: Judul skripsi wajib terdiri dari **minimal 5 kata**.
   - Ketentuan foto: Diwajibkan memakai **Toga** (maksimal 1 MB).

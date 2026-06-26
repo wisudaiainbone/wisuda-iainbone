@@ -9,7 +9,7 @@ export default async function Page({ params }: { params: Promise<{ nim: string }
   const nim = resolvedParams.nim;
   const decodedNim = decodeURIComponent(nim);
   
-  const [data, activePeriode, allowEditTogaSetting, allowEditProfileSetting, showTogaInfoSetting, showUndanganInfoSetting, allowPerbaikanSetting, showPrestasiCardSetting] = await Promise.all([
+  const [data, activePeriode, allowEditTogaSetting, allowEditProfileSetting, showTogaInfoSetting, showUndanganInfoSetting, allowPerbaikanSetting, showPrestasiCardSetting, contohFotoUrlSetting] = await Promise.all([
     getWisudawanByNim(decodedNim),
     getActivePeriode(),
     getSetting('allow_edit_toga', 'true', true),
@@ -17,7 +17,8 @@ export default async function Page({ params }: { params: Promise<{ nim: string }
     getSetting('show_toga_info', 'true', true),
     getSetting('show_undangan_info', 'true', true),
     getSetting('allow_perbaikan', 'true', true),
-    getSetting('show_prestasi_card', 'true', true)
+    getSetting('show_prestasi_card', 'true', true),
+    getSetting('contoh_foto_url', '', true)
   ]);
 
   if (!data) {
@@ -30,6 +31,7 @@ export default async function Page({ params }: { params: Promise<{ nim: string }
   const showUndanganInfo = showUndanganInfoSetting === 'true';
   const allowPerbaikan = allowPerbaikanSetting === 'true';
   const showPrestasiCard = showPrestasiCardSetting === 'true';
+  const contohFotoUrl = contohFotoUrlSetting;
 
-  return <ClientProfile nim={nim} w={data as any} activePeriode={activePeriode} allowEditToga={allowEditToga} allowEditProfile={allowEditProfile} showTogaInfo={showTogaInfo} showUndanganInfo={showUndanganInfo} allowPerbaikan={allowPerbaikan} showPrestasiCard={showPrestasiCard} />;
+  return <ClientProfile nim={nim} w={data as any} activePeriode={activePeriode} allowEditToga={allowEditToga} allowEditProfile={allowEditProfile} showTogaInfo={showTogaInfo} showUndanganInfo={showUndanganInfo} allowPerbaikan={allowPerbaikan} showPrestasiCard={showPrestasiCard} contohFotoUrl={contohFotoUrl as string} />;
 }

@@ -11,7 +11,7 @@ import {
   QrCode, ArrowLeft, Star, BadgeCheck, FileText, Hash,
   Timer, Mail, CheckCircle2, MapPin, Megaphone,
   MessageCircle, BookMarked, ChevronDown, ChevronUp, Pencil, LogOut, Camera, Eye, Loader2, Lock, Key,
-  FileEdit, Plus, X, Send, ClipboardList
+  FileEdit, Plus, X, Send, ClipboardList, Maximize
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -123,7 +123,7 @@ function StatBox({ label, value, sub }: { label: string; value: string; sub?: st
 }
 
 /* ── Page ──────────────────────────────────── */
-export default function ClientProfile({ nim, w: initialW, activePeriode, allowEditToga = true, allowEditProfile = true, showTogaInfo = true, showUndanganInfo = true, allowPerbaikan = true, showPrestasiCard = false }: { nim: string, w: W, activePeriode: any, allowEditToga?: boolean, allowEditProfile?: boolean, showTogaInfo?: boolean, showUndanganInfo?: boolean, allowPerbaikan?: boolean, showPrestasiCard?: boolean }) {
+export default function ClientProfile({ nim, w: initialW, activePeriode, allowEditToga = true, allowEditProfile = true, showTogaInfo = true, showUndanganInfo = true, allowPerbaikan = true, showPrestasiCard = false, contohFotoUrl }: { nim: string, w: W, activePeriode: any, allowEditToga?: boolean, allowEditProfile?: boolean, showTogaInfo?: boolean, showUndanganInfo?: boolean, allowPerbaikan?: boolean, showPrestasiCard?: boolean, contohFotoUrl?: string }) {
   const [w, setW] = useState<W>(initialW);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -158,7 +158,8 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
   const { showToast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isKetentuanFotoOpen, setIsKetentuanFotoOpen] = useState(false);
+  const [isKetentuanFotoOpen, setIsKetentuanFotoOpen] = useState(true);
+  const [isContohFotoZoomed, setIsContohFotoZoomed] = useState(false);
   const [isJabatanLainnya, setIsJabatanLainnya] = useState(false);
   const [isDaftarDialogOpen, setIsDaftarDialogOpen] = useState(false);
   const [isDaftarLoading, setIsDaftarLoading] = useState(false);
@@ -1195,11 +1196,33 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                               </p>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                              {contohFotoUrl && (
+                                <div className="col-span-1 sm:col-span-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-4 flex flex-col md:flex-row gap-5 items-center md:items-start">
+                                  <div
+                                    className="shrink-0 w-full max-w-xs md:max-w-md md:w-96 aspect-[1000/651] rounded-lg overflow-hidden border-2 border-emerald-400 bg-[var(--color-bg-secondary)] relative group cursor-pointer hover:opacity-90 transition-opacity"
+                                    onClick={() => setIsContohFotoZoomed(true)}
+                                  >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={contohFotoUrl} alt="Contoh Foto Wisudawan" className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                      <div className="bg-black/50 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+                                        <Maximize size={24} className="text-white" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex-1 flex flex-col justify-center">
+                                    <p className="font-bold text-[var(--color-text)] mb-1 flex items-center gap-1.5"><BadgeCheck size={14} className="text-emerald-500" /> Contoh Foto Profil</p>
+                                    <p className="text-[var(--color-text-muted)] leading-relaxed">
+                                      Gunakan foto dengan ukuran/rasio 3 x 4 berlatar belakang merah. Pastikan wajah terlihat jelas, menghadap lurus ke depan, dan mengenakan pakaian toga lengkap seperti referensi foto.
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                               <div className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-3 space-y-1">
                                 <p className="font-bold text-[var(--color-text)] flex items-center gap-1">📋 Format Foto</p>
                                 <ul className="text-[var(--color-text-muted)] space-y-0.5 list-disc list-inside leading-relaxed">
                                   <li>Latar Belakang: <strong className="text-[var(--color-text)]">MERAH</strong></li>
-                                  <li>Ukuran/Rasio: <strong className="text-[var(--color-text)]">3×4 CM</strong></li>
+                                  <li>Ukuran/Rasio: <strong className="text-[var(--color-text)]">3 x 4</strong></li>
                                   <li>Format File: <strong className="text-[var(--color-text)]">JPG (Maks 1 MB)</strong></li>
                                   <li>Kualitas: Tajam, Jelas, Tidak Blur</li>
                                   <li className="text-rose-600 dark:text-rose-400 font-semibold">Bukan foto scan/AI/fotokopian!</li>
@@ -2160,6 +2183,36 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
           </div>
         );
       })()}
+
+      {/* Modal Zoom Contoh Foto */}
+      <AnimatePresence>
+        {isContohFotoZoomed && contohFotoUrl && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-pointer"
+              onClick={() => setIsContohFotoZoomed(false)}
+            />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative bg-[var(--color-bg)] rounded-xl overflow-hidden shadow-2xl w-full max-w-4xl"
+            >
+              <button
+                onClick={() => setIsContohFotoZoomed(false)}
+                className="absolute top-3 right-3 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors z-10 backdrop-blur-md"
+              >
+                <X size={20} />
+              </button>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={contohFotoUrl} alt="Contoh Foto Wisudawan Close-Up" className="w-full h-auto object-contain max-h-[85vh] bg-black/50" />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

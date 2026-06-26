@@ -101,6 +101,10 @@ export async function uploadSlideFrame(file: File, key: string, oldPath?: string
   return uploadCertAsset(file, 'slide-frames', `frame_${key}`, 5, oldPath);
 }
 
+export async function uploadContohFoto(file: File, oldPath?: string | null) {
+  return uploadCertAsset(file, 'contoh-foto', 'contoh', 5, oldPath);
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 /**
  * Ekstrak path storage dari public URL Supabase.

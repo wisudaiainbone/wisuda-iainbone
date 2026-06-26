@@ -5,7 +5,7 @@ import { getSetting, updateSetting, getAllSettingsAdmin } from "@/actions/settin
 import { getActivePeriode } from "@/actions/periode";
 import { KeyRound, CheckCircle2, AlertCircle, Loader2, Shirt, Upload, ImageIcon, X } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
-import { uploadCertBackground, uploadCertSignature, extractSupabasePath, deleteCertAsset } from "@/lib/uploadCertBg";
+import { uploadCertBackground, uploadCertSignature, extractSupabasePath, deleteCertAsset, uploadContohFoto } from "@/lib/uploadCertBg";
 import TogaSettingsForm from "./TogaSettingsForm";
 import TamuSettingsForm from "./TamuSettingsForm";
 import SlideSettingsForm from "./SlideSettingsForm";
@@ -52,6 +52,10 @@ export default function AdminPengaturanPage() {
   const [isUploadingTtd, setIsUploadingTtd] = useState(false);
   const ttdFileInputRef = useRef<HTMLInputElement>(null);
 
+  const [contohFotoUrl, setContohFotoUrl] = useState("");
+  const [isUploadingContohFoto, setIsUploadingContohFoto] = useState(false);
+  const contohFotoInputRef = useRef<HTMLInputElement>(null);
+
   const handleBgUpload = async (file: File) => {
     setIsUploadingBg(true);
     try {
@@ -97,6 +101,29 @@ export default function AdminPengaturanPage() {
     await updateSetting('cert_akd_ttd_url', '');
     setCertTtdUrl('');
     showToast('Gambar tanda tangan dihapus.', 'success');
+  };
+
+  const handleContohFotoUpload = async (file: File) => {
+    setIsUploadingContohFoto(true);
+    try {
+      const oldPath = extractSupabasePath(contohFotoUrl);
+      const result = await uploadContohFoto(file, oldPath);
+      await updateSetting('contoh_foto_url', result.publicUrl);
+      setContohFotoUrl(result.publicUrl);
+      showToast('Gambar contoh foto berhasil diupload!', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Upload gagal.', 'error');
+    } finally {
+      setIsUploadingContohFoto(false);
+    }
+  };
+
+  const handleRemoveContohFoto = async () => {
+    const oldPath = extractSupabasePath(contohFotoUrl);
+    if (oldPath) await deleteCertAsset(oldPath);
+    await updateSetting('contoh_foto_url', '');
+    setContohFotoUrl('');
+    showToast('Gambar contoh foto dihapus.', 'success');
   };
 
   useEffect(() => {
@@ -148,6 +175,7 @@ export default function AdminPengaturanPage() {
 
         setCertBgUrl(getVal('cert_bg_url', ''));
         setCertTtdUrl(getVal('cert_akd_ttd_url', ''));
+        setContohFotoUrl(getVal('contoh_foto_url', ''));
 
         setActivePeriode(periodeAktif);
       } catch (err) {
@@ -320,8 +348,41 @@ export default function AdminPengaturanPage() {
                 </div>
               </div>
 
+              {/* Upload Contoh Foto Wisudawan */}
+              <div className="px-6 py-5 border-t border-[var(--color-border)] flex flex-col sm:flex-row sm:items-start justify-between gap-6 hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+                <div className="flex-1">
+                  <h3 className="text-sm font-bold text-[var(--color-text)] flex items-center gap-2">Contoh Foto Wisudawan Bertoga</h3>
+                  <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
+                    Gambar referensi format foto dengan ukuran/rasio 1000 x 651 px. Ditampilkan pada halaman panduan upload profil wisudawan.
+                  </p>
+                </div>
+
+                <div className="w-full sm:w-auto shrink-0 flex flex-col items-center gap-3">
+                  <div className="relative group">
+                    {contohFotoUrl ? (
+                      <div className="relative w-40 aspect-[1000/651] rounded-xl overflow-hidden border-2 border-emerald-400 group bg-[var(--color-bg)] bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e5e7eb%22%2F%3E%3C%2Fsvg%3E')]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={contohFotoUrl} alt="Preview Contoh Foto" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                          <button type="button" onClick={() => contohFotoInputRef.current?.click()} disabled={isUploadingContohFoto} className="p-2 rounded-full bg-white/90 text-emerald-700 hover:bg-white transition-colors" title="Ganti"><Upload size={14} /></button>
+                          <button type="button" onClick={handleRemoveContohFoto} disabled={isUploadingContohFoto} className="p-2 rounded-full bg-white/90 text-red-600 hover:bg-white transition-colors" title="Hapus"><X size={14} /></button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button type="button" onClick={() => contohFotoInputRef.current?.click()} disabled={isUploadingContohFoto}
+                        className="w-40 aspect-[1000/651] border-2 border-dashed border-[var(--color-border)] rounded-xl flex flex-col items-center justify-center gap-2 text-[var(--color-text-muted)] hover:border-emerald-400 hover:text-emerald-600 transition-colors cursor-pointer bg-[var(--color-bg)]">
+                        {isUploadingContohFoto ? <Loader2 size={24} className="animate-spin text-emerald-500" /> : <ImageIcon size={24} />}
+                        <span className="text-xs font-medium text-center">{isUploadingContohFoto ? 'Upload...' : 'Pilih Foto'}</span>
+                      </button>
+                    )}
+                  </div>
+                  <input ref={contohFotoInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) handleContohFotoUpload(f); e.target.value = ''; }} />
+                </div>
+              </div>
+
               {/* Akses Edit Profile */}
-              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
                 <div className="flex-1">
                   <h2 className="text-sm font-bold text-[var(--color-text)] flex items-center gap-2">
                     Izinkan Pendaftaran & Edit Profil
