@@ -39,6 +39,10 @@ export default function AdminPengaturanPage() {
   const [isClearCacheModalOpen, setIsClearCacheModalOpen] = useState(false);
   const [isClearCacheLoading, setIsClearCacheLoading] = useState(false);
 
+  // Dummy Modals States
+  const [isCreateDummyModalOpen, setIsCreateDummyModalOpen] = useState(false);
+  const [isDeleteDummyModalOpen, setIsDeleteDummyModalOpen] = useState(false);
+
   // Prestasi Akademik States
   const [certAkdNomor, setCertAkdNomor] = useState("");
   const [certAkdTanggal, setCertAkdTanggal] = useState("");
@@ -204,6 +208,7 @@ export default function AdminPengaturanPage() {
     if (res.success) {
       setHasDummyAccount(true);
       showToast("Akun Uji Coba berhasil dibuat! Silakan login di /auth dengan NIM: DUMMY999", "success");
+      setIsCreateDummyModalOpen(false);
     } else {
       showToast(res.error || "Gagal membuat akun uji coba", "error");
     }
@@ -216,6 +221,7 @@ export default function AdminPengaturanPage() {
     if (res.success) {
       setHasDummyAccount(false);
       showToast("Akun Uji Coba berhasil dihapus.", "success");
+      setIsDeleteDummyModalOpen(false);
     } else {
       showToast(res.error || "Gagal menghapus akun uji coba", "error");
     }
@@ -669,7 +675,7 @@ export default function AdminPengaturanPage() {
                     <button
                       type="button"
                       disabled={isDummyLoading}
-                      onClick={handleDeleteDummy}
+                      onClick={() => setIsDeleteDummyModalOpen(true)}
                       className="flex items-center justify-center gap-2 px-4 h-[38px] bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
                     >
                       {isDummyLoading ? <Loader2 size={14} className="animate-spin" /> : <UserMinus size={14} />}
@@ -679,7 +685,7 @@ export default function AdminPengaturanPage() {
                     <button
                       type="button"
                       disabled={isDummyLoading}
-                      onClick={handleCreateDummy}
+                      onClick={() => setIsCreateDummyModalOpen(true)}
                       className="flex items-center justify-center gap-2 px-4 h-[38px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
                     >
                       {isDummyLoading ? <Loader2 size={14} className="animate-spin" /> : <UserPlus size={14} />}
@@ -1061,6 +1067,27 @@ export default function AdminPengaturanPage() {
         title="Hapus Seluruh Cache?"
         message="Anda yakin ingin menghapus seluruh cache sistem Upstash? Proses ini akan membuat server menarik ulang data langsung dari database Supabase dan mungkin menyebabkan loading halaman lebih lambat untuk pengunjung pertama. Statistik yang tidak sinkron akan diperbaiki."
         confirmText="Ya, Hapus Cache"
+      />
+
+      <ConfirmDialog
+        isOpen={isCreateDummyModalOpen}
+        isLoading={isDummyLoading}
+        onClose={() => setIsCreateDummyModalOpen(false)}
+        onConfirm={handleCreateDummy}
+        title="Buat Akun Uji Coba?"
+        message="Sistem akan membuat 1 akun mahasiswa bayangan (NIM: DUMMY999) agar Anda dapat bereksperimen sebagai mahasiswa tanpa merusak data asli. Akun ini tidak masuk dalam perhitungan statistik dasbor."
+        confirmText="Ya, Buat Akun"
+        isDestructive={false}
+      />
+
+      <ConfirmDialog
+        isOpen={isDeleteDummyModalOpen}
+        isLoading={isDummyLoading}
+        onClose={() => setIsDeleteDummyModalOpen(false)}
+        onConfirm={handleDeleteDummy}
+        title="Hapus Akun Uji Coba?"
+        message="Seluruh data profil simulasi, file unggahan dummy, dan riwayat yang terhubung dengan akun DUMMY999 akan dihapus secara permanen."
+        confirmText="Ya, Hapus Akun"
       />
     </div>
   );
