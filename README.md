@@ -5,9 +5,11 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
 ## 🚀 Fitur Utama
 
 - **Desain Modern & Responsif**: Palet *emerald* dan *slate* premium dengan dukungan Dark Mode penuh.
-- **Autentikasi Wisudawan Aman**:
+- **Autentikasi Wisudawan Aman (JWT Session)**:
+  - Menggunakan sistem **JWT Session (Edge-Compatible)** dengan *httpOnly cookie* (via library `jose`) untuk memproteksi rute `/wisudawan/*` dan `/setup/*` secara ketat di tingkat *middleware*.
+  - Terdapat isolasi data: seorang wisudawan sama sekali tidak dapat mengakses atau mengintip URL profil milik wisudawan lain.
   - *Calon Wisudawan* → login pakai password default (dikonfigurasi admin).
-  - **Setup Akun Wajib (First-Time Login)**: Jika wisudawan login dengan password default, sistem mengarahkan ke halaman `/setup/[nim]` untuk mengisi **Email, Ukuran Toga (otomatis terisi dari database utama tanpa cache), dan Password Baru** sebelum bisa masuk ke profil.
+  - **Setup Akun Wajib (First-Time Login)**: Jika wisudawan login dengan password default, mereka diberikan sesi khusus yang hanya dapat mengakses halaman `/setup/[nim]` untuk mengisi **Email, Ukuran Toga, dan Password Baru**. Setelah berhasil, sesi otomatis terhapus untuk memaksa login ulang demi keamanan maksimal.
   - *Wisudawan Terdaftar* → login pakai password kustom yang di-**hash** (SHA-256 + salt).
   - Tombol **"Cek Status Pendaftaran kamu"** di halaman login untuk cek NIM tanpa perlu login.
 - **Autentikasi Admin Aman**: Login admin terpusat via **NextAuth.js (Google Provider)** — session menggunakan JWT. Akses dibatasi ketat berdasarkan kecocokan email Google dengan database `admin_users`. Terdapat jalur alternatif khusus **Token Presensi** (`absensi_token`) untuk panitia lapangan (Role Admin Absensi) agar dapat mengakses Scanner Kehadiran dan Scanner Tamu secara instan tanpa login Google.
@@ -286,20 +288,20 @@ Aplikasi ini telah dirombak untuk menangani lalu lintas pendaftaran wisuda seren
 ```
 [/auth] Masukkan NIM + Password
         │
-        ├─ Password BUKAN default → /wisudawan/[nim] (langsung ke profil)
+        ├─ Password BUKAN default → Beri JWT Cookie → /wisudawan/[nim] (profil)
         │
-        └─ Password ADALAH default → /setup/[nim]
+        └─ Password ADALAH default → Beri JWT Cookie Khusus → /setup/[nim]
                    │
                    └─ Isi: Email, Ukuran Toga, Password Baru
                               │
-                              └─ Berhasil → kembali ke /auth untuk login ulang
+                              └─ Berhasil → Hapus Sesi → /auth (login ulang)
 ```
 
 1. Wisudawan membuka `/auth` dan memasukkan **NIM** + **Password**.
 2. Jika belum tahu status pendaftaran, klik **"Cek Status Pendaftaran kamu"** → masukkan NIM → sistem menampilkan apakah NIM terdaftar di periode aktif.
 3. *Calon Wisudawan* menggunakan **password default** (dapat dikonfigurasi admin di `/admin/pengaturan`).
-4. Saat login pertama kali dengan password default, wisudawan **diwajibkan mengisi Email, Ukuran Toga, dan Password Baru** di halaman `/setup/[nim]` sebelum bisa masuk ke profil.
-5. Setelah setup selesai, wisudawan kembali login dengan password baru → masuk ke halaman profil.
+4. Saat login pertama kali dengan password default, sistem memberikan *session flag* khusus dan wisudawan **diwajibkan mengisi Email, Ukuran Toga, dan Password Baru** di halaman `/setup/[nim]`. Rute ini diproteksi ketat dan hanya bisa diakses dengan sesi khusus tersebut.
+5. Setelah setup selesai, sistem menghapus sesi lama. Wisudawan kembali login dengan password baru → masuk ke halaman profil. Halaman profil (`/wisudawan/*`) sekarang juga diproteksi penuh oleh *middleware* dan hanya bisa diakses dengan *cookie* JWT yang valid.
 6. Admin dapat **mereset password** wisudawan ke default kapan saja dari panel admin.
 
 ## 📡 Alur Scan QR Hari H

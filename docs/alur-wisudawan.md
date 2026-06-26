@@ -21,8 +21,8 @@ Dokumen ini menjelaskan alur lengkap yang dialami seorang wisudawan saat mengaks
        │              • Jika password '$...'  → verifikasi SHA-256 + salt (hashed)
        │              • Jika password plaintext → bandingkan langsung (backward compat)
        │
-       ├─ Jika password BUKAN default → redirect ke /wisudawan/[nim] (halaman profil)
-       └─ Jika password ADALAH default → redirect ke /setup/[nim] (halaman setup akun)
+       ├─ Jika password BUKAN default → Berikan JWT httpOnly cookie → redirect ke /wisudawan/[nim] (halaman profil)
+       └─ Jika password ADALAH default → Berikan JWT httpOnly cookie (flag isDefaultPassword: true) → redirect ke /setup/[nim] (halaman setup akun)
 ```
 
 ---
@@ -52,7 +52,8 @@ Setiap mahasiswa yang diimpor oleh admin otomatis menggunakan sandi bawaan (defa
    - Memilih **Ukuran Toga** (Jika telah diatur admin, otomatis terisi dari database utama tanpa cache)
    - Membuat **Password Baru** (minimal 6 karakter)
 3. Setelah berhasil mengisi form setup, data email & toga disimpan, dan password baru di-hash (SHA-256).
-4. Wisudawan dikembalikan ke halaman `/auth` untuk login menggunakan sandi yang baru mereka buat.
+4. Sesi awal (isDefaultPassword: true) akan **dihapus/dicabut otomatis**.
+5. Wisudawan dikembalikan ke halaman `/auth` untuk **login ulang** menggunakan sandi yang baru mereka buat guna mendapatkan sesi keamanan penuh.
 
 | Kondisi | Password yang Digunakan | Redirect Arah Login |
 |---|---|---|
@@ -79,7 +80,7 @@ Admin dapat mereset password wisudawan ke **password default** langsung dari tab
 
 ## 4. Halaman Profil Wisudawan (`/wisudawan/[nim]`)
 
-Setelah login dengan password kustom berhasil, wisudawan diarahkan ke halaman profil mereka. Seluruh pengaturan tampilan (toggle fitur) diambil **langsung dari database Supabase** tanpa melalui cache Redis agar perubahan admin langsung aktif.
+Setelah login dengan password kustom berhasil dan **mendapatkan JWT session cookie**, wisudawan diarahkan ke halaman profil mereka. Halaman ini sekarang diproteksi penuh oleh Middleware Next.js — akses publik langsung tanpa *cookie* akan diblokir. Seluruh pengaturan tampilan (toggle fitur) diambil **langsung dari database Supabase** tanpa melalui cache Redis agar perubahan admin langsung aktif.
 
 ### Hero Header
 - **Foto profil** (jika belum ada foto, menampilkan inisial nama dengan latar warna).

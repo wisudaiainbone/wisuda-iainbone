@@ -2,13 +2,30 @@ import { getWisudawanByNim } from "@/actions/wisudawan";
 import { getActivePeriode } from "@/actions/periode";
 import { getSetting } from "@/actions/settings";
 import ClientProfile from "./ClientProfile";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { getWisudawanSession } from "@/actions/wisudawan";
+import { getToken } from "next-auth/jwt";
+import { headers } from "next/headers";
 
 export default async function Page({ params }: { params: Promise<{ nim: string }> }) {
   const resolvedParams = await params;
   const nim = resolvedParams.nim;
   const decodedNim = decodeURIComponent(nim);
-  
+
+  // ── Verifikasi sesi (defense-in-depth di samping middleware) ──
+  // Admin bypass: cek apakah ada admin session NextAuth aktif
+  // Karena getToken butuh req object, kita andalkan middleware sebagai garis pertama.
+  // Di sini kita cek session wisudawan sebagai lapisan kedua.
+  const session = await getWisudawanSession();
+  if (!session) {
+    // Tidak ada sesi wisudawan → redirect ke halaman login
+    redirect(`/auth?callbackUrl=/wisudawan/${encodeURIComponent(decodedNim)}&reason=unauthenticated`);
+  }
+  if (session.nim !== decodedNim) {
+    // Sesi valid tapi bukan milik NIM ini → redirect ke profil sendiri
+    redirect(`/wisudawan/${session.nim}`);
+  }
+
   const [data, activePeriode, allowEditTogaSetting, allowEditProfileSetting, showTogaInfoSetting, showUndanganInfoSetting, allowPerbaikanSetting, showPrestasiCardSetting, contohFotoUrlSetting] = await Promise.all([
     getWisudawanByNim(decodedNim),
     getActivePeriode(),
@@ -35,3 +52,4 @@ export default async function Page({ params }: { params: Promise<{ nim: string }
 
   return <ClientProfile nim={nim} w={data as any} activePeriode={activePeriode} allowEditToga={allowEditToga} allowEditProfile={allowEditProfile} showTogaInfo={showTogaInfo} showUndanganInfo={showUndanganInfo} allowPerbaikan={allowPerbaikan} showPrestasiCard={showPrestasiCard} contohFotoUrl={contohFotoUrl as string} />;
 }
+

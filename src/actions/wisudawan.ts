@@ -6,6 +6,8 @@ import { revalidatePath } from 'next/cache';
 import { getAdminSession } from '@/actions/adminAuth';
 import bcrypt from 'bcryptjs';
 import { updateWisudawanSchema, loginWisudawanSchema, daftarWisudaSchema, setupAkunSchema, changePasswordSchema } from '@/lib/validations';
+import { cookies } from 'next/headers';
+import { signWisudawanToken, verifyWisudawanToken, WISUDAWAN_COOKIE_NAME } from '@/lib/wisudawanSession';
 
 const CACHE_TTL = 3600; // 1 hour
 
@@ -247,6 +249,17 @@ export async function loginWisudawan(nim: string, passwordInput: string) {
     await supabase.from('wisudawan').update({ password: newHash }).eq('nim', nim);
   }
 
+  // Buat JWT session dan simpan sebagai httpOnly cookie
+  const token = await signWisudawanToken(w.nim, usedDefaultPassword);
+  const cookieStore = await cookies();
+  cookieStore.set(WISUDAWAN_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24, // 24 jam
+  });
+
   return { success: true, data: w, isDefaultPassword: usedDefaultPassword };
 }
 
@@ -276,6 +289,29 @@ export async function cekStatusNim(nim: string) {
 
   return { success: true, message: 'NIM terdaftar! Silakan login menggunakan password default atau password Anda.' };
 }
+
+/**
+ * Logout wisudawan: menghapus cookie sesi.
+ * Dipanggil dari ClientProfile saat wisudawan menekan tombol Logout.
+ */
+export async function logoutWisudawan(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete(WISUDAWAN_COOKIE_NAME);
+}
+
+/**
+ * Mendapatkan sesi wisudawan yang sedang login dari cookie.
+ * Digunakan di server components (page.tsx) untuk verifikasi sisi server.
+ * Mengembalikan { nim, isDefaultPassword } jika valid, null jika tidak.
+ */
+export async function getWisudawanSession() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(WISUDAWAN_COOKIE_NAME)?.value;
+  if (!token) return null;
+  return verifyWisudawanToken(token);
+}
+
+
 
 export async function checkExistingNims(nims: string[]) {
   if (!nims || nims.length === 0) return [];

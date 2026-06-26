@@ -68,6 +68,10 @@ export const ROLE_ALLOWED_ROUTES: Record<AdminRole, string[]> = {
     '/admin/toga',
     '/admin/tamu',
     '/admin/informasi',
+    '/admin/prestasi',
+    '/admin/perbaikan',
+    '/admin/kehadiran',
+    '/admin/fakultas',
   ],
 
   admin_unit: [
@@ -152,14 +156,14 @@ export function canManageTamu(role: AdminRole): boolean {
  * Cek apakah role dapat melakukan absensi.
  */
 export function canDoAbsensi(role: AdminRole): boolean {
-  return role === 'superadmin' || role === 'admin_absensi';
+  return role === 'superadmin' || role === 'admin_absensi' || role === 'admin_institut';
 }
 
 /**
  * Cek apakah role dapat mengelola master data Fakultas/Prodi.
  */
 export function canManageFakultas(role: AdminRole): boolean {
-  return role === 'superadmin';
+  return role === 'superadmin' || role === 'admin_institut';
 }
 
 /**

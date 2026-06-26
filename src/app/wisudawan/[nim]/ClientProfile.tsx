@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { updateWisudawan, saveFotoWisudawan, daftarWisuda, getLatestFotoUrl } from "@/actions/wisudawan";
+import { useRouter } from "next/navigation";
+import { updateWisudawan, saveFotoWisudawan, daftarWisuda, getLatestFotoUrl, logoutWisudawan } from "@/actions/wisudawan";
 import { getPerbaikanByNim, createPerbaikan, type Perbaikan } from "@/actions/perbaikan";
 import {
   GraduationCap, BookOpen, Calendar, Clock, Users, Award,
@@ -151,8 +152,11 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
   const [activeTab, setActiveTab] = useState(initialW["STATUS"] === "Calon Wisudawan" ? "lengkapi_data" : "pelaksanaan");
   const [isHintOpen, setIsHintOpen] = useState(true);
 
-  const handleLogout = () => {
-    window.location.href = '/';
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logoutWisudawan();
+    router.push('/auth');
   };
 
   const { showToast } = useToast();
@@ -492,9 +496,13 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               <Pencil size={15} />
             </button>
           )}
-          <Link href="/auth" className="flex items-center justify-center h-9 w-9 text-rose-600 dark:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full" title="Logout">
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center h-9 w-9 text-rose-600 dark:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full"
+            title="Logout"
+          >
             <LogOut size={15} />
-          </Link>
+          </button>
           <div className="flex items-center justify-center h-9 w-9 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full overflow-hidden [&>button]:border-none [&>button]:bg-transparent [&>button]:w-full [&>button]:h-full [&>button]:rounded-none">
             <ThemeToggle isScrolled={true} />
           </div>
@@ -511,9 +519,12 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
           <button onClick={() => setIsPasswordDialogOpen(true)} className="flex items-center h-9 gap-1.5 text-xs font-medium text-amber-600 dark:text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 transition-colors px-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-full hover:bg-amber-100 dark:hover:bg-amber-900/40">
             <Key size={14} /> Password
           </button>
-          <Link href="/auth" className="flex items-center h-9 gap-1.5 text-xs font-medium text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors px-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-full hover:bg-red-100 dark:hover:bg-red-900/40">
+          <button
+            onClick={handleLogout}
+            className="flex items-center h-9 gap-1.5 text-xs font-medium text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors px-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-full hover:bg-red-100 dark:hover:bg-red-900/40"
+          >
             <LogOut size={14} /> Logout
-          </Link>
+          </button>
           {w["STATUS"] !== "Calon Wisudawan" && allowEditProfile && (
             <button onClick={() => setIsEditing(!isEditing)} className="flex items-center h-9 gap-1.5 text-xs font-medium text-[var(--color-text-subtle)] hover:text-[var(--color-text)] transition-colors px-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full hover:bg-[var(--color-bg-secondary)]">
               <Pencil size={14} /> {isEditing ? "Batal Edit" : "Edit Data"}

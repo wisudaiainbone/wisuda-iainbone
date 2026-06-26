@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Lock, Mail, GraduationCap, CheckCircle2, ArrowRight, Eye, EyeOff } from "lucide-react";
-import { setupAkunWisudawan } from "@/actions/wisudawan";
+import { setupAkunWisudawan, logoutWisudawan } from "@/actions/wisudawan";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const TOGA_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -59,6 +59,8 @@ export default function SetupClient({ nim, nama, initialToga }: { nim: string; n
       if (!res.success) {
         setError(res.error || "Gagal menyimpan. Coba lagi.");
       } else {
+        // Hapus session lama (isDefaultPassword=true) agar wisudawan login ulang
+        await logoutWisudawan();
         setIsDone(true);
         // Redirect ke /auth setelah 3 detik
         setTimeout(() => router.push("/auth"), 3000);
