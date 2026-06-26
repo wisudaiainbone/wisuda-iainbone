@@ -57,10 +57,11 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
     return range;
   };
 
-  const renderLink = (page: number, children: React.ReactNode, className: string, ariaLabel?: string) => {
+  const renderLink = (page: number, children: React.ReactNode, className: string, ariaLabel?: string, keyProp?: string) => {
     if (onPageChange) {
       return (
         <button
+          key={keyProp}
           onClick={(e) => handlePageClick(e as any, page)}
           className={className}
           aria-label={ariaLabel}
@@ -71,7 +72,7 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
       );
     }
     return (
-      <Link href={createPageURL(page)} className={className} aria-label={ariaLabel}>
+      <Link key={keyProp} href={createPageURL(page)} className={className} aria-label={ariaLabel}>
         {children}
       </Link>
     );
@@ -114,7 +115,9 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
               isCurrent
                 ? 'bg-emerald-600 border-emerald-600 text-white'
                 : 'border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]'
-            }`
+            }`,
+            undefined,
+            `page-${page}-${index}`
           );
         })}
 
