@@ -154,7 +154,8 @@ export async function getAllWisudawan(filterOptions?: { role?: string, unitKerja
     query = query.eq('fakultas', filterOptions.unitKerja);
   }
 
-  const { data, error } = await query.order('nim', { ascending: true });
+  // Mengubah urutan dari nim menjadi timestamp (waktu input oleh admin)
+  const { data, error } = await query.order('timestamp', { ascending: false });
 
   if (error) {
     console.error('Error fetching all wisudawan:', error);
