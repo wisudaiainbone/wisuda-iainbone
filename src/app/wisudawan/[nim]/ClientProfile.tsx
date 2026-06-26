@@ -809,7 +809,6 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                     </div>
                     <div>
                       <h3 className="text-sm font-bold text-blue-900 dark:text-blue-300">Foto Wisuda</h3>
-                      <p className="text-xs text-blue-700/80 dark:text-blue-400/80">Perbarui foto profil (Pastikan latar merah, jas/blazer hitam)</p>
                     </div>
                   </div>
                   <label className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold transition-all shrink-0 ${uploadStatus === 'uploading' ? "bg-blue-400 cursor-not-allowed text-white opacity-70" : "bg-blue-600 hover:bg-blue-700 active:scale-95 text-white cursor-pointer"}`}>

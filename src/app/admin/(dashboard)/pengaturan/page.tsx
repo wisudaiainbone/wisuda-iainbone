@@ -9,6 +9,7 @@ import { uploadCertBackground, uploadCertSignature, extractSupabasePath, deleteC
 import TogaSettingsForm from "./TogaSettingsForm";
 import TamuSettingsForm from "./TamuSettingsForm";
 import SlideSettingsForm from "./SlideSettingsForm";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 export default function AdminPengaturanPage() {
   const { showToast } = useToast();
@@ -33,6 +34,10 @@ export default function AdminPengaturanPage() {
   // Dummy Account States
   const [hasDummyAccount, setHasDummyAccount] = useState(false);
   const [isDummyLoading, setIsDummyLoading] = useState(false);
+
+  // Clear Cache Modal States
+  const [isClearCacheModalOpen, setIsClearCacheModalOpen] = useState(false);
+  const [isClearCacheLoading, setIsClearCacheLoading] = useState(false);
 
   // Prestasi Akademik States
   const [certAkdNomor, setCertAkdNomor] = useState("");
@@ -640,16 +645,7 @@ export default function AdminPengaturanPage() {
                 <div className="flex items-center justify-start shrink-0">
                   <button
                     type="button"
-                    onClick={async () => {
-                      if (!confirm('Anda yakin ingin menghapus seluruh cache sistem? Proses ini akan membuat halaman meload data asli dan memakan waktu sedikit lebih lama untuk visitor pertama.')) return;
-                      const { clearAllSystemCache } = await import('@/actions/dashboard');
-                      const success = await clearAllSystemCache();
-                      if (success) {
-                        showToast('Berhasil', 'success', 'Seluruh cache sistem berhasil dibersihkan.');
-                      } else {
-                        showToast('Gagal', 'error', 'Gagal membersihkan cache.');
-                      }
-                    }}
+                    onClick={() => setIsClearCacheModalOpen(true)}
                     className="flex items-center justify-center gap-2 px-4 h-[38px] bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-xs font-bold transition-colors"
                   >
                     <AlertCircle size={14} />
@@ -1040,6 +1036,32 @@ export default function AdminPengaturanPage() {
           <SlideSettingsForm initialData={allSettingsMap} />
         )}
       </div>
+
+      <ConfirmDialog
+        isOpen={isClearCacheModalOpen}
+        isLoading={isClearCacheLoading}
+        onClose={() => setIsClearCacheModalOpen(false)}
+        onConfirm={async () => {
+          setIsClearCacheLoading(true);
+          try {
+            const { clearAllSystemCache } = await import('@/actions/dashboard');
+            const success = await clearAllSystemCache();
+            if (success) {
+              showToast('Berhasil', 'success', 'Seluruh cache sistem berhasil dibersihkan.');
+              setIsClearCacheModalOpen(false);
+            } else {
+              showToast('Gagal', 'error', 'Gagal membersihkan cache.');
+            }
+          } catch (error) {
+            showToast('Gagal', 'error', 'Terjadi kesalahan sistem.');
+          } finally {
+            setIsClearCacheLoading(false);
+          }
+        }}
+        title="Hapus Seluruh Cache?"
+        message="Anda yakin ingin menghapus seluruh cache sistem Upstash? Proses ini akan membuat server menarik ulang data langsung dari database Supabase dan mungkin menyebabkan loading halaman lebih lambat untuk pengunjung pertama. Statistik yang tidak sinkron akan diperbaiki."
+        confirmText="Ya, Hapus Cache"
+      />
     </div>
   );
 }
