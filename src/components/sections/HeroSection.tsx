@@ -18,6 +18,23 @@ const iconMap: Record<string, React.ElementType> = {
   UserMinus
 };
 
+function parseToCalendarDate(dateString: string) {
+  if (!dateString) return null;
+  const MONTHS: Record<string, string> = {
+    'januari': '01', 'februari': '02', 'maret': '03', 'april': '04',
+    'mei': '05', 'juni': '06', 'juli': '07', 'agustus': '08',
+    'september': '09', 'oktober': '10', 'november': '11', 'desember': '12'
+  };
+  const parts = dateString.trim().toLowerCase().split(' ');
+  if (parts.length >= 3) {
+    const day = parts[0].padStart(2, '0');
+    const month = MONTHS[parts[1]] || '01';
+    const year = parts[2];
+    return `${year}${month}${day}`;
+  }
+  return null;
+}
+
 export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[] }) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [activePeriodIdx, setActivePeriodIdx] = useState(0);
@@ -247,7 +264,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                     return (
                       <>
                         {/* 1. Event Card */}
-                        <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-xl rounded-2xl p-6 relative">
+                        <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-xl rounded-2xl p-6 relative z-[60]">
                           <div className="mb-6">
                             <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 mb-4">
                               <div className="flex items-center gap-3">
@@ -280,7 +297,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                               </div>
 
                               {/* Calendar Button (hanya di kartu pertama untuk sekarang) */}
-                              {activePeriodIdx === 0 && (
+                              {/* Calendar Button (hanya di kartu pertama untuk sekarang) */}
+                              {activePeriodIdx === 0 && period.date && parseToCalendarDate(period.date) && (
                                 <div className="relative" ref={calendarRef}>
                                   <button
                                     onClick={() => setShowCalendar(!showCalendar)}
@@ -300,57 +318,106 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                         transition={{ duration: 0.18 }}
                                         className="absolute right-0 top-full mt-2 w-[200px] sm:w-48 bg-[var(--color-surface)] backdrop-blur-xl rounded-xl border border-[var(--color-border)] p-1.5 text-sm text-left flex flex-col z-30"
                                       >
-                                        <div className="px-3 py-1.5 text-xs font-bold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                                          Sesi Pertama (08.00)
-                                        </div>
-                                        <a
-                                          href="https://calendar.google.com/calendar/render?action=TEMPLATE&dates=20260610T000000Z%2F20260610T040000Z&details=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Pertama.&location=Gedung%20Serbaguna%20IAIN%20Bone,%20Watampone&text=Wisuda%20IAIN%20Bone%20(Sesi%201)"
-                                          target="_blank" rel="noopener noreferrer"
-                                          className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
-                                        >
-                                          Google Calendar
-                                        </a>
-                                        <a
-                                          href="https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Pertama.&enddt=2026-06-10T04%3A00%3A00Z&location=Gedung%20Serbaguna%20IAIN%20Bone%2C%20Watampone&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=2026-06-10T00%3A00%3A00Z&subject=Wisuda%20IAIN%20Bone%20%28Sesi%201%29"
-                                          target="_blank" rel="noopener noreferrer"
-                                          className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
-                                        >
-                                          Outlook Calendar
-                                        </a>
-                                        <a
-                                          href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:20260610T000000Z%0ADTEND:20260610T040000Z%0ASUMMARY:Wisuda%20IAIN%20Bone%20(Sesi%201)%0ADESCRIPTION:Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Pertama.%0ALOCATION:Gedung%20Serbaguna%20IAIN%20Bone,%20Watampone%0AEND:VEVENT%0AEND:VCALENDAR"
-                                          download="wisuda-sesi1.ics"
-                                          className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
-                                        >
-                                          Apple Calendar (iCal)
-                                        </a>
+                                        {(() => {
+                                          const eventDate = parseToCalendarDate(period.date);
+                                          if (!eventDate) return null;
+                                          const loc = encodeURIComponent([period.venue, period.location].filter(Boolean).join(', '));
+                                          
+                                          if (!period.session1 && !period.session2) {
+                                            return (
+                                              <>
+                                                <div className="px-3 py-1.5 text-xs font-bold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                                                  Wisuda IAIN Bone
+                                                </div>
+                                                <a
+                                                  href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${eventDate}T000000Z%2F${eventDate}T090000Z&details=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone.&location=${loc}&text=Wisuda%20IAIN%20Bone`}
+                                                  target="_blank" rel="noopener noreferrer"
+                                                  className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                >
+                                                  Google Calendar
+                                                </a>
+                                                <a
+                                                  href={`https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone.&enddt=${eventDate.slice(0,4)}-${eventDate.slice(4,6)}-${eventDate.slice(6,8)}T09%3A00%3A00Z&location=${loc}&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${eventDate.slice(0,4)}-${eventDate.slice(4,6)}-${eventDate.slice(6,8)}T00%3A00%3A00Z&subject=Wisuda%20IAIN%20Bone`}
+                                                  target="_blank" rel="noopener noreferrer"
+                                                  className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                >
+                                                  Outlook Calendar
+                                                </a>
+                                                <a
+                                                  href={`data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:${eventDate}T000000Z%0ADTEND:${eventDate}T090000Z%0ASUMMARY:Wisuda%20IAIN%20Bone%0ADESCRIPTION:Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone.%0ALOCATION:${loc}%0AEND:VEVENT%0AEND:VCALENDAR`}
+                                                  download="wisuda.ics"
+                                                  className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                >
+                                                  Apple Calendar (iCal)
+                                                </a>
+                                              </>
+                                            );
+                                          }
 
-                                        <div className="h-px bg-[var(--color-border)] my-1.5"></div>
-
-                                        <div className="px-3 py-1.5 text-xs font-bold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                                          Sesi Kedua (13.00)
-                                        </div>
-                                        <a
-                                          href="https://calendar.google.com/calendar/render?action=TEMPLATE&dates=20260610T050000Z%2F20260610T090000Z&details=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Kedua.&location=Gedung%20Serbaguna%20IAIN%20Bone,%20Watampone&text=Wisuda%20IAIN%20Bone%20(Sesi%202)"
-                                          target="_blank" rel="noopener noreferrer"
-                                          className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
-                                        >
-                                          Google Calendar
-                                        </a>
-                                        <a
-                                          href="https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Kedua.&enddt=2026-06-10T09%3A00%3A00Z&location=Gedung%20Serbaguna%20IAIN%20Bone%2C%20Watampone&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=2026-06-10T05%3A00%3A00Z&subject=Wisuda%20IAIN%20Bone%20%28Sesi%202%29"
-                                          target="_blank" rel="noopener noreferrer"
-                                          className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
-                                        >
-                                          Outlook Calendar
-                                        </a>
-                                        <a
-                                          href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:20260610T050000Z%0ADTEND:20260610T090000Z%0ASUMMARY:Wisuda%20IAIN%20Bone%20(Sesi%202)%0ADESCRIPTION:Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Kedua.%0ALOCATION:Gedung%20Serbaguna%20IAIN%20Bone,%20Watampone%0AEND:VEVENT%0AEND:VCALENDAR"
-                                          download="wisuda-sesi2.ics"
-                                          className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
-                                        >
-                                          Apple Calendar (iCal)
-                                        </a>
+                                          return (
+                                            <>
+                                              {period.session1 && (
+                                                <>
+                                                  <div className="px-3 py-1.5 text-xs font-bold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                                                    Sesi Pertama ({period.session1})
+                                                  </div>
+                                                  <a
+                                                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${eventDate}T000000Z%2F${eventDate}T040000Z&details=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Pertama.&location=${loc}&text=Wisuda%20IAIN%20Bone%20(Sesi%201)`}
+                                                    target="_blank" rel="noopener noreferrer"
+                                                    className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                  >
+                                                    Google Calendar
+                                                  </a>
+                                                  <a
+                                                    href={`https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Pertama.&enddt=${eventDate.slice(0,4)}-${eventDate.slice(4,6)}-${eventDate.slice(6,8)}T04%3A00%3A00Z&location=${loc}&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${eventDate.slice(0,4)}-${eventDate.slice(4,6)}-${eventDate.slice(6,8)}T00%3A00%3A00Z&subject=Wisuda%20IAIN%20Bone%20%28Sesi%201%29`}
+                                                    target="_blank" rel="noopener noreferrer"
+                                                    className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                  >
+                                                    Outlook Calendar
+                                                  </a>
+                                                  <a
+                                                    href={`data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:${eventDate}T000000Z%0ADTEND:${eventDate}T040000Z%0ASUMMARY:Wisuda%20IAIN%20Bone%20(Sesi%201)%0ADESCRIPTION:Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Pertama.%0ALOCATION:${loc}%0AEND:VEVENT%0AEND:VCALENDAR`}
+                                                    download="wisuda-sesi1.ics"
+                                                    className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                  >
+                                                    Apple Calendar (iCal)
+                                                  </a>
+                                                </>
+                                              )}
+                                              {period.session1 && period.session2 && (
+                                                <div className="h-px bg-[var(--color-border)] my-1.5"></div>
+                                              )}
+                                              {period.session2 && (
+                                                <>
+                                                  <div className="px-3 py-1.5 text-xs font-bold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                                                    Sesi Kedua ({period.session2})
+                                                  </div>
+                                                  <a
+                                                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${eventDate}T050000Z%2F${eventDate}T090000Z&details=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Kedua.&location=${loc}&text=Wisuda%20IAIN%20Bone%20(Sesi%202)`}
+                                                    target="_blank" rel="noopener noreferrer"
+                                                    className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                  >
+                                                    Google Calendar
+                                                  </a>
+                                                  <a
+                                                    href={`https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Kedua.&enddt=${eventDate.slice(0,4)}-${eventDate.slice(4,6)}-${eventDate.slice(6,8)}T09%3A00%3A00Z&location=${loc}&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${eventDate.slice(0,4)}-${eventDate.slice(4,6)}-${eventDate.slice(6,8)}T05%3A00%3A00Z&subject=Wisuda%20IAIN%20Bone%20%28Sesi%202%29`}
+                                                    target="_blank" rel="noopener noreferrer"
+                                                    className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                  >
+                                                    Outlook Calendar
+                                                  </a>
+                                                  <a
+                                                    href={`data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:${eventDate}T050000Z%0ADTEND:${eventDate}T090000Z%0ASUMMARY:Wisuda%20IAIN%20Bone%20(Sesi%202)%0ADESCRIPTION:Acara%20Upacara%20Wisuda%20ke-XVII%20Institut%20Agama%20Islam%20Negeri%20Bone%20-%20Sesi%20Kedua.%0ALOCATION:${loc}%0AEND:VEVENT%0AEND:VCALENDAR`}
+                                                    download="wisuda-sesi2.ics"
+                                                    className="block px-3 py-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors font-medium text-xs"
+                                                  >
+                                                    Apple Calendar (iCal)
+                                                  </a>
+                                                </>
+                                              )}
+                                            </>
+                                          );
+                                        })()}
                                       </motion.div>
                                     )}
                                   </AnimatePresence>
