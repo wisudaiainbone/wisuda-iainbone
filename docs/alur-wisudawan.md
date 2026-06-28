@@ -97,7 +97,7 @@ Menampilkan judul *"Wisuda Program Sarjana dan Magister [Periode] IAIN Bone"* be
 - Periode, Pelaksanaan, Tempat, Sesi, Nomor Urut, Jam Sesi.
 - Catatan Pendaftaran (`hint_pendaftaran`) tampil **di atas tombol Lihat Undangan Wisuda** jika diisi admin — sebagai pengingat bahwa jadwal dapat berubah sewaktu-waktu.
 - Tombol **Lihat Undangan Wisuda** (merah) — membuka Tiket E-Undangan digital (disembunyikan untuk Calon Wisudawan).
-- Tombol **Link Pengumuman Resmi** (oranye) — tetap tampil meskipun status masih Calon Wisudawan.
+- Tombol **Link Pengumuman Resmi** (oranye) — tetap tampil meskipun status masih Calon Wisudawan. Menampilkan PDF pengumuman di dalam layar dengan Modal *In-App* yang menggunakan komponen `PdfModal` yang bersih.
 - Tombol Gabung WhatsApp Group (disembunyikan untuk Calon Wisudawan).
 
 ### Tab Konten — Wisudawan Aktif (Status: Terdaftar)

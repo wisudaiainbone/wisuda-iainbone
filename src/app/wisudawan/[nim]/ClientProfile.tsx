@@ -20,6 +20,7 @@ import CropModal from "@/components/ui/CropModal";
 import { getCroppedImg } from "@/lib/cropImage";
 import { useToast } from "@/components/ui/Toast";
 import DownloadSertifikatButton from "@/components/wisudawan/DownloadSertifikatButton";
+import { PdfModal } from "@/components/ui/PdfModal";
 
 import { uploadFotoToGDrive, getOptimizedGDriveUrl } from "@/lib/uploadFoto";
 
@@ -128,6 +129,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
   const [w, setW] = useState<W>(initialW);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [selectedPdf, setSelectedPdf] = useState<string | null>(null);
 
   // Jika activePeriode ada, sesuaikan formatnya
   const p: Period = activePeriode ? {
@@ -399,12 +401,13 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
             </div>
             {[
               { label: "Periode", value: w["PERIODE"] || p.title || "-" },
-              { label: "Pelaksanaan", value: `${p.day}, ${p.date}` },
-              { label: "Tempat", value: `${p.venue}, ${p.location}` },
+              { label: "Pelaksanaan", value: `${p.day}${p.day && p.date ? ', ' : ''}${p.date}` },
+              ...((p.venue || p.location) ? [{ label: "Tempat", value: [p.venue, p.location].filter(Boolean).join(', ') }] : []),
               ...(w["STATUS"] !== "Calon Wisudawan" && w["SESI"] && w["SESI"] !== "-" && w["SESI"] !== "Belum Ditentukan" ? [
                 { label: "Sesi", value: w["SESI"] },
                 { label: "Nomor Urut", value: w["URUT"] ? `${w["URUT"]}` : "-" },
-                { label: "Jam Sesi", value: w["SESI"] === "Sesi 1" || w["SESI"] === "SESI 1" ? p.session1 : p.session2 },
+                ...((w["SESI"] === "Sesi 1" || w["SESI"] === "SESI 1") && p.session1 ? [{ label: "Jam Sesi", value: p.session1 }] : []),
+                ...((w["SESI"] === "Sesi 2" || w["SESI"] === "SESI 2") && p.session2 ? [{ label: "Jam Sesi", value: p.session2 }] : []),
               ] : []),
             ].map(s => (
               <div key={s.label} className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-3 py-3 border-b border-[var(--color-border)] last:border-0">
@@ -432,11 +435,11 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               </button>
             )}
             {p.linkPengumuman && (
-              <a href={p.linkPengumuman} target="_blank" rel="noopener noreferrer"
+              <button onClick={() => setSelectedPdf(p.linkPengumuman || null)}
                 className="flex items-center justify-center gap-2 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-sm font-bold transition-all w-full">
                 <Megaphone size={15} />
                 Link Pengumuman Resmi
-              </a>
+              </button>
             )}
             {w["STATUS"] !== "Calon Wisudawan" && p.wagLink && (
               <a href={p.wagLink} target="_blank" rel="noopener noreferrer"
@@ -2242,6 +2245,11 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
         )}
       </AnimatePresence>
 
+      <PdfModal
+        isOpen={!!selectedPdf}
+        onClose={() => setSelectedPdf(null)}
+        pdfUrl={selectedPdf || ''}
+      />
     </div>
   );
 }

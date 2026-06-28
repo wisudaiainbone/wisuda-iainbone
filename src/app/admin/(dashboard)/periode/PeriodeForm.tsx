@@ -84,6 +84,7 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
               required
             >
               <option value="Sedang Dibuka">Sedang Dibuka</option>
+              <option value="Akan Datang">Akan Datang</option>
               <option value="Ditutup">Ditutup</option>
               <option value="Selesai">Selesai</option>
             </select>
@@ -130,48 +131,44 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Tempat Pelaksanaan</label>
+            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Tempat Pelaksanaan (Opsional)</label>
             <input
               type="text"
               placeholder="Contoh: Gedung Serbaguna IAIN Bone, Watampone"
               value={formData.tempat_pelaksanaan || ''}
               onChange={(e) => setFormData({ ...formData, tempat_pelaksanaan: e.target.value })}
               className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
-              required
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Jadwal Gladi Bersih</label>
+            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Jadwal Gladi Bersih (Opsional)</label>
             <input
               type="text"
               placeholder="Contoh: Senin, 9 Juni 2026 (Sesi 1: 14.00, Sesi 2: 19.00)"
               value={formData.jadwal_gladi || ''}
               onChange={(e) => setFormData({ ...formData, jadwal_gladi: e.target.value })}
               className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
-              required
             />
           </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Waktu Sesi 1</label>
+            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Waktu Sesi 1 (Opsional)</label>
             <input
               type="text"
               value={formData.waktu_sesi_1 || ''}
               onChange={(e) => setFormData({ ...formData, waktu_sesi_1: e.target.value })}
               className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
-              required
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Waktu Sesi 2</label>
+            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Waktu Sesi 2 (Opsional)</label>
             <input
               type="text"
               value={formData.waktu_sesi_2 || ''}
               onChange={(e) => setFormData({ ...formData, waktu_sesi_2: e.target.value })}
               className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
-              required
             />
           </div>
         </div>

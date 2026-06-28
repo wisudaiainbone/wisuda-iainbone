@@ -32,7 +32,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
     - Di layar *mobile*, seluruh filter dropdown secara cerdas dikelompokkan dalam satu tombol toggle **Filter Data** (*collapsible*) dengan status default tertutup.
     - **Status Toga** — memunculkan kolom `Uk Toga` di tabel secara dinamis ketika diaktifkan.
     - **Filter Sesi** (`Sesi Satu` / `Sesi Dua` / `Tanpa Sesi`) — memunculkan kolom `Sesi` di tabel secara dinamis ketika diaktifkan. Tombol reset (✕) muncul ketika ada filter aktif.
-- **Pengumuman Resmi Periode (PDF)** *(Baru)*: Admin dapat mengunggah file PDF pengumuman resmi saat mengedit Periode Wisuda. Tombol unduh otomatis muncul di profil setiap wisudawan yang terdaftar di periode tersebut.
+- **Pengumuman Resmi Periode (PDF)** *(Baru)*: Admin dapat mengunggah file PDF pengumuman resmi saat mengedit Periode Wisuda. Tombol pengumuman otomatis muncul di profil setiap wisudawan yang terdaftar di periode tersebut dan juga di halaman publik. Pengumuman dibuka secara elegan menggunakan **Modal In-App** tanpa membuka tab baru, lengkap dengan otomatisasi Bypass Preview khusus untuk link Google Drive agar tidak diblokir login.
 - **Export Daftar Wisudawan (XLSX)** — Tombol teal **Daftar** mengekspor data wisudawan *terdaftar* ke file `.xlsx` dengan 3 tab (Sesi Satu, Sesi Dua, dan **Rekap**). Tab Rekap menyajikan rekapitulasi data otomatis (Total Wisudawan, Ukuran Toga, Jenis Kelamin, dan Distribusi IPK) per Fakultas & Prodi. Proses 100% *client-side*.
 - **Generate Slide PPTX** *(Diperbarui)* — Tombol violet **Slide** menghasilkan presentasi PowerPoint (`.pptx`) berukuran 1080×1920px (portrait) untuk layar LED. Slide di-generate per Fakultas, berisi foto wisudawan, nomor urut, nama (Title Case), NIM, Prodi, IPK, dan Predikat (dalam label warna pastel). Dihiasi fitur desain pintar: **Badge Bundar (5 cm)** di sudut kiri atas foto, ornamen teks pembatas `◈ ━━━━━━ ◈`, dan bingkai kustom otomatis menyesuaikan fakultas dari pengaturan *app_settings*.
 - **Generate Buku Album Wisudawan** *(Baru)* — Tombol indigo **Album** menghasilkan dokumen berformat tiga kolom (Area Foto | Data: Nama/NIM/Fakultas/Prodi | Area Tanda Tangan) dengan tiga pilihan format ekspor:
@@ -240,7 +240,7 @@ Aplikasi ini telah dirombak untuk menangani lalu lintas pendaftaran wisuda seren
 - `src/actions/` — Server Actions Next.js:
   - `adminAuth.ts` — Login, logout, dan get session admin.
   - `adminUsers.ts` — CRUD daftar admin (invite, toggle, delete, update role).
-  - `periode.ts` — Pengaturan periode wisuda (aktif diurutkan paling atas).
+  - `periode.ts` — Pengaturan periode wisuda (aktif diurutkan paling atas). Mendukung status baru **"Akan Datang"** dan *field* opsional untuk lokasi/sesi/gladi yang akan menyesuaikan tampilan publik secara dinamis jika dikosongkan.
   - `perbaikan.ts` — CRUD pengajuan perbaikan data wisudawan (buat, list, update status); invalidate cache `wisudawan:[nim]` saat status diperbarui.
   - `prodi.ts` — CRUD master data prodi, `updateProdiOrder` untuk menyimpan urutan drag-and-drop (batch update kolom `urutan`).
   - `sesi.ts` — Penetapan Sesi per Fakultas; update massal `wisudawan.sesi` & `prodi.sesi`; invalidate cache NIM massal via Redis Pipeline.

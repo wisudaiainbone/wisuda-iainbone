@@ -65,9 +65,13 @@ export default async function AdminPeriodePage() {
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                           Aktif
                         </div>
+                      ) : periode.status === 'Akan Datang' ? (
+                        <div className="px-2.5 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 text-xs uppercase font-bold tracking-wider rounded-full flex items-center gap-1.5">
+                          Akan Datang
+                        </div>
                       ) : (
                         <div className="px-2.5 py-1 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 text-xs uppercase font-bold tracking-wider rounded-full flex items-center gap-1.5">
-                          Selesai
+                          {periode.status}
                         </div>
                       )}
                     </div>
@@ -137,9 +141,13 @@ export default async function AdminPeriodePage() {
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                               Aktif
                             </span>
+                          ) : periode.status === 'Akan Datang' ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-semibold">
+                              Akan Datang
+                            </span>
                           ) : (
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 text-xs font-semibold">
-                              Selesai
+                              {periode.status}
                             </span>
                           )}
                         </td>

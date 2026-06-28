@@ -19,6 +19,7 @@ export default async function HomePage() {
     registrationDateLabel: p.tanggal_pendaftaran,
     gladi: p.jadwal_gladi,
     pengumuman: p.pengumuman,
+    linkPengumuman: p.link_pengumuman,
     hint_pendaftaran: p.hint_pendaftaran,
     stats: p.stats,
     wagLink: p.wagLink,

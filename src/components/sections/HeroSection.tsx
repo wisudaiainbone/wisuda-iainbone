@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Calendar, MapPin, CalendarPlus, Users, UserCheck, UserMinus, Clock, Phone, ChevronLeft, ChevronRight, GraduationCap, Lock } from "lucide-react";
+import { ChevronDown, Calendar, MapPin, CalendarPlus, Users, UserCheck, UserMinus, Clock, Phone, ChevronLeft, ChevronRight, GraduationCap, Lock, FileText } from "lucide-react";
 import { getSetting } from "@/actions/settings";
+import { PdfModal } from "@/components/ui/PdfModal";
 
 type Stat = { label: string; value: string; icon: string; color: string; bg: string; details?: { label: string; value: string; }[] };
 export type Period = {
   id: any; title: string; status: string; date: string; day: string; location: string; venue: string;
-  session1: string; session2: string; statusColor: string; stats: Stat[]; registrationDateLabel: string; hint_pendaftaran?: string;
+  session1: string; session2: string; statusColor: string; stats: Stat[]; registrationDateLabel: string; hint_pendaftaran?: string; linkPengumuman?: string;
 };
 
 const iconMap: Record<string, React.ElementType> = {
@@ -24,6 +25,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
   const [contactEmail, setContactEmail] = useState("wisuda@iainbone.ac.id");
   const [contactWaLabel, setContactWaLabel] = useState("+62 811 9429 035");
   const [contactWaLink, setContactWaLink] = useState("628119429035");
+  const [selectedPdf, setSelectedPdf] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -169,6 +171,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
               >
                 Persiapkan momen berharga Anda dengan melengkapi seluruh persyaratan yang ada.
               </motion.p>
+
+
             </div>
 
             {/* 3. Kontak Bantuan & Footer (Mobile: Bawah, Desktop: Bawah) */}
@@ -353,33 +357,48 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                 </div>
                               )}
                             </div>
-                            <p className="text-sm sm:text-base font-semibold uppercase tracking-wide text-[var(--color-text)] mt-4 leading-relaxed">
-                              {period.title}
-                            </p>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-4">
+                              <p className="text-sm sm:text-base font-semibold uppercase tracking-wide text-[var(--color-text)] leading-relaxed">
+                                {period.title}
+                              </p>
+                              {period.linkPengumuman && (
+                                <button
+                                  onClick={() => setSelectedPdf(period.linkPengumuman || null)}
+                                  className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 dark:text-emerald-400 dark:border-emerald-800/30 text-xs sm:text-xs font-medium rounded-xl transition-all shrink-0"
+                                >
+                                  <FileText size={15} />
+                                  Pengumuman
+                                </button>
+                              )}
+                            </div>
                           </div>
 
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                          <div className={`grid grid-cols-1 gap-3 mt-2 ${(period.location || period.venue || period.session1 || period.session2) ? 'sm:grid-cols-2' : ''}`}>
                             {/* Tanggal */}
                             <div className="flex items-center gap-3 p-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] hover:border-emerald-500/30 transition-colors">
                               <div className="w-10 h-10 rounded-xl bg-emerald-800/10 border border-emerald-800/20 flex items-center justify-center shrink-0">
                                 <Calendar size={18} className="text-emerald-800 dark:text-emerald-400" />
                               </div>
                               <div>
-                                <p className="text-[var(--color-text)] font-semibold text-sm">{period.date}</p>
-                                <p className="text-[var(--color-text-muted)] text-xs mt-0.5">{period.day}</p>
+                                <p className="text-[var(--color-text)] font-semibold text-sm">
+                                  {period.day}{period.day && period.date ? ', ' : ''}{period.date}
+                                </p>
                               </div>
                             </div>
 
                             {/* Tempat */}
-                            <div className="flex items-center gap-3 p-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] hover:border-emerald-500/30 transition-colors">
-                              <div className="w-10 h-10 rounded-xl bg-emerald-800/10 border border-emerald-800/20 flex items-center justify-center shrink-0">
-                                <MapPin size={18} className="text-emerald-800 dark:text-emerald-400" />
+                            {(period.location || period.venue) && (
+                              <div className="flex items-center gap-3 p-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] hover:border-emerald-500/30 transition-colors">
+                                <div className="w-10 h-10 rounded-xl bg-emerald-800/10 border border-emerald-800/20 flex items-center justify-center shrink-0">
+                                  <MapPin size={18} className="text-emerald-800 dark:text-emerald-400" />
+                                </div>
+                                <div>
+                                  <p className="text-[var(--color-text)] font-semibold text-sm">
+                                    {[period.venue, period.location].filter(Boolean).join(', ')}
+                                  </p>
+                                </div>
                               </div>
-                              <div>
-                                <p className="text-[var(--color-text)] font-semibold text-sm">{period.location}</p>
-                                <p className="text-[var(--color-text-muted)] text-xs mt-0.5">{period.venue}</p>
-                              </div>
-                            </div>
+                            )}
 
                             {/* Sesi 1 (Minimalis) */}
                             {period.session1 && (
@@ -557,6 +576,13 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
           </div>
         </div>
       </div>
+
+      {/* PDF Modal */}
+      <PdfModal
+        isOpen={!!selectedPdf}
+        onClose={() => setSelectedPdf(null)}
+        pdfUrl={selectedPdf || ''}
+      />
 
       {/* Mobile Floating CTA Bar */}
       <AnimatePresence>
