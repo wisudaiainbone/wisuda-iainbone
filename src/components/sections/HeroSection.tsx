@@ -266,15 +266,18 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                         {/* 1. Event Card */}
                         <div className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-xl rounded-2xl p-6 relative z-[60]">
                           <div className="mb-6">
-                            <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 mb-4">
-                              <div className="flex items-center gap-3">
-                                <span className={`inline-flex items-center self-start sm:self-auto px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
-                                  {period.status}
-                                </span>
+                            {(() => {
+                              const showCalendarBtn = activePeriodIdx === 0 && period.date && parseToCalendarDate(period.date);
+                              return (
+                                <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 mb-4">
+                                  <div className={`flex items-center gap-3 ${!showCalendarBtn ? 'w-full' : ''}`}>
+                                    <span className={`inline-flex items-center self-start sm:self-auto px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
+                                      {period.status}
+                                    </span>
 
-                                {/* Navigation Controls */}
-                                {graduationPeriods.length > 1 && (
-                                  <div className="hidden sm:flex items-center gap-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1">
+                                    {/* Navigation Controls */}
+                                    {graduationPeriods.length > 1 && (
+                                      <div className={`hidden sm:flex items-center gap-1 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-full p-1 ${!showCalendarBtn ? 'ml-auto' : ''}`}>
                                     <button
                                       onClick={() => setActivePeriodIdx(Math.max(0, activePeriodIdx - 1))}
                                       disabled={activePeriodIdx === 0}
@@ -424,6 +427,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                 </div>
                               )}
                             </div>
+                            );
+                            })()}
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-4">
                               <p className="text-sm sm:text-base font-semibold uppercase tracking-wide text-[var(--color-text)] leading-relaxed">
                                 {period.title}
