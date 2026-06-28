@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { getAllWisudawan } from "./wisudawan";
 import { redis } from '@/lib/redis';
 import { revalidatePath } from 'next/cache';
+import { getFakultasData } from '@/lib/fakultas';
 
 const CACHE_KEY = 'active_periode_pengaturan';
 const CACHE_TTL = 3600; // 1 hour
@@ -97,10 +98,23 @@ export async function getActivePeriode() {
   // Transform data
   const result = data.map(p => {
     // Hitung pendaftar untuk periode spesifik ini
-    const pendaftarAktif = wisudawanList.filter(w =>
+    const pendaftarAktifList = wisudawanList.filter(w =>
       w.periode === p.nama_periode &&
       ['Terdaftar', 'Proses', 'Selesai'].includes(w.status)
-    ).length;
+    );
+    const pendaftarAktif = pendaftarAktifList.length;
+
+    const fakultasBreakdownMap: Record<string, number> = {};
+    pendaftarAktifList.forEach(w => {
+      const fak = w.fakultas || 'Lainnya';
+      fakultasBreakdownMap[fak] = (fakultasBreakdownMap[fak] || 0) + 1;
+    });
+
+    const pendaftarDetails = Object.entries(fakultasBreakdownMap).map(([fak, count]) => {
+      const { singkatan } = getFakultasData(fak);
+      return { label: singkatan, value: `${count} Pendaftar` };
+    });
+
     const sisaKuota = Math.max(0, p.kuota - pendaftarAktif);
 
     return {
@@ -108,7 +122,7 @@ export async function getActivePeriode() {
       pendaftarAktif,
       stats: [
         { bg: "bg-emerald-800/20", icon: "Users", color: "text-emerald-700", label: "Kuota Total", value: p.kuota.toString() },
-        { bg: "bg-blue-500/20", icon: "UserCheck", color: "text-blue-400", label: "Pendaftar", value: pendaftarAktif.toString() },
+        { bg: "bg-blue-500/20", icon: "UserCheck", color: "text-blue-400", label: "Pendaftar", value: pendaftarAktif.toString(), details: pendaftarDetails },
         { bg: "bg-amber-500/20", icon: "UserMinus", color: "text-amber-400", label: "Sisa Kuota", value: sisaKuota.toString() }
       ],
       hint_pendaftaran: p.hint_pendaftaran,

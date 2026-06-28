@@ -5,6 +5,7 @@ Aplikasi web portal pendaftaran dan informasi wisuda resmi untuk **Institut Agam
 ## 🚀 Fitur Utama
 
 - **Desain Modern & Responsif**: Palet *emerald* dan *slate* premium dengan dukungan Dark Mode penuh.
+  - **Tooltips Interaktif**: Halaman publik (Landing Page) menampilkan rincian jumlah pendaftar per Fakultas saat stat "Pendaftar" diarah (hover) atau diklik, menggunakan efek transisi warna hijau zamrud (emerald) yang elegan.
 - **Autentikasi Wisudawan Aman (JWT Session)**:
   - Menggunakan sistem **JWT Session (Edge-Compatible)** dengan *httpOnly cookie* (via library `jose`) untuk memproteksi rute `/wisudawan/*` dan `/setup/*` secara ketat di tingkat *middleware*.
   - Terdapat isolasi data: seorang wisudawan sama sekali tidak dapat mengakses atau mengintip URL profil milik wisudawan lain.

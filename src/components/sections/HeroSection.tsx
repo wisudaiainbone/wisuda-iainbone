@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Calendar, MapPin, CalendarPlus, Users, UserCheck, UserMinus, Clock, Phone, ChevronLeft, ChevronRight, GraduationCap, Lock } from "lucide-react";
 import { getSetting } from "@/actions/settings";
 
-type Stat = { label: string; value: string; icon: string; color: string; bg: string };
+type Stat = { label: string; value: string; icon: string; color: string; bg: string; details?: { label: string; value: string; }[] };
 export type Period = {
   id: any; title: string; status: string; date: string; day: string; location: string; venue: string;
   session1: string; session2: string; statusColor: string; stats: Stat[]; registrationDateLabel: string; hint_pendaftaran?: string;
@@ -416,7 +416,11 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                           {period.stats.map((stat, idx) => {
                             const StatIcon = iconMap[stat.icon] || Users;
                             return (
-                              <div key={idx} className="bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-md rounded-2xl p-3 sm:p-4 flex flex-col items-center sm:flex-row sm:justify-start sm:gap-3 transition-all">
+                              <div 
+                                key={idx} 
+                                className={`group relative z-10 hover:z-50 focus:z-50 bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-md rounded-2xl p-3 sm:p-4 flex flex-col items-center sm:flex-row sm:justify-start sm:gap-3 transition-all ${stat.details ? 'cursor-pointer hover:border-emerald-500/50 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none outline-none' : ''}`}
+                                tabIndex={stat.details ? 0 : undefined}
+                              >
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center shrink-0 mb-2 sm:mb-0`}>
                                   <StatIcon size={16} className="sm:hidden" />
                                   <StatIcon size={18} className="hidden sm:block" />
@@ -432,6 +436,20 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                   </p>
                                   <p className="text-base sm:text-lg font-bold text-[var(--color-text)] font-mono tracking-wider leading-none">{stat.value}</p>
                                 </div>
+
+                                {stat.details && stat.details.length > 0 && (
+                                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-xl p-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus:opacity-100 group-focus:visible transition-all duration-200">
+                                    <div className="text-[10px] font-bold text-[var(--color-text-subtle)] uppercase tracking-wider px-2 pt-1 pb-2 text-center border-b border-[var(--color-border)] mb-1">
+                                      Detail per Fakultas
+                                    </div>
+                                    {stat.details.map((detail, dIdx) => (
+                                      <div key={dIdx} className="flex justify-between items-center px-2 py-1.5 text-xs hover:bg-[var(--color-bg-secondary)] rounded-lg transition-colors">
+                                        <span className="font-semibold text-[var(--color-text)]">{detail.label}</span>
+                                        <span className="text-[var(--color-text-muted)]">{detail.value}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             );
                           })}

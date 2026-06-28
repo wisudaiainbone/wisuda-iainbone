@@ -90,6 +90,7 @@ src/
 - [x] Pembangunan Navigasi (Navbar Desktop + Bottom Nav)
 - [x] 6 Section Utama pada Landing Page
 - [x] Dark Mode / Light Mode dengan variabel kustom CSS
+- [x] **Tooltips Interaktif Hero Section**: Menampilkan rincian pendaftar per Fakultas saat stat "Pendaftar" di-hover/klik di halaman publik.
 - [x] **Autentikasi Admin** (Migrasi ke NextAuth.js Google Provider)
   - Login terpusat dengan akun Gmail (SSO)
   - Middleware validasi JWT dari `next-auth/jwt`
