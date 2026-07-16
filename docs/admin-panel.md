@@ -75,8 +75,8 @@ Halaman utama yang pertama kali dilihat oleh Admin, menyediakan ringkasan analit
 
 ### Pengaturan Periode (`/admin/pengaturan`)
 Pengelolaan periode wisuda aktif, membaca dari tabel `periode_wisuda`:
-- Status Pelaksanaan (Sedang Dibuka / Selesai)
-- Kuota Wisudawan
+- **Nama Periode & Status**: Kedua field ditampilkan sejajar dalam satu baris (grid 2 kolom).
+- **Kuota Per Fakultas**: Input kuota diisi per-fakultas (5 baris: FSHI, FT, FUD, FEBI, Pascasarjana). Kolom **Total Kuota** dihitung otomatis (readonly) dari penjumlahan seluruh kuota fakultas — tidak ada input kuota manual lagi.
 - Jadwal & Tanggal (pendaftaran, pelaksanaan, gladi)
 - Tempat Pelaksanaan, Sesi, Jam Sesi
 - Pengumuman Tambahan (ditampilkan di profil wisudawan)
@@ -209,6 +209,10 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
   - Dilengkapi fitur **Fuzzy-Match Validation** untuk mencocokkan & memperbaiki otomatis ejaan Fakultas/Prodi.
   - **Validasi Wajib Isi**: Sistem menolak baris yang kosong pada kolom esensial (NIM, Nama, IPK, Predikat, Fakultas, Prodi, Tanggal Yudisium). Kolom Ukuran Toga bersifat opsional.
   - **Parsing Tanggal Khusus**: Membaca file Excel dalam mode *Raw Text* secara ketat untuk kolom Tanggal Yudisium. Wajib berformat **`YYYY-MM-DD`** secara visual pada sel Excel (contoh: `2026-05-13`) untuk mencegah inkonsistensi zona waktu. Format lain akan ditolak secara otomatis.
+  - **Validasi Kuota Total**: Setelah semua validasi data lewat, sistem memeriksa sisa kuota periode aktif (`kuota - jumlah_wisudawan_saat_ini`). Jika batch melebihi sisa slot, baris berlebih secara otomatis ditolak dengan pesan **"Kuota wisudawan telah terpenuhi"** — urutan prioritas sesuai urutan baris di file Excel.
+  - **Validasi Kuota Per-Fakultas**: Jika kolom `kuota_per_fakultas` di periode aktif terisi, sistem juga memvalidasi kuota per-unit. Baris yang melebihi kuota fakultasnya ditolak dengan pesan **"Kuota wisudawan Fakultas [X] telah terpenuhi"**.
+  - **Banner Info Kuota**: Dialog import menampilkan panel ringkasan kuota (Kuota Total / Terisi / Sisa) beserta badge sisa per-Fakultas. Badge berwarna merah jika kuota habis, amber jika hampir penuh, hijau jika masih lega.
+  - **Indikator Prediksi di Preview**: Sebelum submit, header preview menampilkan badge tambahan **"Ditolak (Kuota)"** jika jumlah baris valid melebihi sisa kuota yang tersedia.
 - **Export Multi-format (Dropdown)**: Unduh seluruh data (termasuk filter yang sedang aktif) melalui menu dropdown cerdas yang menyediakan 4 pilihan format: `.xlsx`, `.csv`, `.sql` (perintah single-insert), dan `.json`. Pilihan CSV, SQL, dan JSON dilindungi otorisasi khusus dan hanya bisa diakses oleh role `superadmin` atau `admin_institut`.
 - **Kolom Aksi Cepat**:
   - 👁️ **Lihat Profil** — pratinjau profil.

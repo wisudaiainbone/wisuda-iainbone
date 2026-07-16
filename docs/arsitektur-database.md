@@ -75,6 +75,40 @@ Contoh: WISUDA-KE-XII_2026_001_20210001001
 ### `periode_wisuda`
 Menyimpan konfigurasi periode wisuda: status, kuota, jadwal, tempat, sesi, pengumuman, hint pendaftaran, link WAG, dan link_pengumuman (File PDF di Google Drive). Dikelola admin dari `/admin/pengaturan`.
 
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| `id` | VARCHAR | Primary key (format: `YYYY-RANDOM6`) |
+| `nama_periode` | TEXT | Nama/judul periode wisuda |
+| `status` | TEXT | `'Sedang Dibuka'` \| `'Akan Datang'` \| `'Ditutup'` \| `'Selesai'` |
+| `kuota` | INTEGER | **Dihitung otomatis** dari total penjumlahan semua nilai di `kuota_per_fakultas`. Tidak boleh diisi manual. |
+| `kuota_per_fakultas` | JSONB | Kuota per fakultas/unit dalam format JSON. Kunci = nama fakultas, nilai = jumlah kuota (integer). Contoh: `{"Fakultas Tarbiyah": 200, "Pascasarjana": 90}`. Kosong `{}` = hanya validasi kuota total yang berlaku saat import batch. |
+| `tanggal_pendaftaran` | TEXT | Rentang tanggal pendaftaran (teks bebas, contoh: `20 Juni 2026 - 8 Agustus 2026`) |
+| `tanggal_pelaksanaan` | TEXT | Tanggal pelaksanaan wisuda |
+| `tempat_pelaksanaan` | TEXT | Lokasi pelaksanaan (opsional) |
+| `waktu_sesi_1` | TEXT | Jam Sesi 1 (opsional) |
+| `waktu_sesi_2` | TEXT | Jam Sesi 2 (opsional) |
+| `jadwal_gladi` | TEXT | Jadwal gladi bersih (opsional) |
+| `pengumuman` | TEXT | Pengumuman untuk wisudawan (opsional) |
+| `hint_pendaftaran` | TEXT | Catatan pendaftaran yang ditampilkan merah di halaman publik |
+| `waglink` | TEXT | Link Grup WhatsApp (opsional) |
+| `theme` | TEXT | URL gambar tema (opsional) |
+| `status_color` | TEXT | Kode warna tema (opsional) |
+| `link_pengumuman` | TEXT | URL file PDF pengumuman resmi di Google Drive (opsional) |
+| `tempat_pengambilan_toga` | TEXT | Lokasi pengambilan toga (opsional) |
+| `waktu_pengambilan_toga` | JSONB | Jadwal pengambilan toga per fakultas (opsional) |
+
+#### Contoh `kuota_per_fakultas`
+```json
+{
+  "Fakultas Syariah dan Hukum Islam": 150,
+  "Fakultas Tarbiyah": 200,
+  "Fakultas Ushuluddin dan Dakwah": 80,
+  "Fakultas Ekonomi dan Bisnis Islam": 180,
+  "Pascasarjana": 90
+}
+```
+> Nilai `kuota` total = 150 + 200 + 80 + 180 + 90 = **700** (dihitung dan disimpan otomatis saat admin menyimpan form Periode).
+
 ### `prodi`
 Menyimpan daftar master Fakultas, Prodi, Singkatan, dan Gelar. Digunakan untuk validasi import dan penentuan gelar otomatis.
 
@@ -222,6 +256,11 @@ Menyimpan daftar tamu undangan eksternal untuk acara wisuda.
    - `db_migration.sql` — tabel `admin_users` + `app_settings` + RLS policies
    - `perbaikan_migration.sql` — tabel `perbaikan_data` + setting `allow_perbaikan`
    - `supabase_tamu.sql` — tabel `tamu` + indeks kehadiran
+   - Kolom kuota per-fakultas (jalankan manual):
+     ```sql
+     ALTER TABLE periode_wisuda
+     ADD COLUMN IF NOT EXISTS kuota_per_fakultas jsonb DEFAULT '{}'::jsonb;
+     ```
 3. Salin kredensial ke `.env.local`:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
