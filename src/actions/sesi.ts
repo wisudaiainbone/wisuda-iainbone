@@ -64,6 +64,7 @@ export async function getSesiPerFakultas(): Promise<
   const { data, error } = await supabase
     .from('wisudawan')
     .select('fakultas, sesi')
+    .neq('nim', 'DUMMY999')
     .order('fakultas');
 
   if (error || !data) return [];

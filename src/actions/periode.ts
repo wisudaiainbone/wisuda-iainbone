@@ -29,12 +29,16 @@ export async function getActivePeriode() {
     const totalPendaftar = pendaftar ?? 0;
     const sisaKuota = Math.max(0, data.kuota - totalPendaftar);
   
+    // Hitung kuota per-fakultas (sisa)
+    const kuotaPerFakultas: Record<string, number> = data.kuota_per_fakultas || {};
+
     // Format ke bentuk yang dibutuhkan frontend
     const result = {
       id: data.id,
       nama_periode: data.nama_periode,
       status: data.status,
       kuota: data.kuota,
+      kuota_per_fakultas: kuotaPerFakultas,
       tanggal_pendaftaran: data.tanggal_pendaftaran,
       tanggal_pelaksanaan: data.tanggal_pelaksanaan,
       tempat_pelaksanaan: data.tempat_pelaksanaan,
@@ -117,9 +121,20 @@ export async function getActivePeriode() {
 
     const sisaKuota = Math.max(0, p.kuota - pendaftarAktif);
 
+    // Hitung kuota_per_fakultas dan sisa per-fakultas
+    const kuotaPerFakultas: Record<string, number> = p.kuota_per_fakultas || {};
+    const sisaPerFakultas: Record<string, number> = {};
+    for (const [fak, kuota] of Object.entries(kuotaPerFakultas)) {
+      const terpakai = fakultasBreakdownMap[fak] || 0;
+      sisaPerFakultas[fak] = Math.max(0, (kuota as number) - terpakai);
+    }
+
     return {
       ...p,
       pendaftarAktif,
+      kuota_per_fakultas: kuotaPerFakultas,
+      pendaftar_per_fakultas: fakultasBreakdownMap,
+      sisa_per_fakultas: sisaPerFakultas,
       stats: [
         { bg: "bg-emerald-800/20", icon: "Users", color: "text-emerald-700", label: "Kuota Total", value: p.kuota.toString() },
         { bg: "bg-blue-500/20", icon: "UserCheck", color: "text-blue-400", label: "Pendaftar", value: pendaftarAktif.toString(), details: pendaftarDetails },
@@ -160,13 +175,18 @@ export async function createPeriode(data: any) {
     }
     const customId = `${year}-${randomPart}`;
 
+    // Hitung kuota total dari jumlah kuota per-fakultas
+    const kuotaPerFakultas: Record<string, number> = data.kuota_per_fakultas || {};
+    const kuotaTotal = Object.values(kuotaPerFakultas).reduce((sum: number, val: any) => sum + (parseInt(val) || 0), 0);
+
       const { data: inserted, error } = await supabase
         .from('periode_wisuda')
         .insert({
           id: customId,
           nama_periode: nama_periode || data.title || 'Periode Baru',
           status: status || 'Sedang Dibuka',
-          kuota: parseInt(kuota) || 0,
+          kuota: kuotaTotal,
+          kuota_per_fakultas: kuotaPerFakultas,
           tanggal_pendaftaran,
           tanggal_pelaksanaan: tanggal_pelaksanaan || data.date,
           tempat_pelaksanaan: tempat_pelaksanaan ?? data.location ?? null,
@@ -207,12 +227,17 @@ export async function updatePeriodePengaturan(id: string, updates: any) {
       ...data_pengaturan 
     } = updates;
 
+    // Hitung kuota total dari jumlah kuota per-fakultas
+    const kuotaPerFakultas: Record<string, number> = updates.kuota_per_fakultas || {};
+    const kuotaTotal = Object.values(kuotaPerFakultas).reduce((sum: number, val: any) => sum + (parseInt(val) || 0), 0);
+
     const { error } = await supabase
       .from('periode_wisuda')
       .update({ 
         nama_periode: nama_periode || updates.title, 
         status,
-        kuota: parseInt(kuota) || 0,
+        kuota: kuotaTotal,
+        kuota_per_fakultas: kuotaPerFakultas,
         tanggal_pendaftaran,
         tanggal_pelaksanaan: tanggal_pelaksanaan || updates.date,
         tempat_pelaksanaan: tempat_pelaksanaan ?? updates.location ?? null,
@@ -230,10 +255,8 @@ export async function updatePeriodePengaturan(id: string, updates: any) {
 
     if (error) throw error;
 
-    // Bersihkan cache jika ini adalah periode yang sedang dibuka
-    if (status === 'Sedang Dibuka') {
-      await redis.del(CACHE_KEY);
-    }
+    // Bersihkan cache (selalu, karena kuota mungkin berubah)
+    await redis.del(CACHE_KEY);
     
     revalidatePath('/');
     revalidatePath('/admin/pengaturan');

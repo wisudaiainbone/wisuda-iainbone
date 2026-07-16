@@ -861,6 +861,80 @@ export async function importWisudawanBatch(data: any[]) {
       });
     }
 
+    // ─── VALIDASI KUOTA ───────────────────────────────────────────────────────
+    if (rowsToInsert.length > 0) {
+      // Ambil kuota periode aktif
+      const { data: periodeData } = await supabase
+        .from('periode_wisuda')
+        .select('kuota, kuota_per_fakultas')
+        .eq('nama_periode', namaPeriodeAktif)
+        .single();
+
+      const kuotaTotal: number = periodeData?.kuota ?? 0;
+      const kuotaPerFakultas: Record<string, number> = periodeData?.kuota_per_fakultas ?? {};
+
+      // Hitung jumlah wisudawan yang sudah ada di periode ini
+      const { count: existingCount } = await supabase
+        .from('wisudawan')
+        .select('nim', { count: 'exact', head: true })
+        .eq('periode', namaPeriodeAktif)
+        .in('status', ['Calon Wisudawan', 'Terdaftar', 'Proses', 'Selesai']);
+
+      const jumlahSekarang = existingCount ?? 0;
+      const sisaKuotaTotal = Math.max(0, kuotaTotal - jumlahSekarang);
+
+      // Potong rowsToInsert berdasarkan sisa kuota total
+      if (rowsToInsert.length > sisaKuotaTotal) {
+        const ditolak = rowsToInsert.splice(sisaKuotaTotal);
+        for (const row of ditolak) {
+          failedRows.push({ nim: row.nim, nama: row.nama_mahasiswa, reason: 'Kuota wisudawan telah terpenuhi' });
+        }
+      }
+
+      // Validasi per-fakultas (hanya jika kuota_per_fakultas terisi)
+      if (Object.keys(kuotaPerFakultas).length > 0 && rowsToInsert.length > 0) {
+        // Hitung jumlah yang sudah ada per-fakultas di periode ini
+        const { data: existingPerFakultas } = await supabase
+          .from('wisudawan')
+          .select('fakultas')
+          .eq('periode', namaPeriodeAktif)
+          .in('status', ['Calon Wisudawan', 'Terdaftar', 'Proses', 'Selesai']);
+
+        const terpakaiPerFakultas: Record<string, number> = {};
+        for (const row of (existingPerFakultas ?? [])) {
+          const fak = row.fakultas || '';
+          terpakaiPerFakultas[fak] = (terpakaiPerFakultas[fak] || 0) + 1;
+        }
+
+        // Hitung juga yang baru akan dimasukkan dari rowsToInsert
+        const akanDiinsertPerFakultas: Record<string, number> = {};
+        const rowsLolosKuotaFak: typeof rowsToInsert = [];
+
+        for (const row of rowsToInsert) {
+          const fak = row.fakultas || '';
+          const kuotaFak = kuotaPerFakultas[fak];
+
+          if (kuotaFak !== undefined) {
+            const sudahTerpakai = terpakaiPerFakultas[fak] || 0;
+            const akanDiinsert = akanDiinsertPerFakultas[fak] || 0;
+            const totalJikaLolos = sudahTerpakai + akanDiinsert + 1;
+
+            if (totalJikaLolos > kuotaFak) {
+              failedRows.push({ nim: row.nim, nama: row.nama_mahasiswa, reason: `Kuota wisudawan Fakultas ${fak} telah terpenuhi` });
+              continue;
+            }
+            akanDiinsertPerFakultas[fak] = akanDiinsert + 1;
+          }
+
+          rowsLolosKuotaFak.push(row);
+        }
+
+        // Ganti rowsToInsert dengan yang sudah lolos validasi per-fakultas
+        rowsToInsert.splice(0, rowsToInsert.length, ...rowsLolosKuotaFak);
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
     if (rowsToInsert.length > 0) {
       const { error: insertError } = await supabase
         .from('wisudawan')

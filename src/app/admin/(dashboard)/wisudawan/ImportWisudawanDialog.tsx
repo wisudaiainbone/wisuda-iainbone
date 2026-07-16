@@ -10,6 +10,7 @@ type Props = {
   userRole: string;
   unitKerja?: string | null;
   dbProdiList?: any[];
+  kuotaInfo?: any | null;
 };
 
 // Levenshtein distance helper for fuzzy matching
@@ -30,7 +31,7 @@ function levenshteinDistance(a: string, b: string): number {
   return matrix[b.length][a.length];
 }
 
-export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList = [] }: Props) {
+export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList = [], kuotaInfo }: Props) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -222,6 +223,40 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
     reader.readAsBinaryString(selectedFile);
   };
 
+  // ─── Hitung prediksi kuota dari previewData ───────────────────────────────
+  const kuotaTotal: number = kuotaInfo?.kuota ?? 0;
+  // Ambil dari stats: Pendaftar = index 1
+  const totalTerdaftarDB: number = kuotaInfo?.stats?.[1]?.value ? parseInt(kuotaInfo.stats[1].value) : 0;
+  const sisaKuotaTotal: number = Math.max(0, kuotaTotal - totalTerdaftarDB);
+  const kuotaPerFakultas: Record<string, number> = kuotaInfo?.kuota_per_fakultas ?? {};
+  const hasKuotaPerFak = Object.keys(kuotaPerFakultas).length > 0;
+
+  // Hitung berapa baris valid yang akan masuk vs ditolak karena kuota
+  const validRows = previewData.filter(r => r._isValid !== false);
+  const validCount = validRows.length;
+  const ditolakKarenaKuotaTotal = Math.max(0, validCount - sisaKuotaTotal);
+
+  // Sisa per-fakultas dari kuotaInfo
+  const sisaPerFakultas: Record<string, number> = kuotaInfo?.sisa_per_fakultas ?? {};
+  // Hitung prediksi per-fakultas
+  let ditolakKarenaKuotaFak = 0;
+  if (hasKuotaPerFak) {
+    const hitungPerFak: Record<string, number> = {};
+    validRows.slice(0, sisaKuotaTotal).forEach(row => {
+      const fak = row.fakultas?.toString().trim() || '';
+      if (kuotaPerFakultas[fak] !== undefined) {
+        const sisa = (sisaPerFakultas[fak] ?? kuotaPerFakultas[fak]) - (hitungPerFak[fak] || 0);
+        if (sisa <= 0) {
+          ditolakKarenaKuotaFak++;
+        } else {
+          hitungPerFak[fak] = (hitungPerFak[fak] || 0) + 1;
+        }
+      }
+    });
+  }
+  const totalPrediksiDitolakKuota = ditolakKarenaKuotaTotal + ditolakKarenaKuotaFak;
+  // ────────────────────────────────────────────────────────────────────────────
+
   const handleSubmit = async () => {
     const validData = previewData.filter(row => row._isValid !== false);
     
@@ -338,6 +373,61 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
                 </button>
               </div>
 
+              {/* ── Banner Kuota ── */}
+              {kuotaInfo && (
+                <div className="border border-[var(--color-border)] rounded-xl overflow-hidden">
+                  <div className="px-4 py-2.5 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)] flex items-center justify-between">
+                    <span className="text-xs font-bold text-[var(--color-text)] uppercase tracking-wider">Info Kuota — {kuotaInfo.nama_periode}</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                      sisaKuotaTotal === 0
+                        ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
+                        : sisaKuotaTotal <= 10
+                        ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                        : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                    }`}>
+                      Sisa Total: {sisaKuotaTotal.toLocaleString('id-ID')}
+                    </span>
+                  </div>
+                  <div className="px-4 py-3 grid grid-cols-3 gap-4 text-center text-sm">
+                    <div>
+                      <p className="text-[var(--color-text-muted)] text-xs mb-0.5">Kuota Total</p>
+                      <p className="font-bold text-[var(--color-text)]">{kuotaTotal.toLocaleString('id-ID')}</p>
+                    </div>
+                    <div>
+                      <p className="text-[var(--color-text-muted)] text-xs mb-0.5">Terisi</p>
+                      <p className="font-bold text-blue-600 dark:text-blue-400">{totalTerdaftarDB.toLocaleString('id-ID')}</p>
+                    </div>
+                    <div>
+                      <p className="text-[var(--color-text-muted)] text-xs mb-0.5">Sisa</p>
+                      <p className={`font-bold ${
+                        sisaKuotaTotal === 0 ? 'text-rose-600 dark:text-rose-400'
+                        : sisaKuotaTotal <= 10 ? 'text-amber-600 dark:text-amber-400'
+                        : 'text-emerald-600 dark:text-emerald-400'
+                      }`}>{sisaKuotaTotal.toLocaleString('id-ID')}</p>
+                    </div>
+                  </div>
+                  {hasKuotaPerFak && (
+                    <div className="border-t border-[var(--color-border)] px-4 py-2">
+                      <p className="text-xs font-semibold text-[var(--color-text-muted)] mb-2">Sisa Kuota Per Fakultas:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(kuotaPerFakultas).map(([fak, kuota]) => {
+                          const sisa = sisaPerFakultas[fak] ?? (kuota as number);
+                          return (
+                            <span key={fak} className={`text-xs px-2 py-1 rounded-lg border font-medium ${
+                              sisa === 0
+                                ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/40'
+                                : 'bg-[var(--color-bg-secondary)] text-[var(--color-text)] border-[var(--color-border)]'
+                            }`}>
+                              {fak.replace('Fakultas ', 'F. ')} — {sisa} sisa
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {!file ? (
                 <div
                   onDragOver={(e) => e.preventDefault()}
@@ -388,6 +478,11 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
                       {previewData.filter(r => r._isValid === false).length > 0 && (
                         <span className="flex items-center gap-1 text-rose-600 dark:text-rose-400">
                           <AlertCircle size={14} /> {previewData.filter(r => r._isValid === false).length} Ditolak/Dilewati
+                        </span>
+                      )}
+                      {totalPrediksiDitolakKuota > 0 && (
+                        <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                          <AlertCircle size={14} /> {totalPrediksiDitolakKuota} Ditolak (Kuota)
                         </span>
                       )}
                     </div>

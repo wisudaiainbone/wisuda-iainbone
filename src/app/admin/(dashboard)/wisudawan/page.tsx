@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getAllWisudawan } from "@/actions/wisudawan";
 import { getProdiList } from "@/actions/prodi";
 import { getSetting } from "@/actions/settings";
+import { getActivePeriode } from "@/actions/periode";
 import { UserCheck, GraduationCap, Clock } from "lucide-react";
 import { getAdminSession } from "@/actions/adminAuth";
 import WisudawanContainer from "./WisudawanContainer";
@@ -12,13 +13,14 @@ type PageProps = {
 
 export default async function AdminWisudawanPage(props: PageProps) {
   const adminSession = await getAdminSession();
-  const [allWisudawan, dbProdiList, allowDeleteSetting] = await Promise.all([
+  const [allWisudawan, dbProdiList, allowDeleteSetting, activePeriode] = await Promise.all([
     getAllWisudawan({
       role: adminSession?.role,
       unitKerja: adminSession?.unit_kerja
     }),
     getProdiList(),
     getSetting('allow_delete_wisudawan', 'false'),
+    getActivePeriode(),
   ]);
 
   const allowDeleteWisudawan = allowDeleteSetting === 'true';
@@ -83,6 +85,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
           statusList={statusList}
           adminSession={adminSession}
           allowDeleteWisudawan={allowDeleteWisudawan}
+          kuotaInfo={activePeriode}
         />
       </Suspense>
 

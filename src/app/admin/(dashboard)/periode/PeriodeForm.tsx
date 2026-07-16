@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { updatePeriodePengaturan, createPeriode } from "@/actions/periode";
 import { Save } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
+import { FAKULTAS_MAP } from "@/lib/fakultas";
+
+const FAKULTAS_LIST = Object.keys(FAKULTAS_MAP);
 
 export default function PeriodeForm({ initialData }: { initialData: any }) {
   const [formData, setFormData] = useState<any>(initialData);
@@ -11,6 +14,20 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadText, setUploadText] = useState('');
   const { showToast } = useToast();
+
+  // State kuota per-fakultas — diinisialisasi dari DB atau kosong
+  const initKuotaFak = (): Record<string, number> => {
+    const fromDb = initialData?.kuota_per_fakultas;
+    if (fromDb && typeof fromDb === 'object') return fromDb;
+    return {};
+  };
+  const [kuotaPerFakultas, setKuotaPerFakultas] = useState<Record<string, number>>(initKuotaFak);
+
+  // Hitung total kuota otomatis
+  const kuotaTotal = useMemo(
+    () => Object.values(kuotaPerFakultas).reduce((sum, v) => sum + (parseInt(v as any) || 0), 0),
+    [kuotaPerFakultas]
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +51,7 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
 
       const { id, created_at, updated_at, stats, title, date, location, venue, day, session1, session2, gladi, ...cleanData } = formData;
       cleanData.link_pengumuman = finalLink;
+      cleanData.kuota_per_fakultas = kuotaPerFakultas;
       
       let res;
       if (formData.id) {
@@ -63,18 +81,18 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 space-y-4">
-        <div>
-          <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Nama Periode / Judul</label>
-          <input
-            type="text"
-            value={formData.nama_periode || ''}
-            onChange={(e) => setFormData({ ...formData, nama_periode: e.target.value })}
-            className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
-            required
-          />
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Nama Periode / Judul</label>
+            <input
+              type="text"
+              value={formData.nama_periode || ''}
+              onChange={(e) => setFormData({ ...formData, nama_periode: e.target.value })}
+              className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
+              required
+            />
+          </div>
+
           <div>
             <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Status</label>
             <select
@@ -89,17 +107,52 @@ export default function PeriodeForm({ initialData }: { initialData: any }) {
               <option value="Selesai">Selesai</option>
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-[var(--color-text)] mb-2">Kuota Mahasiswa</label>
-            <input
-              type="number"
-              value={formData.kuota || ''}
-              onChange={(e) => setFormData({ ...formData, kuota: parseInt(e.target.value) || 0 })}
-              className="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none"
-              required
-            />
-          </div>
         </div>
+
+        {/* ── Kuota Per Fakultas ── */}
+        <div>
+          <label className="block text-sm font-semibold text-[var(--color-text)] mb-3">Kuota Per Fakultas</label>
+          <div className="border border-[var(--color-border)] rounded-xl overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
+                  <th className="px-4 py-2.5 text-left font-semibold text-[var(--color-text-muted)] w-full">Fakultas / Unit</th>
+                  <th className="px-4 py-2.5 text-right font-semibold text-[var(--color-text-muted)] whitespace-nowrap">Kuota</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--color-border)]">
+                {FAKULTAS_LIST.map((fak) => (
+                  <tr key={fak} className="hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
+                    <td className="px-4 py-2.5 text-[var(--color-text)]">
+                      <span className="font-medium">{FAKULTAS_MAP[fak].singkatan}</span>
+                      <span className="text-[var(--color-text-muted)] ml-2 text-xs">{fak}</span>
+                    </td>
+                    <td className="px-4 py-2 text-right">
+                      <input
+                        type="number"
+                        min={0}
+                        value={kuotaPerFakultas[fak] ?? ''}
+                        onChange={(e) =>
+                          setKuotaPerFakultas((prev) => ({ ...prev, [fak]: parseInt(e.target.value) || 0 }))
+                        }
+                        className="w-24 px-3 py-1.5 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] text-right focus:ring-2 focus:ring-emerald-500/50 outline-none"
+                        placeholder="0"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="bg-emerald-50 dark:bg-emerald-900/20 border-t-2 border-emerald-200 dark:border-emerald-800">
+                  <td className="px-4 py-2.5 font-bold text-emerald-700 dark:text-emerald-400">Total Kuota (Otomatis)</td>
+                  <td className="px-4 py-2.5 text-right font-bold text-emerald-700 dark:text-emerald-400 text-base">{kuotaTotal.toLocaleString('id-ID')}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <p className="text-xs text-[var(--color-text-muted)] mt-1.5">Total kuota dihitung otomatis dari jumlah kuota seluruh fakultas.</p>
+        </div>
+
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>

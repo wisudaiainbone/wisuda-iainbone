@@ -20,6 +20,7 @@ interface WisudawanContainerProps {
   statusList: string[];
   adminSession: any;
   allowDeleteWisudawan: boolean;
+  kuotaInfo?: any;
 }
 
 export default function WisudawanContainer({
@@ -30,6 +31,7 @@ export default function WisudawanContainer({
   statusList,
   adminSession,
   allowDeleteWisudawan,
+  kuotaInfo,
 }: WisudawanContainerProps) {
   const [filters, setFilters] = useState({
     q: "",
@@ -87,7 +89,7 @@ export default function WisudawanContainer({
           filteredItems={totalItems}
           totalItems={allWisudawan.length}
         >
-          <ImportWisudawanDialog userRole={adminSession?.role || ''} unitKerja={adminSession?.unit_kerja} dbProdiList={dbProdiList} />
+          <ImportWisudawanDialog userRole={adminSession?.role || ''} unitKerja={adminSession?.unit_kerja} dbProdiList={dbProdiList} kuotaInfo={kuotaInfo} />
           <ExportDropdown data={filteredList} filename="data-wisudawan" userRole={adminSession?.role} />
           <ExportDaftarButton data={filteredList} filename="daftar-wisudawan" />
           
