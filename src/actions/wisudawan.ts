@@ -982,27 +982,38 @@ export async function deleteWisudawan(nim: string) {
       }
     }
 
-    // Ambil data foto sebelum dihapus
-    const { data: mhsData } = await supabase.from('wisudawan').select('foto').eq('nim', nim).single();
+    // Pada soft delete, kita tidak menghapus dari DB dan tidak menghapus foto GDrive
+    // Update log_status juga agar tercatat
+    const now = new Date().toISOString();
+    
+    // Ambil log_status saat ini jika diperlukan, namun untuk sederhana kita tambahkan log manual
+    const { data: mhsLog } = await supabase.from('wisudawan').select('log_status, status').eq('nim', nim).single();
+    let currentLogs = [];
+    if (mhsLog && mhsLog.log_status && Array.isArray(mhsLog.log_status)) {
+      currentLogs = mhsLog.log_status;
+    }
+    const previousStatus = mhsLog?.status || 'Tidak Diketahui';
 
-    const { error } = await supabase.from('wisudawan').delete().eq('nim', nim);
+    currentLogs.push({
+      timestamp: now,
+      status: 'Dihapus',
+      by: 'admin',
+      note: `Dihapus oleh admin (${adminData.role}). Status sebelumnya: ${previousStatus}`
+    });
+
+    const { error } = await supabase.from('wisudawan').update({ 
+      status: 'Dihapus',
+      log_status: currentLogs 
+    }).eq('nim', nim);
     
     if (error) {
-      console.error('Error deleting wisudawan:', error);
+      console.error('Error soft deleting wisudawan:', error);
       return { success: false, error: error.message };
     }
 
-    // Jika ada foto, hapus dari Google Drive
-    if (mhsData?.foto) {
-      const { extractGDriveFileId, deleteFotoFromGDrive } = await import('@/lib/uploadFoto');
-      const fileId = extractGDriveFileId(mhsData.foto);
-      if (fileId) {
-        // Hapus secara background tanpa memblokir respon
-        deleteFotoFromGDrive(fileId).catch(err => {
-          console.error(`Gagal menghapus foto wisudawan ${nim} dari GDrive:`, err);
-        });
-      }
-    }
+    // (Hapus bagian GDrive karena ini soft delete)
+
+
 
     // Invalidate cache
     try {
@@ -1039,34 +1050,18 @@ export async function deleteWisudawanBulk(nims: string[]) {
       }
     }
 
-    // Ambil data foto sebelum dihapus
-    const { data: mhsDataList } = await supabase.from('wisudawan').select('nim, foto').in('nim', nims);
-
-    // Hapus data massal
-    const { error } = await supabase.from('wisudawan').delete().in('nim', nims);
+    // Pada soft delete, kita hanya update status
+    const now = new Date().toISOString();
+    
+    // Kita lakukan update tanpa menambah log kompleks untuk bulk agar cepat
+    const { error } = await supabase.from('wisudawan').update({ status: 'Dihapus' }).in('nim', nims);
     
     if (error) {
-      console.error('Error deleting bulk wisudawan:', error);
+      console.error('Error soft deleting bulk wisudawan:', error);
       return { success: false, error: error.message };
     }
 
-    // Hapus foto dari Google Drive
-    if (mhsDataList && mhsDataList.length > 0) {
-      const { extractGDriveFileId, deleteFotoFromGDrive } = await import('@/lib/uploadFoto');
-      
-      const fileIdsToDelete = mhsDataList
-        .filter(mhs => mhs.foto)
-        .map(mhs => extractGDriveFileId(mhs.foto!))
-        .filter(Boolean) as string[];
 
-      if (fileIdsToDelete.length > 0) {
-        // Hapus secara background
-        Promise.all(fileIdsToDelete.map(fileId => deleteFotoFromGDrive(fileId)))
-          .catch(err => {
-            console.error(`Gagal menghapus beberapa foto wisudawan dari GDrive:`, err);
-          });
-      }
-    }
 
     // Invalidate cache
     try {
@@ -1089,6 +1084,221 @@ export async function deleteWisudawanBulk(nims: string[]) {
   } catch (error: any) {
     console.error('Error in deleteWisudawanBulk:', error);
     return { success: false, error: error.message || 'Terjadi kesalahan saat menghapus.' };
+  }
+}
+
+export async function hardDeleteWisudawan(nim: string) {
+  try {
+    const adminData = await getAdminSession();
+    if (!adminData) return { success: false, error: 'Unauthorized' };
+
+    // Hanya superadmin yang boleh hard delete
+    if (adminData.role !== 'superadmin') {
+      return { success: false, error: 'Hanya Super Admin yang diizinkan melakukan hapus permanen.' };
+    }
+
+    // Ambil data foto sebelum dihapus
+    const { data: mhsData } = await supabase.from('wisudawan').select('foto').eq('nim', nim).single();
+
+    const { error } = await supabase.from('wisudawan').delete().eq('nim', nim);
+    
+    if (error) {
+      console.error('Error hard deleting wisudawan:', error);
+      return { success: false, error: error.message };
+    }
+
+    // Jika ada foto, hapus dari Google Drive
+    if (mhsData?.foto) {
+      const { extractGDriveFileId, deleteFotoFromGDrive } = await import('@/lib/uploadFoto');
+      const fileId = extractGDriveFileId(mhsData.foto);
+      if (fileId) {
+        deleteFotoFromGDrive(fileId).catch(err => {
+          console.error(`Gagal menghapus foto wisudawan ${nim} dari GDrive:`, err);
+        });
+      }
+    }
+
+    try {
+      await redis.del(`wisudawan:${nim}`);
+      await invalidateAllDashboardCache();
+    } catch (err) {
+      console.error("Redis del error:", err);
+    }
+    revalidatePath(`/admin/wisudawan/${nim}`);
+    revalidatePath(`/wisudawan/${nim}`);
+    revalidatePath('/admin/wisudawan');
+    revalidatePath('/admin');
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error in hardDeleteWisudawan:', error);
+    return { success: false, error: error.message || 'Terjadi kesalahan saat menghapus permanen.' };
+  }
+}
+
+export async function hardDeleteWisudawanBulk(nims: string[]) {
+  try {
+    if (!nims || nims.length === 0) return { success: true };
+
+    const adminData = await getAdminSession();
+    if (!adminData) return { success: false, error: 'Unauthorized' };
+
+    if (adminData.role !== 'superadmin') {
+      return { success: false, error: 'Hanya Super Admin yang diizinkan melakukan hapus permanen.' };
+    }
+
+    // Ambil data foto sebelum dihapus
+    const { data: mhsDataList } = await supabase.from('wisudawan').select('nim, foto').in('nim', nims);
+
+    // Hapus data massal
+    const { error } = await supabase.from('wisudawan').delete().in('nim', nims);
+    
+    if (error) {
+      console.error('Error hard deleting bulk wisudawan:', error);
+      return { success: false, error: error.message };
+    }
+
+    // Hapus foto dari Google Drive
+    if (mhsDataList && mhsDataList.length > 0) {
+      const { extractGDriveFileId, deleteFotoFromGDrive } = await import('@/lib/uploadFoto');
+      
+      const fileIdsToDelete = mhsDataList
+        .filter(mhs => mhs.foto)
+        .map(mhs => extractGDriveFileId(mhs.foto!))
+        .filter(Boolean) as string[];
+
+      if (fileIdsToDelete.length > 0) {
+        Promise.all(fileIdsToDelete.map(fileId => deleteFotoFromGDrive(fileId)))
+          .catch(err => {
+            console.error(`Gagal menghapus beberapa foto wisudawan dari GDrive:`, err);
+          });
+      }
+    }
+
+    try {
+      const pipeline = redis.pipeline();
+      nims.forEach(nim => pipeline.del(`wisudawan:${nim}`));
+      await pipeline.exec();
+      await invalidateAllDashboardCache();
+    } catch (err) {
+      console.error("Redis del pipeline error:", err);
+    }
+
+    nims.forEach(nim => {
+      revalidatePath(`/admin/wisudawan/${nim}`);
+      revalidatePath(`/wisudawan/${nim}`);
+    });
+    revalidatePath('/admin/wisudawan');
+    revalidatePath('/admin');
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error in hardDeleteWisudawanBulk:', error);
+    return { success: false, error: error.message || 'Terjadi kesalahan saat menghapus permanen.' };
+  }
+}
+
+export async function restoreWisudawan(nim: string) {
+  try {
+    const adminData = await getAdminSession();
+    if (!adminData) return { success: false, error: 'Unauthorized' };
+
+    if (adminData.role === 'admin_unit' && adminData.unit_kerja) {
+      const { data: mhs } = await supabase.from('wisudawan').select('fakultas').eq('nim', nim).single();
+      if (mhs?.fakultas !== adminData.unit_kerja) {
+        return { success: false, error: 'Anda tidak memiliki izin memulihkan data dari fakultas lain.' };
+      }
+    }
+
+    const now = new Date().toISOString();
+    
+    // Asumsi mengembalikan ke 'Calon Wisudawan' agar aman, atau Anda bisa melacak dari log_status
+    // Untuk sederhana, kembalikan ke 'Calon Wisudawan'
+    const newStatus = 'Calon Wisudawan';
+
+    const { data: mhsLog } = await supabase.from('wisudawan').select('log_status').eq('nim', nim).single();
+    let currentLogs = [];
+    if (mhsLog && mhsLog.log_status && Array.isArray(mhsLog.log_status)) {
+      currentLogs = mhsLog.log_status;
+    }
+    
+    currentLogs.push({
+      timestamp: now,
+      status: newStatus,
+      by: 'admin',
+      note: `Data dipulihkan oleh admin (${adminData.role})`
+    });
+
+    const { error } = await supabase.from('wisudawan').update({ 
+      status: newStatus,
+      log_status: currentLogs 
+    }).eq('nim', nim);
+    
+    if (error) {
+      console.error('Error restoring wisudawan:', error);
+      return { success: false, error: error.message };
+    }
+
+    try {
+      await redis.del(`wisudawan:${nim}`);
+      await invalidateAllDashboardCache();
+    } catch (err) {
+      console.error("Redis del error:", err);
+    }
+    revalidatePath(`/admin/wisudawan/${nim}`);
+    revalidatePath(`/wisudawan/${nim}`);
+    revalidatePath('/admin/wisudawan');
+    revalidatePath('/admin');
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error in restoreWisudawan:', error);
+    return { success: false, error: error.message || 'Terjadi kesalahan saat memulihkan.' };
+  }
+}
+
+export async function restoreWisudawanBulk(nims: string[]) {
+  try {
+    if (!nims || nims.length === 0) return { success: true };
+
+    const adminData = await getAdminSession();
+    if (!adminData) return { success: false, error: 'Unauthorized' };
+
+    if (adminData.role === 'admin_unit' && adminData.unit_kerja) {
+      const { data: mhsList } = await supabase.from('wisudawan').select('fakultas').in('nim', nims);
+      const isAllSameFakultas = mhsList?.every(m => m.fakultas === adminData.unit_kerja);
+      if (!isAllSameFakultas) {
+        return { success: false, error: 'Anda tidak memiliki izin memulihkan sebagian data dari fakultas lain.' };
+      }
+    }
+
+    const { error } = await supabase.from('wisudawan').update({ status: 'Calon Wisudawan' }).in('nim', nims);
+    
+    if (error) {
+      console.error('Error restoring bulk wisudawan:', error);
+      return { success: false, error: error.message };
+    }
+
+    try {
+      const pipeline = redis.pipeline();
+      nims.forEach(nim => pipeline.del(`wisudawan:${nim}`));
+      await pipeline.exec();
+      await invalidateAllDashboardCache();
+    } catch (err) {
+      console.error("Redis del pipeline error:", err);
+    }
+
+    nims.forEach(nim => {
+      revalidatePath(`/admin/wisudawan/${nim}`);
+      revalidatePath(`/wisudawan/${nim}`);
+    });
+    revalidatePath('/admin/wisudawan');
+    revalidatePath('/admin');
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error in restoreWisudawanBulk:', error);
+    return { success: false, error: error.message || 'Terjadi kesalahan saat memulihkan.' };
   }
 }
 

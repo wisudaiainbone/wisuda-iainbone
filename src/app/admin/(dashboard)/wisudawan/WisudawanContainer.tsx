@@ -57,7 +57,14 @@ export default function WisudawanContainer({
       const matchQ = w.nama_mahasiswa.toLowerCase().includes(filters.q.toLowerCase()) || w.nim.toLowerCase().includes(filters.q.toLowerCase());
       const matchFakultas = filters.fakultas ? w.fakultas === filters.fakultas : true;
       const matchProdi = filters.prodi ? w.prodi === filters.prodi : true;
-      const matchStatus = filters.status ? w.status === filters.status : true;
+      // By default (if no status filter), hide 'Dihapus' data!
+      let matchStatus = true;
+      if (filters.status) {
+        matchStatus = w.status === filters.status;
+      } else {
+        matchStatus = w.status !== 'Dihapus';
+      }
+
       const matchToga = !filters.toga ? true : filters.toga === 'sudah' ? !!w.toga : !w.toga;
       const matchHadir = !filters.hadir ? true : filters.hadir === 'sudah' ? !!w.waktu_hadir : !w.waktu_hadir;
       const matchAmbilToga = !filters.ambilToga ? true : filters.ambilToga === 'sudah' ? !!w.waktu_toga : !w.waktu_toga;
@@ -84,7 +91,7 @@ export default function WisudawanContainer({
         <WisudawanSearch 
           fakultasList={fakultasList} 
           prodiList={prodiList} 
-          statusList={statusList}
+          statusList={statusList.includes('Dihapus') ? statusList : [...statusList, 'Dihapus']}
           onSearch={handleSearch}
           filteredItems={totalItems}
           totalItems={allWisudawan.length}
@@ -115,6 +122,7 @@ export default function WisudawanContainer({
         showToga={showToga}
         adminSession={adminSession}
         allowDeleteWisudawan={allowDeleteWisudawan}
+        currentStatusFilter={filters.status}
         onPageChange={setCurrentPage}
       />
     </div>

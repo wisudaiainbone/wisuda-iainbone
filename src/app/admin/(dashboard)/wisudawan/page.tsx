@@ -25,13 +25,15 @@ export default async function AdminWisudawanPage(props: PageProps) {
 
   const allowDeleteWisudawan = allowDeleteSetting === 'true';
 
-  // Extract unique lists for dropdowns
+  // Extract unique lists for dropdowns, excluding 'Dihapus' from the normal status list so it doesn't mess up normal filters unless handled separately
   const fakultasList = Array.from(new Set(allWisudawan.map(w => w.fakultas).filter(Boolean))).sort();
   const prodiList = Array.from(new Set(allWisudawan.map(w => w.prodi).filter(Boolean))).sort();
   const statusList = Array.from(new Set(allWisudawan.map(w => w.status).filter(Boolean))).sort();
 
-  const totalPendaftar = allWisudawan.filter(w => Boolean(w.terdaftar && w.terdaftar !== 'false' && w.terdaftar !== '0')).length;
-  const belumMendaftar = allWisudawan.length - totalPendaftar;
+  // Filter out Dihapus for quick stats
+  const activeWisudawan = allWisudawan.filter(w => w.status !== 'Dihapus');
+  const totalPendaftar = activeWisudawan.filter(w => Boolean(w.terdaftar && w.terdaftar !== 'false' && w.terdaftar !== '0')).length;
+  const belumMendaftar = activeWisudawan.length - totalPendaftar;
 
   return (
     <div className="space-y-6">
@@ -47,7 +49,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
               <span className="sm:hidden">Data</span>
               <span className="hidden sm:inline">Total Data Periode Ini</span>
             </p>
-            <p className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-300 font-mono">{allWisudawan.length}</p>
+            <p className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-300 font-mono">{activeWisudawan.length}</p>
           </div>
         </div>
         <div className="bg-emerald-50 border border-emerald-100 dark:bg-emerald-900/10 dark:border-emerald-800/30 p-2 sm:p-4 rounded-xl flex items-center justify-center sm:justify-start gap-4">

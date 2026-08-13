@@ -2,15 +2,17 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Eye, Check, X, User, Trash2, Loader2 } from "lucide-react";
+import { Eye, Check, X, User, Trash2, Loader2, RotateCcw } from "lucide-react";
 import ImageModal from "./ImageModal";
 import ResetPasswordButton from "./ResetPasswordButton";
 import DeleteWisudawanButton from "./DeleteWisudawanButton";
+import RestoreWisudawanButton from "./RestoreWisudawanButton";
+import HardDeleteWisudawanButton from "./HardDeleteWisudawanButton";
 import WisudawanTableRow from "./WisudawanTableRow";
 import WisudawanMobileCard from "./WisudawanMobileCard";
 import Pagination from "@/components/ui/Pagination";
 import { getFakultasData } from "@/lib/fakultas";
-import { deleteWisudawanBulk } from "@/actions/wisudawan";
+import { deleteWisudawanBulk, hardDeleteWisudawanBulk, restoreWisudawanBulk } from "@/actions/wisudawan";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 interface WisudawanTableClientProps {
@@ -23,6 +25,7 @@ interface WisudawanTableClientProps {
   showToga: boolean;
   adminSession: any;
   allowDeleteWisudawan: boolean;
+  currentStatusFilter?: string;
   onPageChange?: (page: number) => void;
 }
 
@@ -36,11 +39,13 @@ export default function WisudawanTableClient({
   showToga,
   adminSession,
   allowDeleteWisudawan,
+  currentStatusFilter,
   onPageChange,
 }: WisudawanTableClientProps) {
   const [selectedNims, setSelectedNims] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
   const [showConfirmBulk, setShowConfirmBulk] = useState(false);
+  const [bulkActionType, setBulkActionType] = useState<'softDelete'|'hardDelete'|'restore'>('softDelete');
 
   const canDelete = 
     adminSession?.role === 'superadmin' || 
@@ -70,17 +75,27 @@ export default function WisudawanTableClient({
     }
   };
 
-  const handleBulkDelete = () => {
+  const handleBulkAction = () => {
     startTransition(async () => {
-      const res = await deleteWisudawanBulk(selectedNims);
+      let res;
+      if (bulkActionType === 'restore') {
+        res = await restoreWisudawanBulk(selectedNims);
+      } else if (bulkActionType === 'hardDelete') {
+        res = await hardDeleteWisudawanBulk(selectedNims);
+      } else {
+        res = await deleteWisudawanBulk(selectedNims);
+      }
+      
       if (res.success) {
         setSelectedNims([]);
       } else {
-        alert(`Gagal menghapus: ${res.error}`);
+        alert(`Aksi massal gagal: ${res.error}`);
       }
       setShowConfirmBulk(false);
     });
   };
+
+  const isFilterDihapus = currentStatusFilter === 'Dihapus';
 
   return (
     <div className="space-y-4">
@@ -103,14 +118,37 @@ export default function WisudawanTableClient({
             >
               Batal
             </button>
-            <button
-              onClick={() => setShowConfirmBulk(true)}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors disabled:opacity-50"
-              disabled={isPending}
-            >
-              {isPending ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-              Hapus Terpilih
-            </button>
+            {isFilterDihapus ? (
+              <>
+                <button
+                  onClick={() => { setBulkActionType('restore'); setShowConfirmBulk(true); }}
+                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors disabled:opacity-50"
+                  disabled={isPending}
+                >
+                  {isPending && bulkActionType === 'restore' ? <Loader2 size={14} className="animate-spin" /> : <RotateCcw size={14} />}
+                  Pulihkan Terpilih
+                </button>
+                {adminSession?.role === 'superadmin' && (
+                  <button
+                    onClick={() => { setBulkActionType('hardDelete'); setShowConfirmBulk(true); }}
+                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors disabled:opacity-50"
+                    disabled={isPending}
+                  >
+                    {isPending && bulkActionType === 'hardDelete' ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                    Hapus Permanen
+                  </button>
+                )}
+              </>
+            ) : (
+              <button
+                onClick={() => { setBulkActionType('softDelete'); setShowConfirmBulk(true); }}
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors disabled:opacity-50"
+                disabled={isPending}
+              >
+                {isPending && bulkActionType === 'softDelete' ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                Hapus Terpilih
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -287,7 +325,14 @@ export default function WisudawanTableClient({
                         {w.password && (
                           <ResetPasswordButton nim={w.nim} nama={w.nama_mahasiswa} />
                         )}
-                        <DeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} allowDeleteWisudawan={allowDeleteWisudawan} />
+                        {(isFilterDihapus || w.status === 'Dihapus') ? (
+                          <>
+                            <RestoreWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} />
+                            <HardDeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} />
+                          </>
+                        ) : (
+                          <DeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} allowDeleteWisudawan={allowDeleteWisudawan} />
+                        )}
                       </div>
                     </td>
                   </WisudawanTableRow>
@@ -428,7 +473,14 @@ export default function WisudawanTableClient({
                   {w.password && (
                     <ResetPasswordButton nim={w.nim} nama={w.nama_mahasiswa} />
                   )}
-                  <DeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} allowDeleteWisudawan={allowDeleteWisudawan} />
+                  {(isFilterDihapus || w.status === 'Dihapus') ? (
+                    <>
+                      <RestoreWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} />
+                      <HardDeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} />
+                    </>
+                  ) : (
+                    <DeleteWisudawanButton nim={w.nim} nama={w.nama_mahasiswa} userRole={adminSession?.role || ''} allowDeleteWisudawan={allowDeleteWisudawan} />
+                  )}
                 </div>
               </div>
               
@@ -457,10 +509,16 @@ export default function WisudawanTableClient({
       <ConfirmDialog
         isOpen={showConfirmBulk}
         onClose={() => setShowConfirmBulk(false)}
-        onConfirm={handleBulkDelete}
-        title="Hapus Data Massal"
-        message={`Yakin ingin menghapus ${selectedNims.length} data wisudawan yang belum mendaftar? Foto yang terlampir akan ikut terhapus permanen.`}
-        confirmText="Hapus Permanen"
+        onConfirm={handleBulkAction}
+        title={bulkActionType === 'restore' ? "Pulihkan Data Massal" : bulkActionType === 'hardDelete' ? "Hapus Permanen Massal" : "Hapus Data Massal"}
+        message={
+          bulkActionType === 'restore'
+            ? `Yakin ingin memulihkan ${selectedNims.length} data wisudawan? Data akan kembali ke status Calon Wisudawan.`
+            : bulkActionType === 'hardDelete'
+            ? `Yakin ingin menghapus PERMANEN ${selectedNims.length} data wisudawan? Data dan foto yang terlampir akan terhapus dan tidak bisa dikembalikan.`
+            : `Yakin ingin menghapus ${selectedNims.length} data wisudawan yang belum mendaftar?`
+        }
+        confirmText={bulkActionType === 'restore' ? "Pulihkan" : bulkActionType === 'hardDelete' ? "Hapus Permanen" : "Hapus Data"}
         isLoading={isPending}
       />
     </div>
