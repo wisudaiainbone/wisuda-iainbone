@@ -21,6 +21,8 @@ export type CertData = {
   predikat: string;
   prestasiAkd: string;
   periode: string;
+  /** Opsional: override konteks sebutan (misal "Prodi Ekonomi Syariah" untuk sertifikat Prodi) */
+  konteks?: string;
 };
 
 export type CertSettings = {
@@ -196,9 +198,14 @@ const styles = StyleSheet.create({
 });
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-function getSebutan(award: string, fakultas: string): string {
+function getSebutan(award: string, fakultas: string, konteks?: string): string {
   if (award === "Institut") {
     return "Terbaik Institusi Institut Agama Islam Negeri Bone";
+  }
+
+  // Jika konteks diisi (misal "Prodi Ekonomi Syariah"), gunakan langsung
+  if (konteks) {
+    return `Terbaik ${award} ${konteks}`;
   }
 
   let fakultasStr = fakultas;
@@ -214,7 +221,7 @@ function getSebutan(award: string, fakultas: string): string {
 
 // ─── Single Certificate Document ─────────────────────────────────────────────
 export function CertificateDocument({ cert, settings, logoBase64, tempatWisuda, tanggalWisuda }: Props) {
-  const sebutanLabel = getSebutan(cert.prestasiAkd, cert.fakultas || "");
+  const sebutanLabel = getSebutan(cert.prestasiAkd, cert.fakultas || "", cert.konteks);
 
   const ipkFormatted = cert.ipk
     ? parseFloat(cert.ipk.replace(",", ".")).toFixed(2)

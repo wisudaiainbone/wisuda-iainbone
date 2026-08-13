@@ -7,7 +7,9 @@ type Props = {
   initialTab: string;
   akademikControlsNode: React.ReactNode;
   akademikActionButtonsNode?: React.ReactNode;
+  prodiActionButtonsNode?: React.ReactNode;
   akademikContentNode: React.ReactNode;
+  prodiContentNode: React.ReactNode;
   organisasiContentNode: React.ReactNode;
 };
 
@@ -15,7 +17,9 @@ export default function PrestasiClientWrapper({
   initialTab,
   akademikControlsNode,
   akademikActionButtonsNode,
+  prodiActionButtonsNode,
   akademikContentNode,
+  prodiContentNode,
   organisasiContentNode,
 }: Props) {
   const router = useRouter();
@@ -56,6 +60,17 @@ export default function PrestasiClientWrapper({
               <span className="sm:hidden">Akademik</span>
             </button>
             <button
+              onClick={() => handleTabChange("prodi")}
+              className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${
+                activeTab === "prodi"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-[var(--color-surface)] sm:bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)] border sm:border-transparent border-[var(--color-border)]"
+              }`}
+            >
+              <span className="hidden sm:inline">Prestasi Prodi</span>
+              <span className="sm:hidden">Prodi</span>
+            </button>
+            <button
               onClick={() => handleTabChange("organisasi")}
               className={`flex-1 sm:flex-none flex items-center justify-center px-5 sm:px-4 h-[42px] sm:h-[38px] text-sm font-bold rounded-full transition-colors ${
                 activeTab === "organisasi"
@@ -75,11 +90,13 @@ export default function PrestasiClientWrapper({
 
           {/* Action Buttons (Generate, Slide, Print) under the filter on mobile */}
           {activeTab === "akademik" && akademikActionButtonsNode}
+          {activeTab === "prodi" && prodiActionButtonsNode}
         </div>
       </div>
 
       <div className="flex flex-col gap-6">
         {activeTab === "akademik" && akademikContentNode}
+        {activeTab === "prodi" && prodiContentNode}
         {activeTab === "organisasi" && organisasiContentNode}
       </div>
     </div>

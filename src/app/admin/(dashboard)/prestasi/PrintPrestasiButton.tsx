@@ -14,9 +14,11 @@ type Props = {
   settings: CertSettings;
   tempatWisuda: string;
   tanggalWisuda: string;
+  /** 'akademik' (default): gunakan prestasi_akd & konteks Fakultas. 'prodi': gunakan prestasi_prodi & konteks Prodi */
+  mode?: 'akademik' | 'prodi';
 };
 
-export default function PrintPrestasiButton({ data, periode, settings, tempatWisuda, tanggalWisuda }: Props) {
+export default function PrintPrestasiButton({ data, periode, settings, tempatWisuda, tanggalWisuda, mode = 'akademik' }: Props) {
   const [isPrinting, setIsPrinting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [total, setTotal] = useState(0);
@@ -26,10 +28,13 @@ export default function PrintPrestasiButton({ data, periode, settings, tempatWis
     try {
       setIsPrinting(true);
       
-      // Filter data: we only want to print for students who actually have `prestasi_akd` assigned.
-      // (This means they are in the top 3 or Institut best).
+      // Filter dan map data berdasarkan mode
+      const isProdiMode = mode === 'prodi';
       const certDataList: CertData[] = data
-        .filter(w => w.prestasi_akd && w.prestasi_akd.trim() !== '')
+        .filter(w => {
+          const val = isProdiMode ? w.prestasi_prodi : w.prestasi_akd;
+          return val && val.trim() !== '';
+        })
         .map(w => ({
           nim: w.nim,
           namaMahasiswa: w.nama_mahasiswa,
@@ -38,8 +43,11 @@ export default function PrintPrestasiButton({ data, periode, settings, tempatWis
           fakultas: w.fakultas || "",
           ipk: w.ipk || "0",
           predikat: w.predikat || "-",
-          prestasiAkd: w.prestasi_akd,
-          periode: w.periode || periode
+          prestasiAkd: isProdiMode ? w.prestasi_prodi : w.prestasi_akd,
+          periode: w.periode || periode,
+          // Mode Prodi: set konteks ke "Prodi {nama_prodi}" agar sertifikat berbunyi
+          // "Terbaik Kedua Prodi Ekonomi Syariah" bukan "Terbaik Kedua Fakultas ..."
+          konteks: isProdiMode && w.prodi ? `Prodi ${w.prodi}` : undefined,
         }));
 
       if (certDataList.length === 0) {
@@ -77,7 +85,9 @@ export default function PrintPrestasiButton({ data, periode, settings, tempatWis
         
         for (const part of parts) {
           const safeNama = certInfo.namaMahasiswa.replace(/[^a-zA-Z0-9_\-\.]/g, '_');
-          const fileName = `Sertifikat-AKD_${certInfo.fakultas || 'Fakultas'}_${part}_${certInfo.nim}_${safeNama}.pdf`
+          const konteksSlug = (certInfo.konteks || certInfo.fakultas || 'Fakultas').replace(/[^a-zA-Z0-9_\-\.]/g, '_');
+          const prefix = mode === 'prodi' ? 'Sertifikat-PRODI' : 'Sertifikat-AKD';
+          const fileName = `${prefix}_${konteksSlug}_${part}_${certInfo.nim}_${safeNama}.pdf`
             .replace(/[^a-zA-Z0-9_\-\.]/g, '_'); // sanitize
 
           // Buat salinan certInfo dengan prestasiAkd yang spesifik untuk halaman ini
@@ -100,9 +110,9 @@ export default function PrintPrestasiButton({ data, periode, settings, tempatWis
         setProgress(i + 1);
       }
 
-      // Generate Zip
+      const zipLabel = mode === 'prodi' ? 'Prestasi_Prodi' : 'Prestasi';
       const zipBlob = await zip.generateAsync({ type: "blob" });
-      saveAs(zipBlob, `Sertifikat_Prestasi_${periode || 'Semua'}.zip`);
+      saveAs(zipBlob, `Sertifikat_${zipLabel}_${periode || 'Semua'}.zip`);
       
       showToast("Berhasil mendownload sertifikat!", "success");
 

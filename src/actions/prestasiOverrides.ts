@@ -222,6 +222,127 @@ export async function removePrestasiOverride(
   return res;
 }
 
+// ─── Helper: hitung ranking prodi dan tulis prestasi_prodi ke DB ──────────────
+async function syncPrestasiProdiToDb(periode: string, overrides: PrestasiOverride) {
+  // Ambil semua wisudawan terdaftar di periode ini
+  const { data: allWisudawan, error } = await supabase
+    .from('wisudawan')
+    .select('nim, nama_mahasiswa, ipk, tanggal_yudisium, prodi, prestasi_prodi')
+    .eq('periode', periode)
+    .eq('status', 'Terdaftar');
+
+  if (error || !allWisudawan) return;
+
+  const parseIpk = (ipkStr: any) => {
+    if (!ipkStr) return 0;
+    const parsed = parseFloat(ipkStr.toString().replace(',', '.'));
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
+  const parseDate = (dateStr: any) => {
+    if (!dateStr) return new Date(8640000000000000).getTime();
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? new Date(8640000000000000).getTime() : date.getTime();
+  };
+
+  const parsedData = allWisudawan.map(w => ({
+    ...w,
+    parsedIpk: parseIpk(w.ipk),
+    parsedDate: parseDate(w.tanggal_yudisium),
+  }));
+
+  // === Kelompokkan per Prodi ===
+  const byProdi: Record<string, typeof parsedData> = {};
+  parsedData.forEach(w => {
+    const p = w.prodi || 'Tanpa Prodi';
+    if (!byProdi[p]) byProdi[p] = [];
+    byProdi[p].push(w);
+  });
+
+  // Map: nim -> label prestasi_prodi
+  const prestasiProdiMap: Record<string, string> = {};
+  const sebutanMap = ['Kesatu', 'Kedua', 'Ketiga'];
+
+  Object.keys(byProdi).forEach(prodi => {
+    const sorted = byProdi[prodi].sort((a, b) => {
+      if (b.parsedIpk !== a.parsedIpk) return b.parsedIpk - a.parsedIpk;
+      return a.parsedDate - b.parsedDate;
+    });
+
+    let top3 = sorted.slice(0, 3);
+    const prodiOverrides = overrides?.prodi?.[prodi] || {};
+
+    top3 = top3.map((w, idx) => {
+      if (prodiOverrides[idx.toString()]) {
+        const oUser = parsedData.find(x => x.nim === prodiOverrides[idx.toString()]);
+        if (oUser) return { ...oUser };
+      }
+      return w;
+    });
+
+    top3.forEach((w, idx) => {
+      const sebutan = sebutanMap[idx] || `Ke-${idx + 1}`;
+      prestasiProdiMap[w.nim] = sebutan;
+    });
+  });
+
+  // === Batch update ke Supabase ===
+  const updates: any[] = [];
+  const nimsToInvalidateCache = new Set<string>();
+
+  allWisudawan.forEach(w => {
+    const newPrestasi = prestasiProdiMap[w.nim] || null;
+    const oldPrestasi = w.prestasi_prodi || null;
+
+    if (newPrestasi !== oldPrestasi) {
+      updates.push({
+        nim: w.nim,
+        prestasi_prodi: newPrestasi,
+      });
+      nimsToInvalidateCache.add(w.nim);
+    }
+  });
+
+  if (updates.length > 0) {
+    await supabase
+      .from('wisudawan')
+      .upsert(updates, { onConflict: 'nim' });
+
+    // Hapus Redis cache per-wisudawan agar data terbaru
+    try {
+      const pipeline = redis.pipeline();
+      nimsToInvalidateCache.forEach(nim => {
+        pipeline.del(`wisudawan:${nim}`);
+      });
+      pipeline.del('dashboard:stats:all');
+      await pipeline.exec();
+    } catch (err) {
+      console.error('Redis pipeline error on syncPrestasiProdiToDb:', err);
+    }
+  }
+}
+
+// ─── Generate Prestasi Prodi: dipanggil tombol Generate Prodi ──────────────
+export async function generatePrestasiProdi(periode: string) {
+  if (!periode) return { success: false, error: 'Periode tidak valid' };
+
+  try {
+    // Baca override yang ada, lalu hapus hanya bagian 'prodi'
+    const currentOverrides = await getPrestasiOverrides(periode);
+    currentOverrides.prodi = {};
+    await updateSetting(`prestasi_override_${periode}`, JSON.stringify(currentOverrides));
+
+    const emptyProdiOverrides = {};
+    await syncPrestasiProdiToDb(periode, { prodi: emptyProdiOverrides });
+
+    revalidatePath('/admin/prestasi');
+    return { success: true };
+  } catch (err: any) {
+    console.error('Error in generatePrestasiProdi:', err);
+    return { success: false, error: err.message || 'Terjadi kesalahan' };
+  }
+}
+
 export async function searchWisudawanByNimAndPeriode(periode: string, searchQuery: string) {
   if (!searchQuery || searchQuery.length < 3) return { success: true, data: [] };
   

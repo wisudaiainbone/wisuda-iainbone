@@ -6,8 +6,10 @@ import { getSetting, getAllSettingsAdmin } from "@/actions/settings";
 import { Trophy, Filter } from "lucide-react";
 import Link from "next/link";
 import PrestasiAkademikView from "./PrestasiAkademikView";
+import PrestasiProdiView from "./PrestasiProdiView";
 import ExportPrestasiButton from "./ExportPrestasiButton";
 import GeneratePrestasiButton from "./GeneratePrestasiButton";
+import GeneratePrestasiProdiButton from "./GeneratePrestasiProdiButton";
 import PrintPrestasiButton from "./PrintPrestasiButton";
 import SlidePrestasiPptxDialog from "./SlidePrestasiPptxDialog";
 import PrestasiClientWrapper from "./PrestasiClientWrapper";
@@ -47,19 +49,30 @@ export default async function AdminPrestasiPage(props: PageProps) {
   );
 
   // Cek apakah prestasi_akd sudah pernah digenerate untuk periode ini
-  // dengan melihat apakah ada minimal satu wisudawan yang memiliki nilai prestasi_akd
   let isGenerated = false;
+  let isGeneratedProdi = false;
   if (filterPeriode) {
-    const { data: checkData } = await supabase
-      .from('wisudawan')
-      .select('nim')
-      .eq('periode', filterPeriode)
-      .eq('status', 'Terdaftar')
-      .not('prestasi_akd', 'is', null)
-      .not('prestasi_akd', 'eq', '')
-      .limit(1);
-    
-    isGenerated = !!(checkData && checkData.length > 0);
+    const [checkAkd, checkProdi] = await Promise.all([
+      supabase
+        .from('wisudawan')
+        .select('nim')
+        .eq('periode', filterPeriode)
+        .eq('status', 'Terdaftar')
+        .not('prestasi_akd', 'is', null)
+        .not('prestasi_akd', 'eq', '')
+        .limit(1),
+      supabase
+        .from('wisudawan')
+        .select('nim')
+        .eq('periode', filterPeriode)
+        .eq('status', 'Terdaftar')
+        .not('prestasi_prodi', 'is', null)
+        .not('prestasi_prodi', 'eq', '')
+        .limit(1),
+    ]);
+
+    isGenerated = !!(checkAkd.data && checkAkd.data.length > 0);
+    isGeneratedProdi = !!(checkProdi.data && checkProdi.data.length > 0);
   }
 
   // Ambil pengaturan sertifikat akademik
@@ -118,12 +131,37 @@ export default async function AdminPrestasiPage(props: PageProps) {
           </div>
         ) : undefined
       }
+      prodiActionButtonsNode={
+        adminSession?.role !== 'admin_unit' ? (
+          <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
+            <GeneratePrestasiProdiButton periode={filterPeriode} isGenerated={isGeneratedProdi} />
+            <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
+            <PrintPrestasiButton
+              data={targetWisudawan}
+              periode={filterPeriode}
+              settings={certSettings}
+              tempatWisuda={tempatWisuda}
+              tanggalWisuda={tanggalWisuda}
+              mode="prodi"
+            />
+          </div>
+        ) : undefined
+      }
       akademikContentNode={
         <PrestasiAkademikView
           data={targetWisudawan}
           periode={filterPeriode}
           overrides={overrides}
           isGenerated={isGenerated}
+          role={adminSession?.role}
+        />
+      }
+      prodiContentNode={
+        <PrestasiProdiView
+          data={targetWisudawan}
+          periode={filterPeriode}
+          overrides={overrides}
+          isGenerated={isGeneratedProdi}
           role={adminSession?.role}
         />
       }
