@@ -196,25 +196,20 @@ const styles = StyleSheet.create({
 });
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-function getSebutan(prestasiAkd: string, fakultas: string): string {
-  const parts = prestasiAkd
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-  const hasInstitut = parts.includes("Institut");
-  const rank = parts.find((p) => p !== "Institut");
-
-  const fakultasStr = fakultas.toLowerCase() === "pascasarjana"
-    ? "Pascasarjana"
-    : `Fakultas ${fakultas}`;
-
-  if (hasInstitut && rank) {
-    return `Terbaik ${rank} ${fakultasStr} dan Terbaik Institut`;
+function getSebutan(award: string, fakultas: string): string {
+  if (award === "Institut") {
+    return "Terbaik Institusi Institut Agama Islam Negeri Bone";
   }
-  if (hasInstitut && !rank) {
-    return "Terbaik Institut";
+
+  let fakultasStr = fakultas;
+  if (
+    fakultas.toLowerCase() !== "pascasarjana" &&
+    !fakultas.toLowerCase().startsWith("fakultas")
+  ) {
+    fakultasStr = `Fakultas ${fakultas}`;
   }
-  return `Terbaik ${rank || prestasiAkd} ${fakultasStr}`;
+
+  return `Terbaik ${award} ${fakultasStr}`;
 }
 
 // ─── Single Certificate Document ─────────────────────────────────────────────

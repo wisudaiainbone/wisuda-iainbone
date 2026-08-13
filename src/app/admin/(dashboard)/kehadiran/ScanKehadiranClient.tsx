@@ -567,7 +567,7 @@ export default function ScanKehadiranClient({ initialMeta, isPresensiOnly = fals
                 </h3>
                 {scanResult.data && (
                   <div className="bg-white/50 dark:bg-black/20 rounded-xl p-4 w-full">
-                    <p className="font-bold text-[var(--color-text)] text-lg mb-0.5">{scanResult.data.nama_mahasiswa}</p>
+                    <p className="font-bold text-[var(--color-text)] text-lg mb-0.5 uppercase">{scanResult.data.nama_mahasiswa}</p>
                     <p className="text-sm font-mono text-[var(--color-text-muted)] mb-2">{scanResult.data.nim}</p>
                     <div className="flex items-center justify-center gap-2 text-xs font-bold">
                       <span className="px-2 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 rounded border border-emerald-200 dark:border-emerald-700">
@@ -645,7 +645,7 @@ export default function ScanKehadiranClient({ initialMeta, isPresensiOnly = fals
                     <tr key={s.nim || idx} className="hover:bg-[var(--color-bg-secondary)]/60 transition-colors">
                       <td className="px-4 py-3.5 whitespace-nowrap text-[var(--color-text-muted)] font-mono text-xs">{waktu}</td>
                       <td className="px-4 py-3.5 whitespace-nowrap font-bold text-[var(--color-text)]">{s.nim}</td>
-                      <td className="px-4 py-3.5 text-[var(--color-text)] max-w-[150px] truncate font-medium" title={s.nama_mahasiswa}>{s.nama_mahasiswa}</td>
+                      <td className="px-4 py-3.5 text-[var(--color-text)] max-w-[150px] truncate font-medium uppercase" title={s.nama_mahasiswa}>{s.nama_mahasiswa}</td>
                       <td className="px-4 py-3.5 whitespace-nowrap text-emerald-600 dark:text-emerald-400 font-bold text-xs">{prodiStr}</td>
                     </tr>
                   );
@@ -698,7 +698,7 @@ export default function ScanKehadiranClient({ initialMeta, isPresensiOnly = fals
                         <tr key={s.nim || idx} className="hover:bg-[var(--color-bg-secondary)]/60 transition-colors">
                           <td className="px-2 py-3 whitespace-nowrap text-[var(--color-text-muted)] font-mono text-[10px] sm:text-xs">{waktu}</td>
                           <td className="px-2 py-3 whitespace-nowrap font-bold text-[var(--color-text)]">{s.nim}</td>
-                          <td className="px-2 py-3 text-[var(--color-text)] max-w-[80px] sm:max-w-[150px] truncate font-medium" title={s.nama_mahasiswa}>{s.nama_mahasiswa}</td>
+                          <td className="px-2 py-3 text-[var(--color-text)] max-w-[80px] sm:max-w-[150px] truncate font-medium uppercase" title={s.nama_mahasiswa}>{s.nama_mahasiswa}</td>
                           <td className="px-2 py-3 whitespace-nowrap text-emerald-600 dark:text-emerald-400 font-bold text-[10px] sm:text-xs">{prodiStr}</td>
                         </tr>
                       );

@@ -502,7 +502,7 @@ export default function ImportWisudawanDialog({ userRole, unitKerja, dbProdiList
                         {previewData.map((row, idx) => (
                           <tr key={idx} className={`transition-colors ${row._isValid === false ? 'bg-rose-50 dark:bg-rose-900/10' : 'hover:bg-[var(--color-bg-secondary)]'}`}>
                             <td className={`px-4 py-2 font-mono ${row._isValid === false ? 'text-rose-500 line-through opacity-50' : ''}`}>{row.nim}</td>
-                            <td className={`px-4 py-2 font-medium ${row._isValid === false ? 'text-rose-500 line-through opacity-50' : ''}`}>{row.nama_mahasiswa}</td>
+                            <td className={`px-4 py-2 font-medium uppercase ${row._isValid === false ? 'text-rose-500 line-through opacity-50' : ''}`}>{row.nama_mahasiswa}</td>
                             <td className={`px-4 py-2 text-[var(--color-text-muted)] ${row._isValid === false ? 'opacity-50' : ''}`}>{row.ipk}</td>
                             <td className="px-4 py-2 text-[var(--color-text-muted)]">
                               <span className={row._isValid === false ? 'text-rose-500 font-semibold' : ''}>{row.fakultas}</span>

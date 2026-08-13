@@ -180,7 +180,7 @@ export default function PrestasiAkademikView({
               <h3 className="text-xs font-black tracking-widest text-amber-600 dark:text-amber-500 uppercase mb-1">
                 Wisudawan Terbaik Institut {isBestOverridden && <span className="lowercase text-[10px] bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 px-1.5 py-0.5 rounded ml-1">(dimodifikasi manual)</span>}
               </h3>
-              <p className="text-2xl font-bold text-[var(--color-text)] mb-1">{bestOverall.nama_gelar || bestOverall.nama_mahasiswa}</p>
+              <p className="text-2xl font-bold text-[var(--color-text)] mb-1 uppercase">{bestOverall.nama_gelar || bestOverall.nama_mahasiswa}</p>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm mt-1">
                 <p className="font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded">
                   IPK: {formatIpk(bestOverall.ipk)}
@@ -263,7 +263,7 @@ export default function PrestasiAkademikView({
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex flex-col">
-                            <span className="font-bold text-[var(--color-text)]">
+                            <span className="font-bold text-[var(--color-text)] uppercase">
                               {w.nama_gelar || w.nama_mahasiswa}
                               {w.isOverridden && <span className="text-[10px] text-amber-600 bg-amber-100 px-1 py-0.5 rounded ml-1.5 font-normal relative -top-0.5">*</span>}
                             </span>

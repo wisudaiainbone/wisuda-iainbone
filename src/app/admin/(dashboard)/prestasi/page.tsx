@@ -79,11 +79,7 @@ export default async function AdminPrestasiPage(props: PageProps) {
 
   const currentPeriodeObj = allPeriode.find(p => p.nama_periode === filterPeriode) || activePeriodes[0];
   const tempatWisuda = currentPeriodeObj?.tempat_pelaksanaan || "Watampone";
-  const tanggalWisuda = currentPeriodeObj?.tanggal_pelaksanaan 
-    ? new Date(currentPeriodeObj.tanggal_pelaksanaan).toLocaleDateString("id-ID", {
-        day: "numeric", month: "long", year: "numeric"
-      })
-    : "";
+  const tanggalWisuda = currentPeriodeObj?.tanggal_pelaksanaan || "";
 
   return (
     <PrestasiClientWrapper

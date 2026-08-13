@@ -604,7 +604,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                       </span>
                     )}
                   </div>
-                  <h1 className="text-xl sm:text-2xl font-extrabold font-[var(--font-outfit)] text-[var(--color-text)] leading-tight">
+                  <h1 className="text-xl sm:text-2xl font-extrabold font-[var(--font-outfit)] text-[var(--color-text)] leading-tight uppercase">
                     {w["NAMA GELAR"] || w["NAMA MAHASISWA"] || "-"}
                   </h1>
                   <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{w["FAKULTAS"]}</p>
@@ -1746,7 +1746,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
 
               {/* Info wisudawan */}
               <div className="text-center mt-0.5">
-                <p className="text-sm font-black text-gray-900">{w["NAMA GELAR"]}</p>
+                <p className="text-sm font-black text-gray-900 uppercase">{w["NAMA GELAR"]}</p>
                 <p className="text-base font-mono font-bold tracking-wider text-gray-700 mt-0.5">{w["NIM"]}</p>
               </div>
 
@@ -1854,7 +1854,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
 
               {/* Info wisudawan */}
               <div className="text-center mt-0.5">
-                <p className="text-sm font-black text-gray-900">{w["NAMA GELAR"]}</p>
+                <p className="text-sm font-black text-gray-900 uppercase">{w["NAMA GELAR"]}</p>
                 <p className="text-base font-mono font-bold tracking-wider text-gray-700 mt-0.5">{w["NIM"]}</p>
               </div>
 

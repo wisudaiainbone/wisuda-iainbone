@@ -2,7 +2,7 @@
 
 import { getSetting, updateSetting } from "./settings";
 import { revalidatePath } from "next/cache";
-import { createSupabaseServerClient } from "@/lib/supabase-server";
+import { createSupabaseServerClient, createSupabaseAdminClient } from "@/lib/supabase-server";
 import { supabase } from "@/lib/supabase";
 import { redis } from "@/lib/redis";
 
@@ -225,15 +225,20 @@ export async function removePrestasiOverride(
 export async function searchWisudawanByNimAndPeriode(periode: string, searchQuery: string) {
   if (!searchQuery || searchQuery.length < 3) return { success: true, data: [] };
   
-  const supabaseServer = await createSupabaseServerClient();
-  const { data, error } = await supabaseServer
+  // Gunakan Admin Client (service role) agar tidak diblokir RLS
+  const supabaseAdmin = await createSupabaseAdminClient();
+
+  const { data, error } = await supabaseAdmin
     .from('wisudawan')
     .select('nim, nama_mahasiswa, prodi, fakultas, ipk, tanggal_yudisium, status, periode')
     .eq('periode', periode)
-    .eq('status', 'Terdaftar')
     .or(`nim.ilike.%${searchQuery}%,nama_mahasiswa.ilike.%${searchQuery}%`)
-    .limit(10);
+    .limit(20);
 
-  if (error) return { success: false, error: error.message };
+  if (error) {
+    console.error('[searchWisudawanByNimAndPeriode] error:', error);
+    return { success: false, error: error.message };
+  }
+
   return { success: true, data };
 }

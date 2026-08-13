@@ -186,7 +186,7 @@ export default function WisudawanTableClient({
                       <span className="font-mono text-[var(--color-text-muted)] text-xs font-normal">{w.nim}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-[var(--color-text)] font-bold text-xs">{w.nama_gelar || w.nama_mahasiswa}</span>
+                      <span className="text-[var(--color-text)] font-bold text-xs uppercase">{w.nama_gelar || w.nama_mahasiswa}</span>
                     </td>
                     <td className="px-4 py-4 text-center">
                       {(() => {
@@ -362,7 +362,7 @@ export default function WisudawanTableClient({
                 <div className="flex-1 min-w-0 pr-6">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="font-bold text-sm text-[var(--color-text)] truncate">{w.nama_gelar || w.nama_mahasiswa}</p>
+                      <p className="font-bold text-sm text-[var(--color-text)] truncate uppercase">{w.nama_gelar || w.nama_mahasiswa}</p>
                       <p className="font-mono text-xs text-[var(--color-text-muted)]">{w.nim}</p>
                     </div>
                     <span className="text-xs font-bold px-2 py-0.5 rounded bg-[var(--color-bg-secondary)] shrink-0">

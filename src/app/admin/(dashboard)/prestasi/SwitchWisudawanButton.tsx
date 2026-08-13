@@ -148,7 +148,7 @@ export default function SwitchWisudawanButton({
                       <User size={18} className="text-slate-400" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-[var(--color-text)] truncate">{w.nama_mahasiswa}</p>
+                      <p className="text-sm font-bold text-[var(--color-text)] truncate uppercase">{w.nama_mahasiswa}</p>
                       <p className="text-xs text-[var(--color-text-muted)]">NIM: {w.nim}</p>
                       <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mt-1">IPK: {w.ipk}</p>
                     </div>

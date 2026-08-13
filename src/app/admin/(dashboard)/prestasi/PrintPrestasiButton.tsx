@@ -72,29 +72,30 @@ export default function PrintPrestasiButton({ data, periode, settings, tempatWis
       for (let i = 0; i < certDataList.length; i++) {
         const certInfo = certDataList[i];
         
-        // Generate Sebutan for filename
+        // Pisahkan jika ada lebih dari satu penghargaan, misal: "Kesatu, Institut"
         const parts = certInfo.prestasiAkd.split(',').map(s => s.trim()).filter(Boolean);
-        let rankStr = parts[0] || "Sertifikat"; // e.g. "Kesatu"
-        if (parts.includes("Institut")) {
-          rankStr = rankStr !== "Institut" ? `${rankStr}_Institut` : "Institut";
-        }
         
-        const safeNama = certInfo.namaMahasiswa.replace(/[^a-zA-Z0-9_\-\.]/g, '_');
-        const fileName = `Sertifikat-AKD_${certInfo.fakultas || 'Fakultas'}_${rankStr}_${certInfo.nim}_${safeNama}.pdf`
-          .replace(/[^a-zA-Z0-9_\-\.]/g, '_'); // sanitize
+        for (const part of parts) {
+          const safeNama = certInfo.namaMahasiswa.replace(/[^a-zA-Z0-9_\-\.]/g, '_');
+          const fileName = `Sertifikat-AKD_${certInfo.fakultas || 'Fakultas'}_${part}_${certInfo.nim}_${safeNama}.pdf`
+            .replace(/[^a-zA-Z0-9_\-\.]/g, '_'); // sanitize
 
-        // Create PDF instance
-        const doc = <CertificateDocument 
-          cert={certInfo} 
-          settings={settings} 
-          logoBase64={logoBase64} 
-          tempatWisuda={tempatWisuda} 
-          tanggalWisuda={tanggalWisuda} 
-        />;
-        const asPdf = pdf(doc);
-        const pdfBlob = await asPdf.toBlob();
+          // Buat salinan certInfo dengan prestasiAkd yang spesifik untuk halaman ini
+          const specificCertInfo = { ...certInfo, prestasiAkd: part };
 
-        zip.file(fileName, pdfBlob);
+          // Create PDF instance
+          const doc = <CertificateDocument 
+            cert={specificCertInfo} 
+            settings={settings} 
+            logoBase64={logoBase64} 
+            tempatWisuda={tempatWisuda} 
+            tanggalWisuda={tanggalWisuda} 
+          />;
+          const asPdf = pdf(doc);
+          const pdfBlob = await asPdf.toBlob();
+
+          zip.file(fileName, pdfBlob);
+        }
         
         setProgress(i + 1);
       }

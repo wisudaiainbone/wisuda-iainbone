@@ -488,7 +488,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
                 <p className="text-sm font-medium text-[var(--color-text-muted)] mb-4">{scanResult.message}</p>
                 {scanResult.data && (
                   <div className="w-full bg-white/70 dark:bg-black/20 rounded-2xl p-4 border border-white/50 dark:border-white/10 text-left">
-                    <p className="font-black text-[var(--color-text)] text-base">{scanResult.data.nama_mahasiswa}</p>
+                    <p className="font-black text-[var(--color-text)] text-base uppercase">{scanResult.data.nama_mahasiswa}</p>
                     <p className="text-xs text-[var(--color-text-muted)] font-mono mt-0.5">{scanResult.data.nim}</p>
                     {scanResult.data.toga && (
                       <div className="mt-3 p-4 rounded-2xl flex flex-col items-center text-center bg-emerald-100/80 border-2 border-emerald-300 dark:bg-emerald-800/80 dark:border-emerald-600">
@@ -566,7 +566,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
                     <tr key={s.nim || idx} className="hover:bg-[var(--color-bg-secondary)]/60 transition-colors">
                       <td className="px-4 py-3.5 whitespace-nowrap text-[var(--color-text-muted)] font-mono text-xs">{waktu}</td>
                       <td className="px-4 py-3.5 whitespace-nowrap font-bold text-[var(--color-text)]">{s.nim}</td>
-                      <td className="px-4 py-3.5 text-[var(--color-text)] max-w-[150px] truncate font-medium" title={s.nama_mahasiswa}>{s.nama_mahasiswa}</td>
+                      <td className="px-4 py-3.5 text-[var(--color-text)] max-w-[150px] truncate font-medium uppercase" title={s.nama_mahasiswa}>{s.nama_mahasiswa}</td>
                       <td className="px-4 py-3.5 whitespace-nowrap text-emerald-600 dark:text-emerald-400 font-bold text-xs">{prodiStr}</td>
                     </tr>
                   );
@@ -619,7 +619,7 @@ export default function ScanTogaClient({ initialMeta }: { initialMeta: any }) {
                         <tr key={s.nim || idx} className="hover:bg-[var(--color-bg-secondary)]/60 transition-colors">
                           <td className="px-2 py-3 whitespace-nowrap text-[var(--color-text-muted)] font-mono text-[10px] sm:text-xs">{waktu}</td>
                           <td className="px-2 py-3 whitespace-nowrap font-bold text-[var(--color-text)]">{s.nim}</td>
-                          <td className="px-2 py-3 text-[var(--color-text)] max-w-[80px] sm:max-w-[150px] truncate font-medium" title={s.nama_mahasiswa}>{s.nama_mahasiswa}</td>
+                          <td className="px-2 py-3 text-[var(--color-text)] max-w-[80px] sm:max-w-[150px] truncate font-medium uppercase" title={s.nama_mahasiswa}>{s.nama_mahasiswa}</td>
                           <td className="px-2 py-3 whitespace-nowrap text-emerald-600 dark:text-emerald-400 font-bold text-[10px] sm:text-xs">{prodiStr}</td>
                         </tr>
                       );
