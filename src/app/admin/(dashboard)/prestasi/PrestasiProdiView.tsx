@@ -79,7 +79,8 @@ export default function PrestasiProdiView({
   const topProdi = Object.keys(byProdi).map(prodi => {
     const sorted = [...byProdi[prodi]].sort((a, b) => {
       if (b.parsedIpk !== a.parsedIpk) return b.parsedIpk - a.parsedIpk;
-      return a.parsedDate - b.parsedDate;
+      if (a.parsedDate !== b.parsedDate) return a.parsedDate - b.parsedDate;
+      return a.nim.localeCompare(b.nim);
     });
 
     let top3 = sorted.slice(0, 3);

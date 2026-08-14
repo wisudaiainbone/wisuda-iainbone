@@ -63,7 +63,8 @@ export default function PrestasiAkademikView({
     .filter(w => w.fakultas !== "Pascasarjana" && w.fakultas?.toLowerCase() !== "pascasarjana")
     .sort((a, b) => {
       if (b.parsedIpk !== a.parsedIpk) return b.parsedIpk - a.parsedIpk;
-      return a.parsedDate - b.parsedDate;
+      if (a.parsedDate !== b.parsedDate) return a.parsedDate - b.parsedDate;
+      return a.nim.localeCompare(b.nim);
     });
   
   let bestOverall = sortedOverall.length > 0 ? sortedOverall[0] : null;
@@ -89,7 +90,8 @@ export default function PrestasiAkademikView({
   const topFakultas = Object.keys(byFakultas).map(f => {
     const sorted = byFakultas[f].sort((a, b) => {
       if (b.parsedIpk !== a.parsedIpk) return b.parsedIpk - a.parsedIpk;
-      return a.parsedDate - b.parsedDate;
+      if (a.parsedDate !== b.parsedDate) return a.parsedDate - b.parsedDate;
+      return a.nim.localeCompare(b.nim);
     });
     
     let top3 = sorted.slice(0, 3);

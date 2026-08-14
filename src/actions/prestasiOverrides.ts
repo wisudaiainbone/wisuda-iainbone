@@ -58,7 +58,8 @@ async function syncPrestasiAkdToDb(periode: string, overrides: PrestasiOverride)
     .filter(w => w.fakultas !== "Pascasarjana" && w.fakultas?.toLowerCase() !== "pascasarjana")
     .sort((a, b) => {
       if (b.parsedIpk !== a.parsedIpk) return b.parsedIpk - a.parsedIpk;
-      return a.parsedDate - b.parsedDate;
+      if (a.parsedDate !== b.parsedDate) return a.parsedDate - b.parsedDate;
+      return a.nim.localeCompare(b.nim);
     });
 
   let bestOverallNim: string | null = sortedOverall.length > 0 ? sortedOverall[0].nim : null;
@@ -82,7 +83,8 @@ async function syncPrestasiAkdToDb(periode: string, overrides: PrestasiOverride)
   Object.keys(byFakultas).forEach(f => {
     const sorted = byFakultas[f].sort((a, b) => {
       if (b.parsedIpk !== a.parsedIpk) return b.parsedIpk - a.parsedIpk;
-      return a.parsedDate - b.parsedDate;
+      if (a.parsedDate !== b.parsedDate) return a.parsedDate - b.parsedDate;
+      return a.nim.localeCompare(b.nim);
     });
 
     let top3 = sorted.slice(0, 3);
@@ -266,7 +268,8 @@ async function syncPrestasiProdiToDb(periode: string, overrides: PrestasiOverrid
   Object.keys(byProdi).forEach(prodi => {
     const sorted = byProdi[prodi].sort((a, b) => {
       if (b.parsedIpk !== a.parsedIpk) return b.parsedIpk - a.parsedIpk;
-      return a.parsedDate - b.parsedDate;
+      if (a.parsedDate !== b.parsedDate) return a.parsedDate - b.parsedDate;
+      return a.nim.localeCompare(b.nim);
     });
 
     let top3 = sorted.slice(0, 3);
