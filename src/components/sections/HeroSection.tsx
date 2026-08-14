@@ -547,7 +547,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                         </div>
 
                         {/* 3. Countdown & CTA */}
-                        <div className="relative overflow-hidden bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-xl rounded-2xl p-6 sm:py-8">
+                        {period.status.toLowerCase() !== 'ditutup' && (
+                          <div className="relative overflow-hidden bg-[var(--color-bg-secondary)] border border-[var(--color-border)] backdrop-blur-xl rounded-2xl p-6 sm:py-8">
                           {/* Background Glow */}
                           <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-emerald-500/10 dark:bg-emerald-500/5 blur-3xl rounded-full pointer-events-none"></div>
 
@@ -614,7 +615,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                               </div>
                             </div>
                           </div>
-                        </div>
+                          </div>
+                        )}
 
                         {/* Mobile Navigation Controls (Below Card) */}
                         {graduationPeriods.length > 1 && (
