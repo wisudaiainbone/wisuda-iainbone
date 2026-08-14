@@ -271,7 +271,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                               return (
                                 <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 mb-4">
                                   <div className={`flex items-center gap-3 ${!showCalendarBtn ? 'w-full' : ''}`}>
-                                    <span className={`inline-flex items-center self-start sm:self-auto px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
+                                    <span className={`inline-flex items-center self-start sm:self-auto px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.status.toLowerCase() === 'ditutup' ? 'bg-rose-800' : period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
                                       {period.status}
                                     </span>
 
@@ -554,18 +554,20 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                           <div className="flex flex-col gap-6 relative z-10 w-full">
                             {/* Header Card: Badge & Date */}
                             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
-                              <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
+                              <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.status.toLowerCase() === 'ditutup' ? 'bg-rose-800' : period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
                                 Jadwal Pendaftaran
                               </span>
-                              <p className="text-xs sm:text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider">
-                                {period.registrationDateLabel}
-                              </p>
+                              {period.status.toLowerCase() !== 'ditutup' && (
+                                <p className="text-xs sm:text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider">
+                                  {period.registrationDateLabel}
+                                </p>
+                              )}
                             </div>
 
                             {/* Konten Utama: Countdown & Button */}
                             <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 w-full">
                               {/* Countdown */}
-                              {isClient && (
+                              {isClient && period.status.toLowerCase() !== 'ditutup' && (
                                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 md:gap-2">
                                   {Object.entries(timeLeft).map(([unit, value], idx, arr) => (
                                     <div key={unit} className="flex items-center gap-1.5 md:gap-2">
@@ -587,13 +589,13 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
 
                               {/* Kanan: CTA Button */}
                               <div className="hidden md:flex flex-col items-center md:items-end shrink-0 mt-2 md:mt-0">
-                                {period.statusColor === 'rose' ? (
+                                {period.status.toLowerCase() === 'ditutup' || period.statusColor === 'rose' ? (
                                   <button
                                     disabled
-                                    className="group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 w-full md:w-auto md:min-w-[200px] overflow-hidden bg-slate-700 opacity-50 cursor-not-allowed"
+                                    className="group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 w-full md:w-auto md:min-w-[200px] overflow-hidden bg-rose-700 opacity-50 cursor-not-allowed"
                                   >
                                     <span className="relative z-10 flex items-center gap-3">
-                                      Daftar Sekarang
+                                      {period.status.toLowerCase() === 'ditutup' ? 'Pendaftaran Ditutup' : 'Daftar Sekarang'}
                                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                                     </span>
                                   </button>
