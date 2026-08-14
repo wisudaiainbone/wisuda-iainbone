@@ -615,7 +615,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                               </div>
                             </div>
                           </div>
-                        )}
+                        </div>
+                      )}
 
                         {/* Mobile Navigation Controls (Below Card) */}
                         {graduationPeriods.length > 1 && (
