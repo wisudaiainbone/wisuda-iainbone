@@ -163,7 +163,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
       {/* Content */}
       <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-20 pb-28 md:pb-6">
 
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column Wrapper */}
           <div className="contents lg:flex flex-col justify-start">
 
@@ -614,7 +614,6 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                 )}
                               </div>
                             </div>
-                          </div>
                           </div>
                         )}
 
