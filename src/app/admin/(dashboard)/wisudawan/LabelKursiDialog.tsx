@@ -149,10 +149,9 @@ export default function LabelKursiDialog({ data, disabled }: Props) {
       }
 
       const pdfBlob = await pdf(<LabelKursiPDFDocument pairs={pairs} />).toBlob();
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl, '_blank');
+      saveAs(pdfBlob, 'Label_Kursi_Wisuda.pdf');
       
-      setProgressMsg('PDF siap dicetak!');
+      setProgressMsg('PDF berhasil diunduh!');
     } catch (e: any) {
       console.error(e);
       alert(e.message || 'Terjadi kesalahan saat membuat PDF');
