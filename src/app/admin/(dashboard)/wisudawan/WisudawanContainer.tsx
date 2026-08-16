@@ -9,6 +9,7 @@ import ExportDaftarButton from "./ExportDaftarButton";
 import SlidePptxDialog from "./SlidePptxDialog";
 import AlbumDialog from "./AlbumDialog";
 import TagDialog from "./TagDialog";
+import LabelKursiDialog from "./LabelKursiDialog";
 import SesiDialog from "./SesiDialog";
 import NomorDialog from "./NomorDialog";
 
@@ -138,6 +139,7 @@ export default function WisudawanContainer({
               <NomorDialog disabled={isSesiBelumDiisi} />
               <ExportDaftarButton data={filteredList} filename="daftar-wisudawan" disabled={isNomorBelumDiisi} />
               <TagDialog data={filteredList} disabled={isNomorBelumDiisi} />
+              <LabelKursiDialog data={filteredList} disabled={isNomorBelumDiisi} />
               <SlidePptxDialog data={filteredList} prodiData={dbProdiList} disabled={isNomorBelumDiisi} />
               <AlbumDialog data={filteredList} prodiData={dbProdiList} disabled={isNomorBelumDiisi} />
             </>
