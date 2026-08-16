@@ -1,5 +1,8 @@
 import React from 'react';
-import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, Font } from '@react-pdf/renderer';
+
+// Nonaktifkan pemenggalan kata (hyphenation)
+Font.registerHyphenationCallback(word => [word]);
 
 type VIPRow = {
   urut: number;
