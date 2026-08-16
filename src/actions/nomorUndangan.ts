@@ -3,6 +3,7 @@
 import { supabase } from '@/lib/supabase';
 import { redis, invalidateAllDashboardCache } from '@/lib/redis';
 import { revalidatePath } from 'next/cache';
+import { getLatestPeriode } from '@/actions/periode';
 
 export interface ProdiResult {
   prodi: string;
@@ -36,15 +37,11 @@ export async function generateNomorUndangan(): Promise<GenerateNomorResult> {
     const { createSupabaseAdminClient } = await import('@/lib/supabase-server');
     const supabaseAdmin = await createSupabaseAdminClient();
 
-    // 1. Ambil periode aktif
-    const { data: aktivePeriode, error: periodeError } = await supabaseAdmin
-      .from('periode_wisuda')
-      .select('id, nama_periode')
-      .eq('status', 'Sedang Dibuka')
-      .single();
+    // 1. Ambil periode berjalan (bisa Sedang Dibuka atau Ditutup)
+    const aktivePeriode = await getLatestPeriode();
 
-    if (periodeError || !aktivePeriode) {
-      return { success: false, error: 'Tidak ada periode wisuda yang sedang aktif.', totalProcessed: 0, periode: '', sesiResults: [] };
+    if (!aktivePeriode) {
+      return { success: false, error: 'Tidak ada periode wisuda.', totalProcessed: 0, periode: '', sesiResults: [] };
     }
 
     const periode = aktivePeriode.nama_periode as string;

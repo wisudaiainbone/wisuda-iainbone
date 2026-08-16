@@ -124,7 +124,7 @@ export default function NomorDialog({ disabled }: { disabled?: boolean }) {
                       <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Syarat wisudawan yang diproses:</p>
                       {[
                         { icon: GraduationCap, label: "Status Terdaftar", color: "text-emerald-500" },
-                        { icon: Layers, label: "Periode Aktif (Sedang Dibuka)", color: "text-blue-500" },
+                        { icon: Layers, label: "Periode Berjalan (Sedang Dibuka / Ditutup)", color: "text-blue-500" },
                         { icon: Hash, label: "Sesi sudah diatur (Sesi Satu / Sesi Dua)", color: "text-violet-500" },
                       ].map(({ icon: Icon, label, color }) => (
                         <div key={label} className="flex items-center gap-2.5 text-sm text-[var(--color-text)]">
