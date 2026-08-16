@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Armchair, X, Loader2, AlertCircle, FileSpreadsheet } from 'lucide-react';
+import { Armchair, X, Loader2, AlertCircle, FileSpreadsheet, FileText } from 'lucide-react';
 import { saveAs } from 'file-saver';
+import { pdf } from '@react-pdf/renderer';
+import LabelKursiPDFDocument from './LabelKursiPDFDocument';
 // @ts-ignore
 import ExcelJS from 'exceljs';
 
@@ -27,6 +29,7 @@ type Props = {
 export default function LabelKursiDialog({ data, disabled }: Props) {
   const [open, setOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
 
   const targetWisudawan = useMemo(() => {
@@ -129,6 +132,36 @@ export default function LabelKursiDialog({ data, disabled }: Props) {
     }
   };
 
+  const generateLabelKursiPdf = async () => {
+    setIsGeneratingPdf(true);
+    setProgressMsg('Membangun dokumen PDF...');
+    try {
+      const sesi1List = targetWisudawan.filter(w => w.sesi === 'Sesi Satu').sort((a, b) => (a.urut || 0) - (b.urut || 0));
+      const sesi2List = targetWisudawan.filter(w => w.sesi === 'Sesi Dua').sort((a, b) => (a.urut || 0) - (b.urut || 0));
+
+      const maxLength = Math.max(sesi1List.length, sesi2List.length);
+      const pairs = [];
+      for (let i = 0; i < maxLength; i++) {
+        pairs.push({
+          sesi1: sesi1List[i] || null,
+          sesi2: sesi2List[i] || null,
+        });
+      }
+
+      const pdfBlob = await pdf(<LabelKursiPDFDocument pairs={pairs} />).toBlob();
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      window.open(pdfUrl, '_blank');
+      
+      setProgressMsg('PDF siap dicetak!');
+    } catch (e: any) {
+      console.error(e);
+      alert(e.message || 'Terjadi kesalahan saat membuat PDF');
+      setProgressMsg('Terjadi kesalahan!');
+    } finally {
+      setTimeout(() => setIsGeneratingPdf(false), 1000);
+    }
+  };
+
   return (
     <>
       <button
@@ -163,7 +196,7 @@ export default function LabelKursiDialog({ data, disabled }: Props) {
                 </div>
               </div>
 
-              {isGenerating ? (
+              {isGenerating || isGeneratingPdf ? (
                 <div className="space-y-3 pt-4 border-t border-[var(--color-border)]">
                   <div className="flex items-center justify-center gap-2 text-sm font-medium text-cyan-600">
                     <Loader2 size={16} className="animate-spin" />
@@ -177,7 +210,14 @@ export default function LabelKursiDialog({ data, disabled }: Props) {
                     className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-xl transition-colors"
                   >
                     <FileSpreadsheet size={18} />
-                    Ekspor Excel Label Kursi
+                    Ekspor Excel
+                  </button>
+                  <button
+                    onClick={generateLabelKursiPdf}
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors"
+                  >
+                    <FileText size={18} />
+                    Cetak PDF (16x19,5 cm)
                   </button>
                 </div>
               )}
