@@ -151,6 +151,17 @@ Mengelola aset desain untuk fitur Generate Slide PPTX wisudawan.
 | Upload Badge Prestasi | Tersedia 3 slot unggahan gambar transparan (PNG/WEBP) untuk ikon/badge prestasi wisudawan yang akan ditampilkan pada fitur Slide Prestasi. |
 | Kode Warna Hex | Tersedia input warna hex per Fakultas dengan color picker yang akan digunakan sebagai aksen dekoratif dan background slide default jika foto/bingkai tidak digunakan. Nilai warna ini akan digunakan langsung oleh `pptxgenjs` di client-side. |
 
+#### Menu Tamu
+Mengelola semua data dan aset terkait undangan tamu wisuda:
+- **Data Undangan Tamu**: Nomor surat, tanggal, jabatan/nama/NIP penandatangan, nama acara.
+- **Gambar Latar Depan & Belakang**: Upload PNG/JPG untuk halaman depan dan belakang undangan.
+- **Tanda Tangan Digital**: Upload gambar tanda tangan PNG transparan.
+- **Susunan Acara**: Textarea multi-baris (Enter = baris baru) yang akan tercetak di halaman 2 undangan.
+- **Daftar Tamu VIP**: Textarea multi-baris (Enter = satu nama tamu). Data ini tersimpan di database dengan key `tamu_vip_list` dan digunakan untuk fitur ekspor label kursi VIP. Menyediakan **3 tombol ekspor** tepat di bawah textarea:
+  - 🟢 **Ekspor Label Excel**: Menghasilkan file `.xlsx` dari template `template_label_tamu.xlsx` di folder `public/`. Sheet `Daftar` diisi dengan kolom `NO` (nomor urut) dan `NAMA` (UPPERCASE). Header digenerate otomatis berlatar kuning.
+  - 📕 **PDF Tamu VIP**: Menghasilkan file `.pdf` ukuran **16 cm × 19,5 cm** dengan layout 2 kolom × 5 baris (10 label per halaman). Setiap label menampilkan nama tamu di tengah (UPPERCASE, bold, font Roboto Condensed) diikuti kata **"Tempat"** di bawahnya. Tidak ada pemenggalan kata.
+  - 🟣 **PDF Kursi VIP**: Identik dengan PDF Tamu VIP, namun **tanpa** kata "Tempat" — hanya nama saja. Berguna untuk label tempel di kursi tamu.
+
 ### Data Wisudawan (`/admin/wisudawan`)
 Pengelolaan data wisudawan dari Supabase, dilengkapi:
 - **Toolbar Terpadu & Responsif Mobile**: Kolom pencarian dan semua tombol aksi (Tambah, Export, Sesi, Nomor, Daftar, Label, Slide, Album) berada dalam satu baris sejajar (`h-10`) di desktop. Di perangkat *mobile*, deretan tombol berubah gaya menjadi **Tag Cloud** mungil yang padat (hanya menampilkan ikon tanpa teks).
@@ -207,6 +218,12 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
   - **Anti-Hyphenation**: Nama panjang tidak akan dipotong di tengah kata (misal: "Hamjan" tidak menjadi "Ham-jan"). Kata yang tidak muat akan pindah baris secara utuh.
   - **Garis Potong Hitam**: Setiap label dibatasi oleh garis hitam tipis sebagai panduan pemotongan.
   - Proses sepenuhnya *client-side* menggunakan `@react-pdf/renderer`, tanpa beban server Vercel maupun Supabase.
+- **Generate Label Kursi** (tombol cyan `Kursi`):
+  - Membuka dialog modal untuk mengunduh daftar urut wisudawan dalam format **Label Kursi**.
+  - Tombol ini menampilkan **dua pilihan ekspor**:
+    - 🟢 **Ekspor Excel (.xlsx)**: Menghasilkan file `.xlsx` (berdasarkan template `template_label_kursi.xlsx` di folder `public/`) dengan dua pasang kolom: `SESI 1 | NIM (Sesi 1)` dan `SESI 2 | NIM (Sesi 2)`. Header baris pertama digenerate otomatis dengan latar kuning bold. Nama ditulis dengan **HURUF BESAR** (UPPERCASE) tanpa gelar akademik.
+    - 📕 **Cetak PDF (16×19,5 cm)**: Menghasilkan file `.pdf` dengan ukuran kertas kustom **16 cm × 19,5 cm**. Layout berupa **grid 2 kolom × 5 baris** (10 kotak pasangan per halaman). Setiap kotak berisi pasangan wisudawan dengan nomor urut yang sama: Sesi 1 di bagian atas (dipisahkan garis hitam), Sesi 2 di bagian bawah. Menggunakan font **Roboto Condensed Bold** agar nama panjang tetap rapi dan tidak penggal kata.
+  - Data diurutkan berdasarkan nomor urut (`urut`) per sesi.
 - **Interaksi Tabel**: Baris tabel wisudawan dapat diklik untuk membuka **Halaman Detail Wisudawan**.
 - **Import Batch via Excel**: Unggah file `.xlsx` untuk memasukkan data massal.
   - Template mencakup auto-fill data contoh dan *sheet* Master Fakultas.
