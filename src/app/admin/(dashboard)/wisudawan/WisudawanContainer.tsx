@@ -87,6 +87,13 @@ export default function WisudawanContainer({
   const showToga = filters.toga !== '';
   const showSesi = filters.sesi !== '';
 
+  const baseTotalItems = useMemo(() => {
+    if (filters.status === 'Dihapus') {
+      return allWisudawan.filter(w => w.status === 'Dihapus').length;
+    }
+    return allWisudawan.filter(w => w.status !== 'Dihapus').length;
+  }, [allWisudawan, filters.status]);
+
   // Disable states berdasarkan kondisi data & periode
   const registeredWisudawan = useMemo(() => allWisudawan.filter(w => w.status === 'Terdaftar'), [allWisudawan]);
   const isSesiBelumDiisi = registeredWisudawan.length === 0 || registeredWisudawan.some(w => !w.sesi);
@@ -104,7 +111,7 @@ export default function WisudawanContainer({
           statusList={statusList.includes('Dihapus') ? statusList : [...statusList, 'Dihapus']}
           onSearch={handleSearch}
           filteredItems={totalItems}
-          totalItems={allWisudawan.length}
+          totalItems={baseTotalItems}
         >
           <ImportWisudawanDialog userRole={adminSession?.role || ''} unitKerja={adminSession?.unit_kerja} dbProdiList={dbProdiList} kuotaInfo={kuotaInfo} />
           <ExportDropdown data={filteredList} filename="data-wisudawan" userRole={adminSession?.role} />
