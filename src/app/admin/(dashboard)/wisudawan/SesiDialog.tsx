@@ -146,8 +146,11 @@ export default function SesiDialog({ disabled }: { disabled?: boolean }) {
                     return (
                       <div
                         key={row.fakultas}
-                        className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border transition-colors ${isChanged
-                            ? "bg-violet-50 dark:bg-violet-900/10 border-violet-200 dark:border-violet-800/40"
+                        className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border transition-colors ${
+                          isChanged
+                            ? currentDraft === "Sesi Satu" 
+                                ? "bg-violet-50 dark:bg-violet-900/10 border-violet-200 dark:border-violet-800/40"
+                                : "bg-teal-50 dark:bg-teal-900/10 border-teal-200 dark:border-teal-800/40"
                             : "bg-[var(--color-surface)] border-[var(--color-border)]"
                           }`}
                       >
@@ -160,7 +163,11 @@ export default function SesiDialog({ disabled }: { disabled?: boolean }) {
                             <p className="text-xs font-semibold text-[var(--color-text)] truncate">{row.fakultas}</p>
                             <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
                               {currentDraft ? (
-                                <span className={`font-medium ${isChanged ? "text-violet-600 dark:text-violet-400" : "text-emerald-600 dark:text-emerald-400"}`}>
+                                <span className={`font-medium ${
+                                  isChanged 
+                                    ? currentDraft === "Sesi Satu" ? "text-violet-600 dark:text-violet-400" : "text-teal-600 dark:text-teal-400" 
+                                    : "text-emerald-600 dark:text-emerald-400"
+                                }`}>
                                   {isChanged ? "→ " : "✓ "}{currentDraft}
                                 </span>
                               ) : (
@@ -174,13 +181,17 @@ export default function SesiDialog({ disabled }: { disabled?: boolean }) {
                         <div className="flex items-center gap-2 shrink-0">
                           {SESI_OPTIONS.map((opt) => {
                             const isActive = currentDraft === opt.value;
+                            const isSesiSatu = opt.value === "Sesi Satu";
+                            const activeColor = isSesiSatu ? "bg-violet-600 border-violet-600" : "bg-teal-600 border-teal-600";
+                            const hoverBorder = isSesiSatu ? "hover:border-violet-400" : "hover:border-teal-400";
+
                             return (
                               <button
                                 key={opt.value}
                                 onClick={() => handleSelect(row.fakultas, opt.value)}
                                 className={`flex items-center gap-1.5 px-3 h-9 rounded-lg text-xs font-semibold border transition-all ${isActive
-                                    ? "bg-violet-600 text-white border-violet-600"
-                                    : "bg-[var(--color-bg-secondary)] border-[var(--color-border)] text-[var(--color-text-subtle)] hover:text-[var(--color-text)] hover:border-violet-400"
+                                    ? `${activeColor} text-white`
+                                    : `bg-[var(--color-bg-secondary)] border-[var(--color-border)] text-[var(--color-text-subtle)] hover:text-[var(--color-text)] ${hoverBorder}`
                                   }`}
                               >
                                 {isActive && <Check size={11} strokeWidth={3} />}
