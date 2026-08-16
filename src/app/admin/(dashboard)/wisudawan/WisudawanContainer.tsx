@@ -99,8 +99,8 @@ export default function WisudawanContainer({
   const isSesiBelumDiisi = registeredWisudawan.length === 0 || registeredWisudawan.some(w => !w.sesi);
   const isNomorBelumDiisi = registeredWisudawan.length === 0 || registeredWisudawan.some(w => !w.urut);
 
-  // Sesi hanya bisa diubah ketika periode Sedang Dibuka
-  const isSesiDisabled = periodeStatus !== 'Sedang Dibuka';
+  // Sesi hanya bisa diubah ketika periode sudah Ditutup
+  const isSesiDisabled = periodeStatus !== 'Ditutup';
 
   return (
     <div className="flex flex-col gap-4 w-full">
