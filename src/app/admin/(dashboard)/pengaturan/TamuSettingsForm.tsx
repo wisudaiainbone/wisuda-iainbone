@@ -5,6 +5,9 @@ import { updateSetting, getAllSettingsAdmin } from "@/actions/settings";
 import { Loader2, CheckCircle2, Upload, ImageIcon, X } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { uploadTamuBackground, uploadTamuSignature, extractSupabasePath, deleteCertAsset } from "@/lib/uploadCertBg";
+import dynamic from "next/dynamic";
+
+const TamuVipExportButtons = dynamic(() => import("./TamuVipExportButtons"), { ssr: false });
 
 export default function TamuSettingsForm({ initialData }: { initialData?: Record<string, string> }) {
   const { showToast } = useToast();
@@ -15,6 +18,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
   const [tamuNama, setTamuNama] = useState(initialData?.tamu_nama || "");
   const [tamuNip, setTamuNip] = useState(initialData?.tamu_nip || "");
   const [tamuAcara, setTamuAcara] = useState(initialData?.tamu_acara || "");
+  const [tamuVipList, setTamuVipList] = useState(initialData?.tamu_vip_list || "");
 
   const [tamuBgDepanUrl, setTamuBgDepanUrl] = useState(initialData?.tamu_bg_depan_url || "");
   const [isUploadingBgDepan, setIsUploadingBgDepan] = useState(false);
@@ -41,6 +45,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
         updateSetting('tamu_nama', tamuNama),
         updateSetting('tamu_nip', tamuNip),
         updateSetting('tamu_acara', tamuAcara),
+        updateSetting('tamu_vip_list', tamuVipList),
         updateSetting('tamu_bg_depan_url', tamuBgDepanUrl),
         updateSetting('tamu_bg_belakang_url', tamuBgBelakangUrl),
         updateSetting('tamu_ttd_url', tamuTtdUrl)
@@ -326,9 +331,29 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
               value={tamuAcara}
               onChange={(e) => setTamuAcara(e.target.value)}
               rows={20}
-              className="w-full min-h-[300] px-4 py-3 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all resize-y"
+              className="w-full min-h-[300px] px-4 py-3 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all resize-y"
               placeholder={`08.00 - Registrasi\n09.00 - Pembukaan\n10.00 - Orasi Ilmiah`}
             />
+          </div>
+        </div>
+
+        {/* Daftar Tamu VIP Section */}
+        <div className="px-6 py-4 flex flex-col gap-4 hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
+          <div>
+            <h3 className="text-sm font-bold text-[var(--color-text)]">Daftar Tamu VIP</h3>
+            <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
+              Pisahkan setiap nama dengan baris baru (Enter). Digunakan untuk ekspor Label Kursi VIP.
+            </p>
+          </div>
+          <div className="w-full">
+            <textarea
+              value={tamuVipList}
+              onChange={(e) => setTamuVipList(e.target.value)}
+              rows={10}
+              className="w-full min-h-[150px] px-4 py-3 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all resize-y"
+              placeholder={`Dr. H. Ahmad, M.Ag.\nProf. Dr. H. Budi, M.A.`}
+            />
+            <TamuVipExportButtons vipListText={tamuVipList} />
           </div>
         </div>
 
