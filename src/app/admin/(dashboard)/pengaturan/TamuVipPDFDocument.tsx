@@ -4,6 +4,13 @@ import { Page, Text, View, Document, StyleSheet, Font } from '@react-pdf/rendere
 // Nonaktifkan pemenggalan kata (hyphenation)
 Font.registerHyphenationCallback(word => [word]);
 
+// Register custom font Condensed
+Font.register({
+  family: 'Roboto Condensed',
+  src: '/fonts/RobotoCondensed-Bold.ttf',
+  fontWeight: 'bold',
+});
+
 type VIPRow = {
   urut: number;
   nama: string;
@@ -41,8 +48,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameText: {
-    fontFamily: 'Helvetica-Bold',
-    fontSize: 10,
+    fontFamily: 'Roboto Condensed',
+    fontWeight: 'bold',
+    fontSize: 11, // Sedikit diperbesar karena condensed lebih ramping
     textAlign: 'center',
   },
   tempatText: {
