@@ -10,6 +10,9 @@ import {
   Font,
 } from "@react-pdf/renderer";
 
+// Nonaktifkan pemenggalan kata (hyphenation)
+Font.registerHyphenationCallback(word => [word]);
+
 export type TagData = {
   nim: string;
   namaLengkap: string;
@@ -38,7 +41,7 @@ const styles = StyleSheet.create({
     // 3 kolom x 4 baris = 12 label per halaman.
     // Memberikan rasio landscape (sekitar 2:1) yang pas untuk desain label.
     width: "33.333%",
-    height: "24.8%", // Sedikit di bawah 25% untuk mencegah wrapping ke halaman baru karena pembulatan pixel
+    height: "25%",
     padding: 0, // Tanpa jarak antar label
   },
   labelBox: {
@@ -100,14 +103,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   namaLengkap: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "Helvetica-Bold",
     color: "#000000",
     lineHeight: 1.1,
-    marginBottom: 2,
+    marginBottom: 0,
   },
   nim: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: "Helvetica",
     color: "#1f2937",
   },
