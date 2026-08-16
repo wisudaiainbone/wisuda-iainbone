@@ -43,7 +43,11 @@ export default function ProdiTableRow({ prodi, index, existingFakultas = [], onD
       </td>
       <td className="px-6 py-4 text-sm text-[var(--color-text-muted)]">
         {prodi.sesi ? (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400">
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase border ${
+            prodi.sesi === 'Sesi Satu' 
+              ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border-teal-200 dark:border-teal-800' 
+              : 'bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 border-violet-200 dark:border-violet-800'
+          }`}>
             {prodi.sesi}
           </span>
         ) : "-"}

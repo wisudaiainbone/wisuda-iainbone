@@ -8,13 +8,23 @@ import { useToast } from "@/components/ui/Toast";
 import { Save, X, Loader2, Pencil, GripVertical, Plus } from "lucide-react";
 import ProdiDialog from "./ProdiDialog";
 import DeleteProdiButton from "./DeleteProdiButton";
+import FakultasOrderDialog from "./FakultasOrderDialog";
 
 interface Props {
   initialProdiList: ProdiItem[];
 }
 
 export default function ProdiTableClient({ initialProdiList }: Props) {
-  const [items, setItems] = useState(initialProdiList);
+  // Urutkan default berdasarkan Sesi -> lalu urutan manual
+  const sortedInitialList = [...initialProdiList].sort((a, b) => {
+    const getSesiWeight = (s: string | null) => (s === "Sesi Satu" ? 1 : s === "Sesi Dua" ? 2 : 3);
+    const weightA = getSesiWeight(a.sesi);
+    const weightB = getSesiWeight(b.sesi);
+    if (weightA !== weightB) return weightA - weightB;
+    return a.urutan - b.urutan;
+  });
+
+  const [items, setItems] = useState(sortedInitialList);
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -23,7 +33,14 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
   // Memastikan sinkronisasi jika props berubah dari server (misal: habis edit via dialog)
   useEffect(() => {
     if (!isDirty) {
-      setItems(initialProdiList);
+      const sorted = [...initialProdiList].sort((a, b) => {
+        const getSesiWeight = (s: string | null) => (s === "Sesi Satu" ? 1 : s === "Sesi Dua" ? 2 : 3);
+        const weightA = getSesiWeight(a.sesi);
+        const weightB = getSesiWeight(b.sesi);
+        if (weightA !== weightB) return weightA - weightB;
+        return a.urutan - b.urutan;
+      });
+      setItems(sorted);
     }
   }, [initialProdiList, isDirty]);
 
@@ -71,7 +88,7 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
   };
 
   const handleCancel = () => {
-    setItems(initialProdiList);
+    setItems(sortedInitialList);
     setIsDirty(false);
   };
 
@@ -150,13 +167,14 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
       </div>
 
       {/* Desktop FAB Tambah Data */}
-      <div className="hidden md:flex fixed bottom-8 right-8 z-50">
+      <div className="hidden md:flex fixed bottom-8 right-8 z-50 items-center gap-3">
+        <FakultasOrderDialog prodiList={items} />
         <ProdiDialog 
           existingFakultas={existingFakultas}
           trigger={
           <button 
             title="Tambah Data Prodi"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-emerald-600/30 transition-transform hover:scale-105 active:scale-95"
           >
             <Plus size={24} />
           </button>
@@ -237,7 +255,11 @@ export default function ProdiTableClient({ initialProdiList }: Props) {
 
                 <div className="flex items-center gap-2">
                   {prodi.sesi && (
-                    <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
+                    <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase border ${
+                      prodi.sesi === 'Sesi Satu'
+                        ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border-teal-200 dark:border-teal-800'
+                        : 'bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 border-violet-200 dark:border-violet-800'
+                    }`}>
                       {prodi.sesi}
                     </span>
                   )}
