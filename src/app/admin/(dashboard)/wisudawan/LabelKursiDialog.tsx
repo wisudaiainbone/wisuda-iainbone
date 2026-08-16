@@ -91,8 +91,8 @@ export default function LabelKursiDialog({ data, disabled }: Props) {
         // Sesi 1
         if (i < sesi1List.length) {
           const w1 = sesi1List[i];
-          // Sesuai revisi: "[Urut] | [NAMA TANPA GELAR]"
-          row.getCell(2).value = `${w1.urut} | ${w1.nama_mahasiswa}`;
+          // Sesuai revisi: "[Urut] | [NAMA TANPA GELAR]" (UPPERCASE)
+          row.getCell(2).value = `${w1.urut} | ${w1.nama_mahasiswa.toUpperCase()}`;
           row.getCell(3).value = `${w1.nim} ( SESI 1 )`;
         } else {
           row.getCell(2).value = '';
@@ -102,8 +102,8 @@ export default function LabelKursiDialog({ data, disabled }: Props) {
         // Sesi 2
         if (i < sesi2List.length) {
           const w2 = sesi2List[i];
-          // Sesuai revisi: "[Urut] | [NAMA TANPA GELAR]"
-          row.getCell(4).value = `${w2.urut} | ${w2.nama_mahasiswa}`;
+          // Sesuai revisi: "[Urut] | [NAMA TANPA GELAR]" (UPPERCASE)
+          row.getCell(4).value = `${w2.urut} | ${w2.nama_mahasiswa.toUpperCase()}`;
           row.getCell(5).value = `${w2.nim} ( SESI 2 )`;
         } else {
           row.getCell(4).value = '';
