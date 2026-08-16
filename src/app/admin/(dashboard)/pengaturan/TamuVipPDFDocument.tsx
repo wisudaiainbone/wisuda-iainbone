@@ -8,6 +8,7 @@ type VIPRow = {
 
 type Props = {
   data: VIPRow[];
+  withTempat?: boolean;
 };
 
 // 16 cm x 19.5 cm in points (1 cm = ~28.346 pt)
@@ -40,10 +41,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica-Bold',
     fontSize: 10,
     textAlign: 'center',
+  },
+  tempatText: {
+    fontFamily: 'Helvetica',
+    fontSize: 10,
+    marginTop: 10,
+    textAlign: 'center',
   }
 });
 
-export default function TamuVipPDFDocument({ data }: Props) {
+export default function TamuVipPDFDocument({ data, withTempat = true }: Props) {
   // Chunking data per 10 items (10 labels = 1 page)
   const chunks: VIPRow[][] = [];
   for (let i = 0; i < data.length; i += 10) {
@@ -57,8 +64,13 @@ export default function TamuVipPDFDocument({ data }: Props) {
           {chunk.map((item, index) => (
             <View key={index} style={styles.cell}>
               <Text style={styles.nameText}>
-                {item.urut} | {item.nama.toUpperCase()}
+                {item.nama.toUpperCase()}
               </Text>
+              {withTempat && (
+                <Text style={styles.tempatText}>
+                  Tempat
+                </Text>
+              )}
             </View>
           ))}
         </Page>

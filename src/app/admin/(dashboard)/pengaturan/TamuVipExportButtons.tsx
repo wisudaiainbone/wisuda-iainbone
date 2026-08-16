@@ -17,6 +17,7 @@ export default function TamuVipExportButtons({ vipListText }: Props) {
   const { showToast } = useToast();
   const [isExportingExcel, setIsExportingExcel] = useState(false);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [isExportingPdfKursi, setIsExportingPdfKursi] = useState(false);
 
   const getVipData = () => {
     return vipListText
@@ -90,23 +91,27 @@ export default function TamuVipExportButtons({ vipListText }: Props) {
     }
   };
 
-  const handleExportPdf = async () => {
+  const handleExportPdf = async (withTempat: boolean) => {
     const data = getVipData();
     if (data.length === 0) {
       showToast("Daftar Tamu VIP kosong.", "error");
       return;
     }
 
-    setIsExportingPdf(true);
+    if (withTempat) setIsExportingPdf(true);
+    else setIsExportingPdfKursi(true);
+
     try {
-      const pdfBlob = await pdf(<TamuVipPDFDocument data={data} />).toBlob();
-      saveAs(pdfBlob, 'Label_Tamu_VIP.pdf');
-      showToast("PDF Label Tamu VIP berhasil diunduh!", "success");
+      const pdfBlob = await pdf(<TamuVipPDFDocument data={data} withTempat={withTempat} />).toBlob();
+      const fileName = withTempat ? 'Label_Tamu_VIP.pdf' : 'Label_Kursi_VIP.pdf';
+      saveAs(pdfBlob, fileName);
+      showToast(`PDF ${fileName} berhasil diunduh!`, "success");
     } catch (e: any) {
       console.error(e);
-      showToast(e.message || "Gagal membuat PDF Label Tamu VIP.", "error");
+      showToast(e.message || "Gagal membuat PDF Label.", "error");
     } finally {
-      setIsExportingPdf(false);
+      if (withTempat) setIsExportingPdf(false);
+      else setIsExportingPdfKursi(false);
     }
   };
 
@@ -123,12 +128,21 @@ export default function TamuVipExportButtons({ vipListText }: Props) {
       </button>
       <button
         type="button"
-        onClick={handleExportPdf}
-        disabled={isExportingPdf}
-        className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors disabled:opacity-70"
+        onClick={() => handleExportPdf(true)}
+        disabled={isExportingPdf || isExportingPdfKursi}
+        className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl transition-colors disabled:opacity-70"
       >
         {isExportingPdf ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
-        Cetak PDF Label (16x19,5 cm)
+        PDF Tamu VIP
+      </button>
+      <button
+        type="button"
+        onClick={() => handleExportPdf(false)}
+        disabled={isExportingPdf || isExportingPdfKursi}
+        className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors disabled:opacity-70"
+      >
+        {isExportingPdfKursi ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
+        PDF Kursi VIP
       </button>
     </div>
   );
