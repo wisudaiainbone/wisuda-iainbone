@@ -38,10 +38,10 @@ const styles = StyleSheet.create({
     padding: 10, // Margin tepi kertas agar tidak terpotong printer
   },
   labelContainer: {
-    // 3 kolom x 3 baris = 9 label per halaman.
-    // Menambah tinggi label seperti yang diminta.
+    // 3 kolom x 3 baris
+    // Sedikit dikurangi tingginya dari 33.333% ke 30%
     width: "33.333%",
-    height: "33.333%",
+    height: "30%",
     padding: 0, // Tanpa jarak antar label
   },
   labelBox: {
