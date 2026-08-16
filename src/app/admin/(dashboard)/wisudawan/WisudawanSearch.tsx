@@ -15,7 +15,7 @@ interface WisudawanSearchProps {
 
 export default function WisudawanSearch({ fakultasList, prodiList, statusList = [], onSearch, children, filteredItems, totalItems }: WisudawanSearchProps) {
   const [showFilters, setShowFilters] = useState(false);
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [fakultas, setFakultas] = useState("");
   const [prodi, setProdi] = useState("");
@@ -32,7 +32,7 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
       isFirstRender.current = false;
       return;
     }
-    
+
     if (onSearch) {
       onSearch({
         q: searchTerm,
@@ -124,7 +124,7 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
             </button>
           )}
         </div>
-        
+
         {/* Info Count (Desktop) */}
         {filteredItems !== undefined && (
           <div className="hidden xl:flex items-center gap-2 px-3 h-10 shrink-0 bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-xl">
@@ -143,7 +143,7 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
       </div>
 
       {/* Mobile Filter Toggle */}
-      <button 
+      <button
         onClick={() => setShowFilters(!showFilters)}
         className="xl:hidden flex items-center justify-between w-full px-4 h-10 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-colors"
       >
@@ -162,86 +162,86 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
       {/* Filters Area */}
       <div className={`flex flex-col gap-3 ${showFilters ? 'flex' : 'hidden'} xl:flex w-full animate-in fade-in slide-in-from-top-2 duration-200`}>
         <div className="flex flex-wrap gap-2 w-full">
-        {fakultasList.length > 0 && (
+          {fakultasList.length > 0 && (
+            <select
+              value={fakultas}
+              onChange={(e) => setFakultas(e.target.value)}
+              className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
+            >
+              <option value="">Fakultas</option>
+              {fakultasList.map((f) => (
+                <option key={f} value={f}>{f}</option>
+              ))}
+            </select>
+          )}
+
+          {prodiList.length > 0 && (
+            <select
+              value={prodi}
+              onChange={(e) => setProdi(e.target.value)}
+              className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
+            >
+              <option value="">Prodi</option>
+              {prodiList.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          )}
+
+          {statusList.length > 0 && (
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
+            >
+              <option value="">Status</option>
+              {statusList.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          )}
+
           <select
-            value={fakultas}
-            onChange={(e) => setFakultas(e.target.value)}
+            value={toga}
+            onChange={(e) => setToga(e.target.value)}
             className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
           >
-            <option value="">Semua Fakultas</option>
-            {fakultasList.map((f) => (
-              <option key={f} value={f}>{f}</option>
-            ))}
+            <option value="">Data Toga</option>
+            <option value="sudah">Sudah Isi Data Toga</option>
+            <option value="belum">Belum Isi Data Toga</option>
           </select>
-        )}
 
-        {prodiList.length > 0 && (
           <select
-            value={prodi}
-            onChange={(e) => setProdi(e.target.value)}
+            value={ambilToga}
+            onChange={(e) => setAmbilToga(e.target.value)}
             className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
           >
-            <option value="">Semua Prodi</option>
-            {prodiList.map((p) => (
-              <option key={p} value={p}>{p}</option>
-            ))}
+            <option value="">Ambil Toga</option>
+            <option value="sudah">Sudah Ambil Toga</option>
+            <option value="belum">Belum Ambil Toga</option>
           </select>
-        )}
 
-        {statusList.length > 0 && (
           <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            value={hadir}
+            onChange={(e) => setHadir(e.target.value)}
             className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
           >
-            <option value="">Semua Status</option>
-            {statusList.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
+            <option value="">Kehadiran</option>
+            <option value="sudah">Hadir</option>
+            <option value="belum">Belum/Tidak Hadir</option>
           </select>
-        )}
 
-        <select
-          value={toga}
-          onChange={(e) => setToga(e.target.value)}
+          <select
+            value={sesi}
+            onChange={(e) => setSesi(e.target.value)}
             className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
-        >
-          <option value="">Semua Data Toga</option>
-          <option value="sudah">Sudah Isi Data Toga</option>
-          <option value="belum">Belum Isi Data Toga</option>
-        </select>
-
-        <select
-          value={ambilToga}
-          onChange={(e) => setAmbilToga(e.target.value)}
-            className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
-        >
-          <option value="">Semua Status Pengambilan Toga</option>
-          <option value="sudah">Sudah Ambil Toga</option>
-          <option value="belum">Belum Ambil Toga</option>
-        </select>
-
-        <select
-          value={hadir}
-          onChange={(e) => setHadir(e.target.value)}
-            className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
-        >
-          <option value="">Semua Kehadiran</option>
-          <option value="sudah">Hadir</option>
-          <option value="belum">Belum/Tidak Hadir</option>
-        </select>
-
-        <select
-          value={sesi}
-          onChange={(e) => setSesi(e.target.value)}
-            className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
-        >
-          <option value="">Semua Sesi</option>
-          <option value="Sesi Satu">Sesi Satu</option>
-          <option value="Sesi Dua">Sesi Dua</option>
-          <option value="Tanpa Sesi">Tanpa Sesi</option>
-        </select>
-      </div>
+          >
+            <option value="">Sesi</option>
+            <option value="Sesi Satu">Sesi Satu</option>
+            <option value="Sesi Dua">Sesi Dua</option>
+            <option value="Tanpa Sesi">Tanpa Sesi</option>
+          </select>
+        </div>
       </div>
 
       {/* Mobile Action Buttons (Below Filters) */}
