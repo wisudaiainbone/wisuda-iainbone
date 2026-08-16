@@ -211,7 +211,7 @@ export default function WisudawanTableClient({
                         )}
                       </td>
                     )}
-                    <td className="px-3 py-4 text-[var(--color-text-muted)] font-medium text-center">
+                    <td className="px-3 py-4 text-[var(--color-text-muted)] text-xs font-mono text-center">
                       {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
                     </td>
                     <td className="px-3 py-4 text-[var(--color-text-muted)] text-xs font-mono text-center">{w.urut || '-'}</td>

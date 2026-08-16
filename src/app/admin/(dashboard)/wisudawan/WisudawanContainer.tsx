@@ -43,7 +43,8 @@ export default function WisudawanContainer({
     toga: "",
     hadir: "",
     ambilToga: "",
-    sesi: ""
+    sesi: "",
+    sortBy: "terbaru"
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,8 +75,23 @@ export default function WisudawanContainer({
       
       return matchQ && matchFakultas && matchProdi && matchStatus && matchToga && matchHadir && matchAmbilToga && matchSesi;
     }).sort((a, b) => {
+      if (filters.sortBy === 'urut_asc') {
+        const urutA = a.urut ? parseInt(a.urut, 10) : 999999;
+        const urutB = b.urut ? parseInt(b.urut, 10) : 999999;
+        if (urutA !== urutB) return urutA - urutB;
+        // Fallback ke timestamp terbaru
+        const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+        const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+        return timeB - timeA;
+      }
+      
       const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
       const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+      
+      if (filters.sortBy === 'terlama') {
+        return timeA - timeB;
+      }
+      // default 'terbaru'
       return timeB - timeA;
     });
   }, [allWisudawan, filters]);
@@ -99,8 +115,8 @@ export default function WisudawanContainer({
   const isSesiBelumDiisi = registeredWisudawan.length === 0 || registeredWisudawan.some(w => !w.sesi);
   const isNomorBelumDiisi = registeredWisudawan.length === 0 || registeredWisudawan.some(w => !w.urut);
 
-  // Sesi hanya bisa diubah ketika periode sudah Ditutup
-  const isSesiDisabled = periodeStatus !== 'Ditutup';
+  // Sesi hanya bisa diubah ketika periode Sedang Dibuka
+  const isSesiDisabled = periodeStatus !== 'Sedang Dibuka';
 
   return (
     <div className="flex flex-col gap-4 w-full">
