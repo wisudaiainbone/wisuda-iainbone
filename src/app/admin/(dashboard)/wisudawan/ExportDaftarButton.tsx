@@ -19,9 +19,10 @@ type WisudawanRow = {
 type Props = {
   data: WisudawanRow[];
   filename?: string;
+  disabled?: boolean;
 };
 
-export default function ExportDaftarButton({ data, filename = 'daftar-wisudawan' }: Props) {
+export default function ExportDaftarButton({ data, filename = 'daftar-wisudawan', disabled }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleExport = async () => {
@@ -126,9 +127,9 @@ export default function ExportDaftarButton({ data, filename = 'daftar-wisudawan'
   return (
     <button
       onClick={handleExport}
-      disabled={loading || !data.length}
-      title="Export Daftar Wisudawan"
-      className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-teal-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+      disabled={loading || !data.length || disabled}
+      title={disabled ? 'Generate Nomor terlebih dahulu sebelum export daftar' : 'Export Daftar Wisudawan'}
+      className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors whitespace-nowrap ${(loading || !data.length || disabled) ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-teal-600 hover:bg-teal-700'}`}
     >
       {loading ? (
         <Loader2 size={16} className="animate-spin" />

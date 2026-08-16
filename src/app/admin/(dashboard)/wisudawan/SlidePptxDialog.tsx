@@ -33,6 +33,7 @@ type ProdiItem = {
 type Props = {
   data: WisudawanRow[];
   prodiData: ProdiItem[];
+  disabled?: boolean;
 };
 
 async function fetchImageAsBase64(url: string): Promise<string | null> {
@@ -97,7 +98,7 @@ function getWarna(fakultas: string) {
   return DEFAULT_COLORS;
 }
 
-export default function SlidePptxDialog({ data, prodiData }: Props) {
+export default function SlidePptxDialog({ data, prodiData, disabled }: Props) {
   const [open, setOpen] = useState(false);
   const [selectedFakultas, setSelectedFakultas] = useState('');
   const [selectedProdi, setSelectedProdi] = useState('');
@@ -396,9 +397,9 @@ export default function SlidePptxDialog({ data, prodiData }: Props) {
       {/* Tombol Slide */}
       <button
         onClick={() => setOpen(true)}
-        disabled={!data.length}
+        disabled={!data.length || disabled}
         title="Generate Slide PPTX"
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-fuchsia-900/20 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors whitespace-nowrap ${(!data.length || disabled) ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-fuchsia-600 hover:bg-fuchsia-700'}`}
       >
         <MonitorPlay size={16} />
         Slide

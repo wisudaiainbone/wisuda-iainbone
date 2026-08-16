@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { getSetting, updateSetting, getAllSettingsAdmin, checkAkunDummy, createAkunDummy, deleteAkunDummy } from "@/actions/settings";
-import { getActivePeriode } from "@/actions/periode";
+import { getLatestPeriode } from "@/actions/periode";
 import { KeyRound, CheckCircle2, AlertCircle, Loader2, Shirt, Upload, ImageIcon, X, UserPlus, UserMinus } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { uploadCertBackground, uploadCertSignature, extractSupabasePath, deleteCertAsset, uploadContohFoto } from "@/lib/uploadCertBg";
@@ -144,7 +144,7 @@ export default function AdminPengaturanPage() {
       try {
         const [allSettings, periodeAktif, dummyStatus] = await Promise.all([
           getAllSettingsAdmin(),
-          getActivePeriode(),
+          getLatestPeriode(),
           checkAkunDummy()
         ]);
         const settingsMap: Record<string, { value: string, description: string }> = {};

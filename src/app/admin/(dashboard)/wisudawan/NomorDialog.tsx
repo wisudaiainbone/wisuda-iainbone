@@ -11,7 +11,7 @@ import { getFakultasData } from "@/lib/fakultas";
 
 type Phase = "confirm" | "loading" | "result" | "error";
 
-export default function NomorDialog() {
+export default function NomorDialog({ disabled }: { disabled?: boolean }) {
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("confirm");
   const [result, setResult] = useState<GenerateNomorResult | null>(null);
@@ -61,7 +61,8 @@ export default function NomorDialog() {
       {/* Trigger Button */}
       <button
         onClick={handleOpen}
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-amber-900/20 whitespace-nowrap"
+        disabled={disabled}
+        className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors whitespace-nowrap ${disabled ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-amber-500 hover:bg-amber-600'}`}
       >
         <ListOrdered size={16} />
         Nomor

@@ -214,10 +214,13 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
   - **Banner Info Kuota**: Dialog import menampilkan panel ringkasan kuota (Kuota Total / Terisi / Sisa) beserta badge sisa per-Fakultas. Badge berwarna merah jika kuota habis, amber jika hampir penuh, hijau jika masih lega.
   - **Indikator Prediksi di Preview**: Sebelum submit, header preview menampilkan badge tambahan **"Ditolak (Kuota)"** jika jumlah baris valid melebihi sisa kuota yang tersedia.
 - **Export Multi-format (Dropdown)**: Unduh seluruh data (termasuk filter yang sedang aktif) melalui menu dropdown cerdas yang menyediakan 4 pilihan format: `.xlsx`, `.csv`, `.sql` (perintah single-insert), dan `.json`. Pilihan CSV, SQL, dan JSON dilindungi otorisasi khusus dan hanya bisa diakses oleh role `superadmin` atau `admin_institut`.
+- **Filter Status "Dihapus"**: Saat filter Status diubah ke **"Dihapus"**, tampilan tabel berubah menjadi mode Restore. Tombol Hapus digantikan oleh tombol **Pulihkan** (ikon putar balik hijau) dan, khusus Superadmin, tombol **Hapus Permanen** (ikon tempat sampah merah).
 - **Kolom Aksi Cepat**:
-  - 👁️ **Lihat Profil** — pratinjau profil.
-  - 🔑 **Reset Password** — reset password ke default.
-  - 🗑️ **Hapus Data Satuan / Massal** — hapus permanen wisudawan secara individual maupun **hapus massal (bulk delete)** menggunakan kotak centang untuk wisudawan yang belum mendaftar. (Otomatis menghapus foto di Google Drive via GAS dan membersihkan cache Upstash Redis).
+  - Lihat Profil — pratinjau profil.
+  - Reset Password — reset password ke default.
+  - **Hapus Data (Soft Delete)** — mengubah status wisudawan menjadi `'Dihapus'` (tidak dihapus permanen). Data tersembunyi dari seluruh statistik, hitungan toga, kehadiran, dan tampilan utama. Foto di Google Drive **tidak** dihapus saat soft delete agar bisa dipulihkan.
+  - **Pulihkan Data** — mengembalikan status wisudawan berstatus `'Dihapus'` kembali ke `'Calon Wisudawan'`. Tersedia secara individual maupun massal (bulk restore).
+  - **Hapus Permanen (Hard Delete)** — *khusus Superadmin*: menghapus baris data wisudawan secara permanen dari database beserta foto di Google Drive. Hanya muncul saat filter Status "Dihapus" aktif.
 
 ### Detail Wisudawan (`/admin/wisudawan/[nim]`)
 Halaman detail khusus panel admin dengan desain *full-width* minimalis.
@@ -265,34 +268,28 @@ Halaman pengelolaan semua pengajuan perbaikan data akademik yang diajukan wisuda
 
 > ⚠️ Halaman ini menampilkan pengajuan dari seluruh wisudawan. Perubahan data aktual di tabel `wisudawan` masih harus dilakukan secara manual oleh Admin melalui form Edit Data Wisudawan.
 
-### Prestasi Akademik (`/admin/prestasi`)
-Halaman peringkat otomatis wisudawan berprestasi berdasarkan IPK tertinggi dan tanggal yudisium terlama.
-- **Wisudawan Terbaik Institut**: Banner emas di bagian atas menampilkan peraih IPK tertinggi secara keseluruhan (kecuali Pascasarjana), lengkap dengan nama gelar, NIM, IPK, Predikat, Prodi, Fakultas, dan Tgl Yudisium.
-- **Tabel Peringkat per Fakultas**: Tabel lengkap menampilkan Top 3 wisudawan terbaik per Fakultas dengan kolom: Peringkat, NIM, Wisudawan, Program Studi, Capaian Akademik, Tgl Yudisium, dan Opsi.
-- **Warna Baris Peringkat**: Setiap baris diberi warna latar dan garis kiri berwarna sesuai medali:
-  - 🥇 **Peringkat 1** — latar kuning emas (amber) + garis kiri amber
-  - 🥈 **Peringkat 2** — latar abu-abu perak (slate) + garis kiri slate
-  - 🥉 **Peringkat 3** — latar oranye perunggu + garis kiri amber-700
-- **Tombol Generate**: Menghitung ulang peringkat dari awal berdasarkan IPK + Tanggal Yudisium, menyimpan hasilnya ke kolom `prestasi_akd` di tabel `wisudawan`. **Setiap kali Generate ditekan, seluruh override manual di-reset** dan sistem kembali ke perhitungan murni.
-- **Override Manual**: Tombol **Ganti Wisudawan** di setiap baris memungkinkan admin mengganti pemenang secara manual. Override disimpan sementara di `app_settings` dengan key `prestasi_override_[periode]` sebagai "aturan pengecualian" agar tidak bertabrakan saat ada beberapa penggantian berurutan.
-- **Print Sertifikat (PDF)**: Tombol "Print Sertifikat" men-generate file PDF `PIAGAM PENGHARGAAN` bergaya resmi untuk setiap wisudawan yang `prestasi_akd`-nya terisi (tidak null). Fitur ini:
-  - Menggunakan `@react-pdf/renderer` — menghasilkan PDF asli dengan teks yang bisa diseleksi dan dicopy.
-  - Data penandatangan (Nomor SK, Jabatan, NIP, Nama) diambil dari menu Pengaturan → Prestasi.
-  - Tanggal dan Tempat Pelaksanaan diambil otomatis dari data **Periode aktif** di database.
-  - **Latar Belakang Kustom**: Jika URL background telah diisi di Pengaturan → Prestasi, gambar tersebut dirender sebagai *layer* belakang sertifikat (bukan halaman terpisah).
-  - **Tanda Tangan Digital**: Gambar tanda tangan pejabat (upload dari Pengaturan → Prestasi) dirender sebagai *overlay* di area tanda tangan, di belakang teks nama dan jabatan, sehingga tidak menutupi identitas penandatangan.
-  - **Format Paragraf**: Kalimat penghargaan otomatis menyertakan nama **Fakultas** wisudawan (misal: "Wisudawan Terbaik Ketiga Fakultas Tarbiyah" atau "Wisudawan Terbaik Ketiga Pascasarjana").
-  - Semua PDF dikemas menjadi satu file `.zip` oleh `jszip` dan diunduh otomatis.
-  - **Format nama file**: `Sertifikat-AKD_[Fakultas]_[Sebutan]_[NIM]_[Nama Mahasiswa].pdf`.
-  - Progress generate ditampilkan real-time di tombol (contoh: "Memproses 3/16 PDF...").
-- **Generate Slide PPTX (Prestasi)**: Tombol "Slide" men-generate file presentasi khusus untuk wisudawan peraih prestasi akademik:
-  - Proses *client-side* murni, membuat 1 file slide lintas-fakultas secara bersamaan.
-  - Secara otomatis mem-filter dan hanya men-generate slide untuk wisudawan yang memiliki data prestasi.
-  - Menggunakan desain khusus: tanpa teks Judul Penelitian, warna teks bottom-half berwarna putih, dan penambahan ornamen *setengah lingkaran raksasa (diameter 45 cm)* di posisi terbawah slide yang mengikuti warna tema masing-masing Fakultas.
-  - Fitur *Title Case*, label IPK pastel, dan bingkai foto tetap dipertahankan seperti pada fitur slide utama.
-- **Export XLSX**: Tombol Export di kanan atas menghasilkan file Excel berisi dua sheet:
-  - *Prestasi Akademik*: Peringkat Institut + peringkat per Fakultas, kolom NIM, IPK, Tgl Yudisium, Fakultas, Prodi, Status.
-  - *Pengalaman Organisasi*: Data Ormawa & jabatan wisudawan terpilih.
+### Prestasi Akademik & Prodi (`/admin/prestasi`)
+Halaman peringkat otomatis wisudawan berprestasi dengan dua tab utama: **Prestasi Akademik** (per Fakultas) dan **Prestasi Prodi** (per Program Studi).
+
+Algoritma pengurutan bersifat **deterministik**: IPK tertinggi → Tanggal Yudisium terlama → NIM (tie-breaker) untuk memastikan hasil yang konsisten antara tampilan UI dan data yang tersimpan di database, bahkan saat ada mahasiswa dengan IPK dan tanggal yudisium yang sama persis.
+
+#### Tab Prestasi Akademik
+- **Wisudawan Terbaik Institut**: Banner emas di bagian atas menampilkan peraih IPK tertinggi secara keseluruhan (kecuali Pascasarjana).
+- **Tabel Peringkat per Fakultas**: Tabel lengkap menampilkan Top 3 wisudawan terbaik per Fakultas dengan kolom: Peringkat, NIM, Wisudawan, Capaian Akademik, Tgl Yudisium, Prestasi, dan Opsi.
+- **Warna Baris Peringkat**: Setiap baris diberi warna latar dan garis kiri berwarna sesuai medali (emas, perak, perunggu).
+- **Tombol Generate**: Menghitung ulang peringkat dari awal, menyimpan hasilnya ke kolom `prestasi_akd` di tabel `wisudawan`. Setiap Generate me-reset seluruh override manual.
+- **Override Manual**: Tombol **Ganti Wisudawan** di setiap baris. Override disimpan di `app_settings` dengan key `prestasi_override_[periode]` pada bagian `akademik`.
+- **Print Sertifikat (PDF)**: Men-generate `PIAGAM PENGHARGAAN` untuk setiap wisudawan berprestasi menggunakan `@react-pdf/renderer`. **Format Paragraf**: kalimat penghargaan menyertakan nama **Prodi** wisudawan (misal: "Wisudawan Terbaik Ketiga Prodi Akuntansi Syariah"). Semua PDF dikemas dalam satu file `.zip`. Progress generate ditampilkan real-time di tombol.
+
+#### Tab Prestasi Prodi
+- **Tabel Peringkat per Program Studi**: Top 3 wisudawan terbaik per masing-masing Prodi, dikelompokkan berdasarkan Fakultas dengan header baris yang jelas.
+- **Tombol Generate Prodi**: Menghitung ulang peringkat terbaik per Prodi secara terpisah dari Prestasi Akademik. Hasil tersimpan ke kolom `prestasi_prodi` di tabel `wisudawan`.
+- **Override Manual Prodi**: Tombol **Ganti Wisudawan** per baris, disimpan di `prestasi_override_[periode]` bagian `prodi`.
+- **Print Sertifikat Prodi**: Men-generate sertifikat dengan **Format Paragraf Prodi**: kalimat penghargaan menyertakan nama **Prodi** (misal: "Wisudawan Terbaik Kedua Prodi Ekonomi Syariah").
+
+#### Fitur Bersama (Kedua Tab)
+- **Generate Slide PPTX (Prestasi)**: Men-generate file presentasi khusus untuk wisudawan peraih prestasi. Proses *client-side* murni, hanya menyertakan wisudawan yang memiliki data prestasi.
+- **Export XLSX**: Menghasilkan file Excel dengan dua sheet (*Prestasi Akademik* dan *Pengalaman Organisasi*).
 
 ### Informasi Wisuda (`/admin/informasi`)
 Halaman referensi cepat yang menampilkan informasi publik wisuda untuk semua periode — **read-only**, tersedia untuk semua role admin.
@@ -421,9 +418,10 @@ Klik **"Buat Superadmin"**. Setelah selesai, Anda bisa langsung login dengan Goo
 | `sesi.ts` | Penetapan Sesi per Fakultas; update massal `wisudawan.sesi` & `prodi.sesi`; invalidate cache NIM massal via Redis Pipeline |
 | `prodi.ts` | CRUD master data prodi; `updateProdiOrder` — batch update kolom `urutan` untuk drag-and-drop |
 | `nomorUndangan.ts` | Generate nomor urut & ID undangan (format `UND_[Periode]_[Sesi]_[Urut]_[NIM]`); reset `urut`/`id_undangan`/`qr_undangan`; batch update + invalidasi Redis Pipeline massal |
-| `scanCache.ts` | **[Baru]** `warmUpTogaCache` & `warmUpUndanganCache` — pipeline Redis warm-up dari Supabase; `getScanMeta` — baca status cache |
-| `scanHistory.ts` | **[Baru]** `getRecentScans` — fetch 20 data scan kehadiran/toga terbaru dari Supabase untuk kolom riwayat di desktop |
-| `prestasiOverrides.ts` | `generatePrestasi` (reset override + hitung ulang), `setPrestasiOverride` / `removePrestasiOverride` (simpan/hapus override manual), `syncPrestasiAkdToDb` (batch update kolom `prestasi_akd` ke Supabase) |
+| `scanCache.ts` | `warmUpTogaCache` & `warmUpUndanganCache` — pipeline Redis warm-up dari Supabase; `getScanMeta` — baca status cache |
+| `scanHistory.ts` | `getRecentScans` — fetch 20 data scan kehadiran/toga terbaru dari Supabase untuk kolom riwayat di desktop |
+| `prestasiOverrides.ts` | `generatePrestasi` / `generatePrestasiProdi` (hitung ulang + reset override); `setPrestasiOverride` / `removePrestasiOverride` (override manual); `syncPrestasiAkdToDb` / `syncPrestasiProdiToDb` (batch update kolom `prestasi_akd` / `prestasi_prodi` ke Supabase) |
+| `wisudawan.ts` | Termasuk `deleteWisudawan` (soft delete → status `'Dihapus'`); `restoreWisudawan` / `restoreWisudawanBulk` (pulihkan ke `'Calon Wisudawan'`); `hardDeleteWisudawan` / `hardDeleteWisudawanBulk` (hapus permanen, khusus superadmin) |
 
 ---
 

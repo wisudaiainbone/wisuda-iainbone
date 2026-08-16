@@ -197,3 +197,16 @@ Admin lihat daftar pengajuan
 - Satu wisudawan hanya boleh punya **1 pengajuan aktif** (`status='proses'`) dalam satu waktu.
 - Setelah status menjadi `'diterima'` atau `'ditolak'`, wisudawan bisa mengajukan permintaan baru.
 - Data aktual di tabel `wisudawan` diperbarui **secara manual oleh Admin** setelah menyetujui pengajuan.
+
+---
+
+## 7. Tampilan Halaman Publik Saat Periode Ditutup
+
+Saat status periode diubah menjadi `'Ditutup'` oleh Admin, halaman publik (`/`) akan otomatis menyesuaikan tampilannya:
+
+- **Label badge status menjadi merah** (rose) — badge yang biasanya menampilkan "Sedang Dibuka" kini merah bertuliskan "Ditutup".
+- **Kotak Jadwal Pendaftaran disembunyikan sepenuhnya** — seluruh blok informasi masa pendaftaran beserta countdown timer tidak ditampilkan sama sekali. Layout kolom kanan menjadi lebih ringkas dan tetap rapi.
+- **Tombol "Daftar Sekarang"** pada tampilan desktop tidak ditampilkan.
+
+Informasi acara (tanggal, tempat, sesi) tetap ditampilkan agar wisudawan yang sudah terdaftar masih dapat melihat detail pelaksanaan wisuda.
+

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getAllWisudawan } from "@/actions/wisudawan";
 import { getProdiList } from "@/actions/prodi";
 import { getSetting } from "@/actions/settings";
-import { getActivePeriode } from "@/actions/periode";
+import { getLatestPeriode } from "@/actions/periode";
 import { UserCheck, GraduationCap, Clock } from "lucide-react";
 import { getAdminSession } from "@/actions/adminAuth";
 import WisudawanContainer from "./WisudawanContainer";
@@ -20,7 +20,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
     }),
     getProdiList(),
     getSetting('allow_delete_wisudawan', 'false'),
-    getActivePeriode(),
+    getLatestPeriode(),
   ]);
 
   const allowDeleteWisudawan = allowDeleteSetting === 'true';
@@ -88,6 +88,7 @@ export default async function AdminWisudawanPage(props: PageProps) {
           adminSession={adminSession}
           allowDeleteWisudawan={allowDeleteWisudawan}
           kuotaInfo={activePeriode}
+          periodeStatus={activePeriode?.status ?? null}
         />
       </Suspense>
 

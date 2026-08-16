@@ -14,7 +14,7 @@ const SESI_OPTIONS = [
 
 type FakSesi = { fakultas: string; sesi: string | null };
 
-export default function SesiDialog() {
+export default function SesiDialog({ disabled }: { disabled?: boolean }) {
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
   const [rows, setRows] = useState<FakSesi[]>([]);
@@ -91,7 +91,9 @@ export default function SesiDialog() {
       {/* Trigger Button */}
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-violet-900/20 whitespace-nowrap"
+        disabled={disabled}
+        title={disabled ? 'Sesi hanya bisa diubah setelah periode ditutup' : 'Pengaturan Sesi per Fakultas'}
+        className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors whitespace-nowrap ${disabled ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-violet-600 hover:bg-violet-700'}`}
       >
         <Layers size={16} />
         Sesi

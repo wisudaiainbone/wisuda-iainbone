@@ -35,6 +35,7 @@ type ProdiItem = {
 type Props = {
   data: WisudawanRow[];
   prodiData: ProdiItem[];
+  disabled?: boolean;
 };
 
 async function fetchImageAsBase64(url: string): Promise<string | null> {
@@ -91,7 +92,7 @@ const pdfStyles = StyleSheet.create({
   signBox: { width: '100%', height: '100%', display: 'flex', justifyContent: 'space-between' }
 });
 
-export default function AlbumDialog({ data, prodiData }: Props) {
+export default function AlbumDialog({ data, prodiData, disabled }: Props) {
   const [open, setOpen] = useState(false);
   const [selectedFakultas, setSelectedFakultas] = useState('');
   const [includePhoto, setIncludePhoto] = useState(true);
@@ -355,7 +356,8 @@ export default function AlbumDialog({ data, prodiData }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-pink-600 hover:bg-pink-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-pink-900/20 whitespace-nowrap"
+        disabled={disabled}
+        className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors whitespace-nowrap ${disabled ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-pink-600 hover:bg-pink-700'}`}
       >
         <BookOpen size={18} />
         <span>Album</span>

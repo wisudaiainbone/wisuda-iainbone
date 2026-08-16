@@ -21,6 +21,7 @@ interface WisudawanContainerProps {
   adminSession: any;
   allowDeleteWisudawan: boolean;
   kuotaInfo?: any;
+  periodeStatus?: string | null;
 }
 
 export default function WisudawanContainer({
@@ -32,6 +33,7 @@ export default function WisudawanContainer({
   adminSession,
   allowDeleteWisudawan,
   kuotaInfo,
+  periodeStatus,
 }: WisudawanContainerProps) {
   const [filters, setFilters] = useState({
     q: "",
@@ -85,6 +87,14 @@ export default function WisudawanContainer({
   const showToga = filters.toga !== '';
   const showSesi = filters.sesi !== '';
 
+  // Disable states berdasarkan kondisi data & periode
+  const registeredWisudawan = useMemo(() => allWisudawan.filter(w => w.status === 'Terdaftar'), [allWisudawan]);
+  const isSesiBelumDiisi = registeredWisudawan.length === 0 || registeredWisudawan.some(w => !w.sesi);
+  const isNomorBelumDiisi = registeredWisudawan.length === 0 || registeredWisudawan.some(w => !w.urut);
+
+  // Sesi hanya bisa diubah ketika periode sudah Ditutup
+  const isSesiDisabled = periodeStatus !== 'Ditutup';
+
   return (
     <div className="flex flex-col gap-4 w-full">
       <div className="w-full">
@@ -98,15 +108,15 @@ export default function WisudawanContainer({
         >
           <ImportWisudawanDialog userRole={adminSession?.role || ''} unitKerja={adminSession?.unit_kerja} dbProdiList={dbProdiList} kuotaInfo={kuotaInfo} />
           <ExportDropdown data={filteredList} filename="data-wisudawan" userRole={adminSession?.role} />
-          <ExportDaftarButton data={filteredList} filename="daftar-wisudawan" />
           
           {adminSession?.role !== 'admin_unit' && (
             <>
-              <SesiDialog />
-              <SlidePptxDialog data={filteredList} prodiData={dbProdiList} />
-              <TagDialog data={filteredList} />
-              <NomorDialog />
-              <AlbumDialog data={filteredList} prodiData={dbProdiList} />
+              <SesiDialog disabled={isSesiDisabled} />
+              <NomorDialog disabled={isSesiBelumDiisi} />
+              <ExportDaftarButton data={filteredList} filename="daftar-wisudawan" disabled={isNomorBelumDiisi} />
+              <TagDialog data={filteredList} disabled={isNomorBelumDiisi} />
+              <SlidePptxDialog data={filteredList} prodiData={dbProdiList} disabled={isNomorBelumDiisi} />
+              <AlbumDialog data={filteredList} prodiData={dbProdiList} disabled={isNomorBelumDiisi} />
             </>
           )}
         </WisudawanSearch>

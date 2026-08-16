@@ -43,7 +43,7 @@ Primary key: `nim`. Menyimpan seluruh data profil wisudawan.
 | `nama_gelar` | TEXT | Auto-generated: nama + gelar (letak cerdas S3 vs lainnya) |
 | `password` | TEXT | NULL = pakai default; `$sha256$salt$hash` = password kustom ter-hash |
 | `id_wisuda` | TEXT | Format: `[PERIODE]_[TAHUN]_[URUTAN-3-DIGIT]_[NIM]` |
-| `status` | TEXT | `'Calon Wisudawan'` atau `'Terdaftar'` |
+| `status` | TEXT | `'Calon Wisudawan'`, `'Terdaftar'`, atau `'Dihapus'` (soft delete — data tidak dihapus, hanya disembunyikan) |
 | `log_status` | JSONB | Array rekaman perubahan status (append-only, tidak pernah ditimpa) |
 | `tanggal_yudisium` | DATE | Format baku `YYYY-MM-DD` |
 | `toga` | TEXT | Ukuran toga (S/M/L/XL/XXL) |
@@ -55,7 +55,8 @@ Primary key: `nim`. Menyimpan seluruh data profil wisudawan.
 | `qr_undangan` | TEXT | URL QR Code undangan dari `api.qrserver.com` |
 | `waktu_toga` | TIMESTAMPTZ | Timestamp saat wisudawan mengambil toga (di-set via Scan Toga, NULL = belum ambil) |
 | `waktu_hadir` | TIMESTAMPTZ | Timestamp saat wisudawan hadir wisuda (di-set via Scan Kehadiran, NULL = belum hadir) |
-| `prestasi_akd` | TEXT | Sebutan prestasi akademik: `'Kesatu'`, `'Kedua'`, `'Ketiga'`, atau kombinasi dengan `'Institut'` (contoh: `'Kesatu, Institut'`). Di-set otomatis oleh tombol Generate di halaman Prestasi. NULL = tidak berprestasi. |
+| `prestasi_akd` | TEXT | Sebutan prestasi akademik per Fakultas: `'Kesatu'`, `'Kedua'`, `'Ketiga'`, atau kombinasi `'Kesatu, Institut'`. Di-set otomatis oleh Generate di tab Prestasi Akademik. NULL = tidak berprestasi. |
+| `prestasi_prodi` | TEXT | Sebutan prestasi terbaik per Program Studi: `'Kesatu'`, `'Kedua'`, atau `'Ketiga'`. Di-set otomatis oleh Generate di tab Prestasi Prodi. NULL = tidak berprestasi. |
 
 #### Format `log_status`
 ```json
@@ -256,6 +257,12 @@ Menyimpan daftar tamu undangan eksternal untuk acara wisuda.
    - `db_migration.sql` — tabel `admin_users` + `app_settings` + RLS policies
    - `perbaikan_migration.sql` — tabel `perbaikan_data` + setting `allow_perbaikan`
    - `supabase_tamu.sql` — tabel `tamu` + indeks kehadiran
+   - `soft_delete_migration.sql` — (opsional) hapus CHECK constraint lama pada kolom `status` agar nilai `'Dihapus'` diterima
+   - Kolom `prestasi_prodi` (jalankan manual):
+     ```sql
+     ALTER TABLE wisudawan
+     ADD COLUMN IF NOT EXISTS prestasi_prodi TEXT;
+     ```
    - Kolom kuota per-fakultas (jalankan manual):
      ```sql
      ALTER TABLE periode_wisuda
@@ -331,10 +338,14 @@ Ketika wisudawan atau admin mengubah data:
 | `updateStatusPerbaikan` | `wisudawan:[nim]` dari perbaikan | `/wisudawan/[nim]`, `/admin/wisudawan/[nim]`, `/admin/perbaikan` |
 | `daftarWisuda` | `wisudawan:[nim]`, `dashboard:stats:all` | `/wisudawan/[nim]`, `/admin/wisudawan` |
 | `importWisudawan` | `dashboard:stats:all` | `/admin/wisudawan`, `/admin` |
-| `deleteWisudawan` | `wisudawan:[nim]`, `dashboard:stats:all` | `/admin/wisudawan`, `/admin` |
+| `deleteWisudawan` (soft) | `wisudawan:[nim]`, `dashboard:stats:all` | `/admin/wisudawan`, `/admin` |
+| `restoreWisudawan` | `wisudawan:[nim]`, `dashboard:stats:all` | `/admin/wisudawan`, `/admin` |
+| `hardDeleteWisudawan` | `wisudawan:[nim]`, `dashboard:stats:all` | `/admin/wisudawan`, `/admin` |
 | `updateSetting` | `setting_[key]` | `/admin/pengaturan` |
 | `generateNomorUndangan` | `wisudawan:[nim]` semua NIM terproses (Pipeline) + `dashboard:stats:all` | `/admin/wisudawan`, `/admin` |
 | `updateProdiOrder` | — (tidak ada cache) | `/admin/fakultas` |
+| `syncPrestasiAkdToDb` | `wisudawan:[nim]` yang berubah (Pipeline) + `dashboard:stats:all` | `/admin/prestasi` |
+| `syncPrestasiProdiToDb` | `wisudawan:[nim]` yang berubah (Pipeline) + `dashboard:stats:all` | `/admin/prestasi` |
 | `warmUpTogaCache` | — (menambah cache baru, bukan menghapus) | — |
 | `warmUpUndanganCache` | — (menambah cache baru, bukan menghapus) | — |
 | `/api/scan/toga` (POST) | — (mengupdate key yang sudah ada di Redis) | — |

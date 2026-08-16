@@ -62,6 +62,72 @@ export async function getActivePeriode() {
   
     return result;
   }
+
+/** Seperti getActivePeriode, tapi fallback ke periode Ditutup jika tidak ada yang Sedang Dibuka.
+ *  Digunakan untuk halaman yang tetap perlu menampilkan data periode meski sudah ditutup
+ *  (contoh: Pengaturan Toga, toolbar Wisudawan).
+ */
+export async function getLatestPeriode() {
+  // 1. Coba ambil yang Sedang Dibuka dulu
+  const { data: opened } = await supabase
+    .from('periode_wisuda')
+    .select('*')
+    .eq('status', 'Sedang Dibuka')
+    .single();
+
+  if (opened) {
+    // Re-use getActivePeriode logic — just return through that function
+    return getActivePeriode();
+  }
+
+  // 2. Fallback: ambil periode Ditutup terbaru (bukan Arsip)
+  const { data, error } = await supabase
+    .from('periode_wisuda')
+    .select('*')
+    .eq('status', 'Ditutup')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error || !data) return null;
+
+  // Hitung pendaftar
+  const { count: pendaftar } = await supabase
+    .from('wisudawan')
+    .select('nim', { count: 'exact', head: true })
+    .eq('periode', data.nama_periode)
+    .in('status', ['Terdaftar', 'Proses', 'Selesai']);
+  const totalPendaftar = pendaftar ?? 0;
+  const sisaKuota = Math.max(0, data.kuota - totalPendaftar);
+  const kuotaPerFakultas: Record<string, number> = data.kuota_per_fakultas || {};
+
+  return {
+    id: data.id,
+    nama_periode: data.nama_periode,
+    status: data.status,
+    kuota: data.kuota,
+    kuota_per_fakultas: kuotaPerFakultas,
+    tanggal_pendaftaran: data.tanggal_pendaftaran,
+    tanggal_pelaksanaan: data.tanggal_pelaksanaan,
+    tempat_pelaksanaan: data.tempat_pelaksanaan,
+    waktu_sesi_1: data.waktu_sesi_1,
+    waktu_sesi_2: data.waktu_sesi_2,
+    jadwal_gladi: data.jadwal_gladi,
+    pengumuman: data.pengumuman,
+    hint_pendaftaran: data.hint_pendaftaran,
+    wagLink: data.waglink,
+    themeImage: data.theme,
+    statusColor: data.status_color,
+    tempat_pengambilan_toga: data.tempat_pengambilan_toga,
+    waktu_pengambilan_toga: data.waktu_pengambilan_toga,
+    link_pengumuman: data.link_pengumuman,
+    stats: [
+      { bg: "bg-emerald-800/20", icon: "Users",     color: "text-emerald-700", label: "Kuota Total",  value: data.kuota.toString() },
+      { bg: "bg-blue-500/20",    icon: "UserCheck", color: "text-blue-400",    label: "Pendaftar",    value: totalPendaftar.toString() },
+      { bg: "bg-amber-500/20",   icon: "UserMinus", color: "text-amber-400",   label: "Sisa Kuota",   value: sisaKuota.toString() }
+    ]
+  };
+}
   
   export async function updateTogaPeriodeSettings(id: string, updates: { tempat_pengambilan_toga: string, waktu_pengambilan_toga: any }) {
     try {

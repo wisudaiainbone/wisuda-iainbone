@@ -9,9 +9,10 @@ import { saveAs } from "file-saver";
 
 type Props = {
   data: any[];
+  disabled?: boolean;
 };
 
-export default function TagDialog({ data }: Props) {
+export default function TagDialog({ data, disabled }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFakultas, setSelectedFakultas] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -83,11 +84,12 @@ export default function TagDialog({ data }: Props) {
     <>
       <button
         onClick={() => setIsOpen(true)}
+        disabled={disabled}
         title="Cetak Label Nama Dada"
-        className="flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors-indigo-900/20 whitespace-nowrap"
+        className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 h-8 sm:h-10 rounded-lg sm:rounded-xl text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors whitespace-nowrap ${disabled ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-indigo-600 hover:bg-indigo-700'}`}
       >
         <Tag size={16} />
-        Tag
+        Label
       </button>
 
       {isOpen && (
