@@ -252,9 +252,9 @@ export default function WisudawanSearch({ fakultasList, prodiList, statusList = 
             onChange={(e) => setSortBy(e.target.value)}
             className="flex-1 min-w-[160px] pl-3 pr-10 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none h-10 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.75rem_center] bg-no-repeat"
           >
-            <option value="terbaru">Urutkan: Waktu Daftar (Terbaru)</option>
-            <option value="terlama">Urutkan: Waktu Daftar (Terlama)</option>
-            <option value="urut_asc">Urutkan: No. Urut</option>
+            <option value="terbaru">Waktu Daftar (Terbaru)</option>
+            <option value="terlama">Waktu Daftar (Terlama)</option>
+            <option value="urut_asc">Urut Sesi</option>
           </select>
         </div>
       </div>
