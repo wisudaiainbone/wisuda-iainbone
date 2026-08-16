@@ -38,10 +38,10 @@ const styles = StyleSheet.create({
     padding: 10, // Margin tepi kertas agar tidak terpotong printer
   },
   labelContainer: {
-    // 3 kolom x 4 baris = 12 label per halaman.
-    // Memberikan rasio landscape (sekitar 2:1) yang pas untuk desain label.
+    // 3 kolom x 3 baris = 9 label per halaman.
+    // Menambah tinggi label seperti yang diminta.
     width: "33.333%",
-    height: "25%",
+    height: "33.333%",
     padding: 0, // Tanpa jarak antar label
   },
   labelBox: {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   namaLengkap: {
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: "Helvetica-Bold",
     color: "#000000",
     lineHeight: 1.1,
