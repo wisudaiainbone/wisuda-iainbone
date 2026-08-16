@@ -6,12 +6,14 @@ import WisudawanTableClient from "./WisudawanTableClient";
 import ImportWisudawanDialog from "./ImportWisudawanDialog";
 import ExportDropdown from "./ExportDropdown";
 import ExportDaftarButton from "./ExportDaftarButton";
-import SlidePptxDialog from "./SlidePptxDialog";
-import AlbumDialog from "./AlbumDialog";
-import TagDialog from "./TagDialog";
-import LabelKursiDialog from "./LabelKursiDialog";
 import SesiDialog from "./SesiDialog";
 import NomorDialog from "./NomorDialog";
+import dynamic from "next/dynamic";
+
+const TagDialog = dynamic(() => import("./TagDialog"), { ssr: false });
+const SlidePptxDialog = dynamic(() => import("./SlidePptxDialog"), { ssr: false });
+const AlbumDialog = dynamic(() => import("./AlbumDialog"), { ssr: false });
+const LabelKursiDialog = dynamic(() => import("./LabelKursiDialog"), { ssr: false });
 
 interface WisudawanContainerProps {
   allWisudawan: any[];
