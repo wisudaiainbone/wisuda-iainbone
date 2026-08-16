@@ -564,8 +564,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                           <div className="flex flex-col gap-6 relative z-10 w-full">
                             {/* Header Card: Badge & Date */}
                             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full">
-                              <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.status.toLowerCase() === 'ditutup' ? 'bg-rose-800' : period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
-                                Jadwal Pendaftaran
+                              <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-white text-xs font-medium tracking-wider uppercase shrink-0 ${period.status.toLowerCase() === 'ditutup' || isRegistrationExpired ? 'bg-rose-800' : period.statusColor === 'emerald' ? 'bg-emerald-800' : period.statusColor === 'rose' ? 'bg-rose-800' : 'bg-slate-700'}`}>
+                                {isRegistrationExpired ? 'Pendaftaran Ditutup' : 'Jadwal Pendaftaran'}
                               </span>
                               {period.status.toLowerCase() !== 'ditutup' && (
                                 <p className="text-xs sm:text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider">
@@ -575,56 +575,56 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                             </div>
 
                             {/* Konten Utama: Countdown & Button */}
-                            <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 w-full">
-                              {/* Countdown — sembunyikan jika masa pendaftaran sudah lewat */}
-                              {isClient && period.status.toLowerCase() !== 'ditutup' && !isRegistrationExpired && (
-                                <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 md:gap-2">
-                                  {Object.entries(timeLeft).map(([unit, value], idx, arr) => (
-                                    <div key={unit} className="flex items-center gap-1.5 md:gap-2">
-                                      <div className="flex flex-col items-center justify-center shrink-0 min-w-[40px] md:min-w-[36px]">
-                                        <span className="text-3xl md:text-2xl font-bold text-[var(--color-text)] font-mono tracking-wider">
-                                          {value.toString().padStart(2, "0")}
-                                        </span>
-                                        <span className="text-xs md:text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mt-0.5">
-                                          {unit}
-                                        </span>
+                            {!isRegistrationExpired && (
+                              <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 w-full">
+                                {/* Countdown — sembunyikan jika masa pendaftaran sudah lewat */}
+                                {isClient && period.status.toLowerCase() !== 'ditutup' && (
+                                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 md:gap-2">
+                                    {Object.entries(timeLeft).map(([unit, value], idx, arr) => (
+                                      <div key={unit} className="flex items-center gap-1.5 md:gap-2">
+                                        <div className="flex flex-col items-center justify-center shrink-0 min-w-[40px] md:min-w-[36px]">
+                                          <span className="text-3xl md:text-2xl font-bold text-[var(--color-text)] font-mono tracking-wider">
+                                            {value.toString().padStart(2, "0")}
+                                          </span>
+                                          <span className="text-xs md:text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mt-0.5">
+                                            {unit}
+                                          </span>
+                                        </div>
+                                        {idx !== arr.length - 1 && (
+                                          <div className="text-2xl md:text-xl font-light text-[var(--color-border)] pb-3 md:pb-2.5">:</div>
+                                        )}
                                       </div>
-                                      {idx !== arr.length - 1 && (
-                                        <div className="text-2xl md:text-xl font-light text-[var(--color-border)] pb-3 md:pb-2.5">:</div>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-
-                              {/* CTA Button — sembunyikan jika masa pendaftaran sudah lewat */}
-                              {!isRegistrationExpired && (
-                              <div className="hidden md:flex flex-col items-center md:items-end shrink-0 mt-2 md:mt-0">
-                                {period.status.toLowerCase() === 'ditutup' || period.statusColor === 'rose' ? (
-                                  <button
-                                    disabled
-                                    className="group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 w-full md:w-auto md:min-w-[200px] overflow-hidden bg-rose-700 opacity-50 cursor-not-allowed"
-                                  >
-                                    <span className="relative z-10 flex items-center gap-3">
-                                      {period.status.toLowerCase() === 'ditutup' ? 'Pendaftaran Ditutup' : 'Daftar Sekarang'}
-                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                                    </span>
-                                  </button>
-                                ) : (
-                                  <a
-                                    href="/auth"
-                                    className={`group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 w-full md:w-auto md:min-w-[200px] overflow-hidden ${period.statusColor === 'emerald' ? 'bg-emerald-800 hover:bg-emerald-900-emerald-900/20' : 'bg-slate-700 hover:bg-slate-800-slate-900/20'}`}
-                                  >
-                                    <span className="relative z-10 flex items-center gap-3">
-                                      Daftar Sekarang
-                                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                                    </span>
-                                    {period.statusColor === 'emerald' && <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
-                                  </a>
+                                    ))}
+                                  </div>
                                 )}
+
+                                {/* CTA Button — sembunyikan jika masa pendaftaran sudah lewat */}
+                                <div className="hidden md:flex flex-col items-center md:items-end shrink-0 mt-2 md:mt-0">
+                                  {period.status.toLowerCase() === 'ditutup' || period.statusColor === 'rose' ? (
+                                    <button
+                                      disabled
+                                      className="group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 w-full md:w-auto md:min-w-[200px] overflow-hidden bg-rose-700 opacity-50 cursor-not-allowed"
+                                    >
+                                      <span className="relative z-10 flex items-center gap-3">
+                                        {period.status.toLowerCase() === 'ditutup' ? 'Pendaftaran Ditutup' : 'Daftar Sekarang'}
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                      </span>
+                                    </button>
+                                  ) : (
+                                    <a
+                                      href="/auth"
+                                      className={`group relative flex items-center justify-center gap-3 px-10 py-3.5 rounded-xl text-white text-sm font-bold transition-all duration-300 w-full md:w-auto md:min-w-[200px] overflow-hidden ${period.statusColor === 'emerald' ? 'bg-emerald-800 hover:bg-emerald-900-emerald-900/20' : 'bg-slate-700 hover:bg-slate-800-slate-900/20'}`}
+                                    >
+                                      <span className="relative z-10 flex items-center gap-3">
+                                        Daftar Sekarang
+                                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                                      </span>
+                                      {period.statusColor === 'emerald' && <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
+                                    </a>
+                                  )}
+                                </div>
                               </div>
-                              )}
-                            </div>
+                            )}
                           </div>
                         </div>
                       )}
