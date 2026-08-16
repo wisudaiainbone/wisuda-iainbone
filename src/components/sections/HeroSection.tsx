@@ -79,6 +79,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
     };
   }, []);
 
+  const [isRegistrationExpired, setIsRegistrationExpired] = useState(false);
+
   useEffect(() => {
     setIsClient(true);
 
@@ -91,16 +93,12 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
         'mei': 4, 'juni': 5, 'juli': 6, 'agustus': 7,
         'september': 8, 'oktober': 9, 'november': 10, 'desember': 11
       };
-      // Extract last date from e.g. "1 Oktober 2026 - 25 Oktober 2026" or "1 OKTOBER - 25 OKTOBER 2026"
       const str = currentPeriod.registrationDateLabel.toLowerCase();
-      // Match last occurrence of "<day> <month_name> <year>" or "<day> <month_name>" (year at end)
       const allMatches = [...str.matchAll(/(\d{1,2})\s+([a-z]+)(?:\s+(\d{4}))?/g)];
-      // Find the year in the whole string
       const yearMatch = str.match(/(\d{4})/);
       const year = yearMatch ? parseInt(yearMatch[1]) : new Date().getFullYear();
 
       if (allMatches.length > 0) {
-        // Take the last date segment as the deadline
         const last = allMatches[allMatches.length - 1];
         const day = parseInt(last[1]);
         const month = MONTHS[last[2]];
@@ -112,7 +110,17 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
       }
     }
 
-    if (!targetDate || targetDate <= 0) return; // Nothing to count down to
+    if (!targetDate || targetDate <= 0) return;
+
+    // Cek langsung apakah sudah melewati deadline
+    const nowInitial = new Date().getTime();
+    if (nowInitial >= targetDate) {
+      setTimeLeft({ Hari: 0, Jam: 0, Menit: 0, Detik: 0 });
+      setIsRegistrationExpired(true);
+      return;
+    }
+
+    setIsRegistrationExpired(false);
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -121,6 +129,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
       if (distance <= 0) {
         clearInterval(interval);
         setTimeLeft({ Hari: 0, Jam: 0, Menit: 0, Detik: 0 });
+        setIsRegistrationExpired(true);
         return;
       }
 
@@ -567,8 +576,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
 
                             {/* Konten Utama: Countdown & Button */}
                             <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 w-full">
-                              {/* Countdown */}
-                              {isClient && period.status.toLowerCase() !== 'ditutup' && (
+                              {/* Countdown — sembunyikan jika masa pendaftaran sudah lewat */}
+                              {isClient && period.status.toLowerCase() !== 'ditutup' && !isRegistrationExpired && (
                                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 md:gap-2">
                                   {Object.entries(timeLeft).map(([unit, value], idx, arr) => (
                                     <div key={unit} className="flex items-center gap-1.5 md:gap-2">
@@ -588,7 +597,8 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                 </div>
                               )}
 
-                              {/* Kanan: CTA Button */}
+                              {/* CTA Button — sembunyikan jika masa pendaftaran sudah lewat */}
+                              {!isRegistrationExpired && (
                               <div className="hidden md:flex flex-col items-center md:items-end shrink-0 mt-2 md:mt-0">
                                 {period.status.toLowerCase() === 'ditutup' || period.statusColor === 'rose' ? (
                                   <button
@@ -613,6 +623,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                                   </a>
                                 )}
                               </div>
+                              )}
                             </div>
                           </div>
                         </div>
