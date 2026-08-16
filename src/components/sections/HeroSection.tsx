@@ -512,8 +512,12 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                         </div>
 
                         {/* 2. Stats Row */}
-                        <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                          {period.stats.map((stat, idx) => {
+                        <div className={`grid gap-3 sm:gap-4 ${period.status.toLowerCase() === 'ditutup' || isRegistrationExpired ? 'grid-cols-1 max-w-sm mx-auto' : 'grid-cols-3'}`}>
+                          {period.stats.filter(stat => {
+                            const isClosed = period.status.toLowerCase() === 'ditutup' || isRegistrationExpired;
+                            if (isClosed && stat.label !== "Pendaftar") return false;
+                            return true;
+                          }).map((stat, idx) => {
                             const StatIcon = iconMap[stat.icon] || Users;
                             return (
                               <div 
