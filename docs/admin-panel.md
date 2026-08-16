@@ -153,7 +153,8 @@ Mengelola aset desain untuk fitur Generate Slide PPTX wisudawan.
 
 ### Data Wisudawan (`/admin/wisudawan`)
 Pengelolaan data wisudawan dari Supabase, dilengkapi:
-- **Toolbar Terpadu & Responsif Mobile**: Kolom pencarian dan semua tombol aksi (Tambah, Export, Sesi, Slide, Tag, Nomor, Daftar, Album) berada dalam satu baris sejajar (`h-10`) di desktop. Di perangkat *mobile*, deretan tombol berubah gaya menjadi **Tag Cloud** mungil yang padat (hanya menampilkan ikon tanpa teks).
+- **Toolbar Terpadu & Responsif Mobile**: Kolom pencarian dan semua tombol aksi (Tambah, Export, Sesi, Nomor, Daftar, Label, Slide, Album) berada dalam satu baris sejajar (`h-10`) di desktop. Di perangkat *mobile*, deretan tombol berubah gaya menjadi **Tag Cloud** mungil yang padat (hanya menampilkan ikon tanpa teks).
+  - **Cascading Disable Logic**: Tombol di-disable secara berurutan untuk mencegah human error: `Sesi` (hanya aktif jika periode Ditutup) → `Nomor` (hanya aktif jika Sesi sudah terisi semua) → `Daftar`, `Label`, `Slide`, `Album` (hanya aktif jika Nomor urut sudah di-generate).
 - **Pencarian Real-time**: Cari berdasarkan NIM atau Nama. Tombol Reset (✕) muncul otomatis saat ada filter aktif.
 - **Tampilan Card View Mobile yang Padat**: Khusus pengguna *smartphone*, tabel data dirender sebagai barisan **Kartu (Card)** interaktif yang merangkum seluruh informasi profil dan aksi tanpa perlu *scroll horizontal*, dengan desain padding dan gap minimum agar hemat ruang layar. Mengklik area manapun pada kartu akan mengarah secara instan ke profil wisudawan bersangkutan berkat fitur prefetch otomatis.
 - **Panel Aksi Mengambang (Floating Action Bar)**: Untuk aksi penyimpanan yang penting (seperti menyimpan urutan Fakultas, Setelan Toga, atau mode Scan Tamu), tombol aksi dan pemberitahuan (`hint`) akan ditampilkan mengambang di bawah layar tepat di atas menu navigasi utama agar mudah diakses jempol.
@@ -198,7 +199,7 @@ Pengelolaan data wisudawan dari Supabase, dilengkapi:
   - Jika opsi foto dimatikan, Area Foto menampilkan kotak kosong "3x4" sebagai panduan *placeholder* dan dokumen dihasilkan instan (tanpa proses unduh foto).
   - Jika opsi foto diaktifkan, foto diunduh satu per satu dari Google Drive dengan *progress bar* yang menampilkan kemajuan secara real-time.
   - Proses sepenuhnya *client-side* — nol beban server Vercel maupun Supabase.
-- **Cetak Label Nama Dada** (tombol indigo `Tag`):
+- **Cetak Label Nama Dada** (tombol indigo `Label`, sebelumnya Tag):
   - Membuka **modal pemilihan Fakultas** yang menampilkan jumlah total wisudawan terdaftar untuk fakultas yang dipilih.
   - Menghasilkan file PDF berukuran **Folio (F4) Landscape** (`330mm × 215mm`) berisi **12 label** per halaman (grid 3 kolom × 4 baris), tanpa jarak antar label.
   - **Desain label dua kolom**: Panel kiri merah maroon (Nomor Urut 3-digit besar + Singkatan Fakultas-Prodi), panel kanan putih (logo IAIN Bone + Nama + NIM + teks footer wisuda).
