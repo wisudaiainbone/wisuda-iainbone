@@ -58,6 +58,26 @@ export default function LabelKursiDialog({ data, disabled }: Props) {
       const sesi1List = targetWisudawan.filter(w => w.sesi === 'Sesi Satu').sort((a, b) => (a.urut || 0) - (b.urut || 0));
       const sesi2List = targetWisudawan.filter(w => w.sesi === 'Sesi Dua').sort((a, b) => (a.urut || 0) - (b.urut || 0));
 
+      // Membuat header otomatis sesuai permintaan (background kuning)
+      const headerRow = sheet.getRow(1);
+      headerRow.values = ['NO', 'SESI 1', 'NIM', 'SESI 2', 'NIM'];
+      for (let c = 1; c <= 5; c++) {
+        const cell = headerRow.getCell(c);
+        cell.font = { bold: true };
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFFFF00' } // Warna kuning pekat
+        };
+      }
+      // Set lebar kolom agar rapi
+      sheet.getColumn(1).width = 5;
+      sheet.getColumn(2).width = 35;
+      sheet.getColumn(3).width = 25;
+      sheet.getColumn(4).width = 35;
+      sheet.getColumn(5).width = 25;
+      headerRow.commit();
+
       const maxLength = Math.max(sesi1List.length, sesi2List.length);
 
       // Mulai mengisi dari baris ke-2 (karena baris 1 adalah header)
