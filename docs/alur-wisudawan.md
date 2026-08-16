@@ -200,13 +200,13 @@ Admin lihat daftar pengajuan
 
 ---
 
-## 7. Tampilan Halaman Publik Saat Periode Ditutup
+## 7. Tampilan Halaman Publik Saat Pendaftaran Kedaluwarsa
 
-Saat status periode diubah menjadi `'Ditutup'` oleh Admin, halaman publik (`/`) akan otomatis menyesuaikan tampilannya:
+Pada halaman utama publik (`/`), tampilan akan beradaptasi secara otomatis jika **masa pendaftaran telah lewat** (melewati rentang tanggal yang ditentukan) atau status periode diubah menjadi `'Ditutup'`:
 
-- **Label badge status menjadi merah** (rose) — badge yang biasanya menampilkan "Sedang Dibuka" kini merah bertuliskan "Ditutup".
-- **Kotak Jadwal Pendaftaran disembunyikan sepenuhnya** — seluruh blok informasi masa pendaftaran beserta countdown timer tidak ditampilkan sama sekali. Layout kolom kanan menjadi lebih ringkas dan tetap rapi.
-- **Tombol "Daftar Sekarang"** pada tampilan desktop tidak ditampilkan.
+- **Kotak Jadwal Pendaftaran Menjadi Padat**: Blok masa pendaftaran tidak dihilangkan, tetapi dibuat lebih ringkas. Bagian bawah yang sebelumnya menampilkan angka *countdown timer* akan disembunyikan sepenuhnya.
+- **Label Berubah Menjadi Merah**: Teks tombol yang sebelumnya "Jadwal Pendaftaran" akan berubah warna menjadi merah (rose) dan bertuliskan **"PENDAFTARAN DITUTUP"**.
+- **Tombol "Daftar Sekarang" Disembunyikan**: Tombol ajakan pendaftaran dihilangkan agar tidak membingungkan calon pendaftar.
 
-Informasi acara (tanggal, tempat, sesi) tetap ditampilkan agar wisudawan yang sudah terdaftar masih dapat melihat detail pelaksanaan wisuda.
+Informasi acara (tanggal, tempat, sesi) tetap ditampilkan secara penuh agar wisudawan yang sudah terdaftar masih dapat melihat detail pelaksanaan wisuda.
 
