@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     borderWidth: 0.5,
-    borderColor: "#9ca3af", // Border abu-abu tipis sebagai panduan potong
+    borderColor: "#000000", // Border hitam tipis sebagai panduan potong
   },
   
   // --- KIRI (Maroon) ---
