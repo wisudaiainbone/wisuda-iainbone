@@ -3,6 +3,7 @@
 import { supabase } from '@/lib/supabase';
 import { redis } from '@/lib/redis';
 import { getAdminSession } from '@/actions/adminAuth';
+import { getLatestPeriode } from '@/actions/periode';
 
 export async function warmUpTogaCache() {
   const session = await getAdminSession();
@@ -10,13 +11,9 @@ export async function warmUpTogaCache() {
 
   try {
     const start = Date.now();
-    const { data: activePeriode, error: periodeError } = await supabase
-      .from('periode_wisuda')
-      .select('nama_periode')
-      .eq('status', 'Sedang Dibuka')
-      .single();
+    const activePeriode = await getLatestPeriode();
 
-    if (periodeError || !activePeriode) {
+    if (!activePeriode) {
       return { success: false, error: 'Tidak ada periode aktif.' };
     }
 
@@ -69,13 +66,9 @@ export async function warmUpUndanganCache() {
 
   try {
     const start = Date.now();
-    const { data: activePeriode, error: periodeError } = await supabase
-      .from('periode_wisuda')
-      .select('nama_periode')
-      .eq('status', 'Sedang Dibuka')
-      .single();
+    const activePeriode = await getLatestPeriode();
 
-    if (periodeError || !activePeriode) {
+    if (!activePeriode) {
       return { success: false, error: 'Tidak ada periode aktif.' };
     }
 
