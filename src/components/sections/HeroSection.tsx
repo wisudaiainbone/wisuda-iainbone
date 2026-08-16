@@ -512,7 +512,7 @@ export function HeroSection({ graduationPeriods }: { graduationPeriods: Period[]
                         </div>
 
                         {/* 2. Stats Row */}
-                        <div className={`grid gap-3 sm:gap-4 ${period.status.toLowerCase() === 'ditutup' || isRegistrationExpired ? 'grid-cols-1 max-w-sm mx-auto' : 'grid-cols-3'}`}>
+                        <div className={`grid gap-3 sm:gap-4 ${period.status.toLowerCase() === 'ditutup' || isRegistrationExpired ? 'grid-cols-1' : 'grid-cols-3'}`}>
                           {period.stats.filter(stat => {
                             const isClosed = period.status.toLowerCase() === 'ditutup' || isRegistrationExpired;
                             if (isClosed && stat.label !== "Pendaftar") return false;
