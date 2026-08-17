@@ -20,6 +20,8 @@ Portal Wisuda IAIN Bone dilengkapi sistem Panel Admin terintegrasi di rute `/adm
    Valid & Sesuai Role → /admin (dashboard)   |   Invalid → Redirect ke /admin/login dengan error
 
 > **Jalur Alternatif (Admin Absensi):** Panitia lapangan dapat login tanpa Google menggunakan **Token Presensi** (menciptakan *cookie* `absensi_token`). Jalur ini khusus memberikan akses minimalis ke `/admin/kehadiran` dan `/admin/tamu` (mode scan).
+
+> **Jalur Alternatif (Admin Toga):** Panitia Toga dapat login tanpa Google menggunakan **Token Scan Toga** (menciptakan *cookie* `toga_scan_token`). Jalur ini khusus memberikan akses mode Scan-Only ke `/admin/toga?tab=scan` tanpa bisa melihat halaman Rekapitulasi Data.
 ```
 
 | Aspek | Lama ❌ | Baru ✅ |
@@ -98,6 +100,8 @@ Halaman Pengaturan menggunakan layout **2-kolom** (menu navigasi kiri 10% / kont
 | `show_toga_info` | Menampilkan tab & informasi toga di profil | `true` |
 | `show_undangan_info` | Menampilkan tab & informasi undangan di profil | `true` |
 | `allow_perbaikan` | Mengizinkan wisudawan mengajukan perbaikan data akademik | `true` |
+| `allow_absensi_login` | Membuka akses rute `/admin/kehadiran` untuk panitia lapangan tanpa login Google (menggunakan Password Default). Dapat dimatikan saat sesi presensi selesai. | `true` |
+| `allow_toga_scan_login` | Membuka akses rute `/admin/toga` (mode scan) untuk panitia toga tanpa login Google (menggunakan Password Default). Saat diakses, tampilan hanya menampilkan tab Scan saja (tanpa Rekapitulasi). | `true` |
 | `show_prestasi_card` | Menampilkan Kartu Prestasi Akademik di halaman profil publik wisudawan (hanya jika memiliki data `prestasi_akd`) | `true` |
 | `contoh_foto_url` | URL publik gambar contoh/referensi foto profil wisudawan bertoga (disimpan di Supabase `cert-assets`). Ditampilkan di halaman panduan upload profil wisudawan dengan fitur zoom (lightbox). | ` ` |
 
@@ -419,10 +423,12 @@ Klik **"Buat Superadmin"**. Setelah selesai, Anda bisa langsung login dengan Goo
 |---|---|
 | `src/app/api/auth/[...nextauth]/route.ts` | Konfigurasi NextAuth API Endpoint |
 | `src/lib/auth.ts` | NextAuth Options & logika validasi akun (`signIn` callback memeriksa `admin_users`) |
-| `src/middleware.ts` | Proteksi rute `/admin` — validasi JWT `getToken()` |
+| `src/middleware.ts` | Proteksi rute `/admin` — validasi JWT `getToken()` (bypass: `/admin/login`, `/admin/kehadiran`, `/admin/tamu`, `/admin/toga`) |
 | `src/actions/adminAuth.ts` | `loginAdmin`, `logoutAdmin`, `getAdminSession` |
 | `src/actions/adminUsers.ts` | CRUD daftar admin (invite, toggle, delete, update role) |
 | `src/actions/settings.ts` | `getSetting`, `updateSetting` — baca/tulis tabel `app_settings` |
+| `src/actions/absensiAuth.ts` | `verifyAbsensiPassword` — validasi password + set cookie `absensi_token` (12 jam); `logoutAbsensi` — hapus cookie |
+| `src/actions/togaScanAuth.ts` | `verifyTogaScanPassword` — validasi password + set cookie `toga_scan_token` (12 jam); `logoutTogaScan` — hapus cookie |
 
 ---
 
@@ -439,7 +445,7 @@ Klik **"Buat Superadmin"**. Setelah selesai, Anda bisa langsung login dengan Goo
 | `sesi.ts` | Penetapan Sesi per Fakultas; update massal `wisudawan.sesi` & `prodi.sesi`; invalidate cache NIM massal via Redis Pipeline |
 | `prodi.ts` | CRUD master data prodi; `updateProdiOrder` — batch update kolom `urutan` untuk drag-and-drop |
 | `nomorUndangan.ts` | Generate nomor urut & ID undangan (format `UND_[Periode]_[Sesi]_[Urut]_[NIM]`); reset `urut`/`id_undangan`/`qr_undangan`; batch update + invalidasi Redis Pipeline massal |
-| `scanCache.ts` | `warmUpTogaCache` & `warmUpUndanganCache` — pipeline Redis warm-up dari Supabase; `getScanMeta` — baca status cache |
+| `scanCache.ts` | `warmUpTogaCache` (auth: NextAuth session atau cookie `toga_scan_token`) & `warmUpUndanganCache` (auth: NextAuth session atau cookie `absensi_token`) — pipeline Redis warm-up dari Supabase; `getScanMeta` — baca status cache |
 | `scanHistory.ts` | `getRecentScans` — fetch 20 data scan kehadiran/toga terbaru dari Supabase untuk kolom riwayat di desktop |
 | `prestasiOverrides.ts` | `generatePrestasi` / `generatePrestasiProdi` (hitung ulang + reset override); `setPrestasiOverride` / `removePrestasiOverride` (override manual); `syncPrestasiAkdToDb` / `syncPrestasiProdiToDb` (batch update kolom `prestasi_akd` / `prestasi_prodi` ke Supabase) |
 | `wisudawan.ts` | Termasuk `deleteWisudawan` (soft delete → status `'Dihapus'`); `restoreWisudawan` / `restoreWisudawanBulk` (pulihkan ke `'Calon Wisudawan'`); `hardDeleteWisudawan` / `hardDeleteWisudawanBulk` (hapus permanen, khusus superadmin) |
