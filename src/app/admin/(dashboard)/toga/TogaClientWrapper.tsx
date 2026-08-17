@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 type Props = {
   initialTab: string;
   canScan: boolean;
+  isScanOnly?: boolean;
   rekapControlsNode: React.ReactNode;
   rekapContentNode: React.ReactNode;
   scanNode: React.ReactNode;
@@ -14,21 +15,23 @@ type Props = {
 export default function TogaClientWrapper({
   initialTab,
   canScan,
+  isScanOnly = false,
   rekapControlsNode,
   rekapContentNode,
   scanNode,
 }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState(initialTab);
+  const [activeTab, setActiveTab] = useState(isScanOnly ? "scan" : initialTab);
 
   // Sync tab state with URL without triggering a hard navigation if possible
   useEffect(() => {
+    if (isScanOnly) return; // scan-only mode tidak perlu sync URL
     const tabParam = searchParams.get("tab");
     if (tabParam && tabParam !== activeTab) {
       setActiveTab(tabParam);
     }
-  }, [searchParams]);
+  }, [searchParams, isScanOnly]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -41,6 +44,11 @@ export default function TogaClientWrapper({
     window.addEventListener("switchTogaTab", handleSwitch);
     return () => window.removeEventListener("switchTogaTab", handleSwitch);
   }, []);
+
+  // Mode scan-only: langsung tampilkan scanNode saja
+  if (isScanOnly) {
+    return <div>{scanNode}</div>;
+  }
 
   return (
     <div className={`${activeTab === "rekapitulasi" ? "space-y-6 pb-24 sm:pb-0" : ""}`}>

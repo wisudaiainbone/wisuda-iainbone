@@ -9,6 +9,9 @@ import { getScanMeta } from "@/actions/scanCache";
 
 import Link from "next/link";
 import TogaClientWrapper from "./TogaClientWrapper";
+import TogaScanLogin from "./TogaScanLogin";
+import { cookies } from "next/headers";
+import { getSetting } from "@/actions/settings";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }> | { [key: string]: string | string[] | undefined };
@@ -18,12 +21,41 @@ export default async function AdminTogaPage(props: PageProps) {
   const resolvedSearchParams = await props.searchParams;
   const tab = (typeof resolvedSearchParams?.tab === 'string' ? resolvedSearchParams.tab : 'rekapitulasi') as string;
 
-  const [adminSession, activePeriode, scanMeta, allPeriode] = await Promise.all([
+  const [adminSession, activePeriode, scanMeta, allPeriode, cookieStore, allowTogaScanLogin] = await Promise.all([
     getAdminSession(),
     getActivePeriode(),
     getScanMeta('toga'),
-    getAllPeriode()
+    getAllPeriode(),
+    cookies(),
+    getSetting('allow_toga_scan_login', 'true', true)
   ]);
+
+  const togaScanToken = cookieStore.get('toga_scan_token')?.value;
+
+  // Jika pengaturan login scan toga dinonaktifkan dan user tidak memiliki NextAuth session
+  if (!adminSession && allowTogaScanLogin !== 'true') {
+    const { ShieldAlert } = await import('lucide-react');
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center h-[80vh] animate-in fade-in zoom-in-95 duration-500">
+        <div className="mb-6 p-6 bg-red-100/50 dark:bg-red-900/20 rounded-full border border-red-200/50 dark:border-red-800/30">
+          <ShieldAlert size={64} className="text-red-600 dark:text-red-400" />
+        </div>
+        <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-text)] mb-4 font-[var(--font-outfit)]">
+          Akses Ditutup
+        </h2>
+        <p className="text-[var(--color-text-subtle)] max-w-md mx-auto leading-relaxed text-lg">
+          Akses Perekaman Scan Toga belum diberikan, silakan hubungi admin.
+        </p>
+      </div>
+    );
+  }
+
+  // Jika diizinkan tapi tidak login NextAuth dan tidak ada cookie khusus scan toga, render Form Login
+  if (!adminSession && !togaScanToken) {
+    return <TogaScanLogin />;
+  }
+
+  const isScanOnly = !adminSession && !!togaScanToken;
 
   const allWisudawan = await getAllWisudawan({
     role: adminSession?.role,
@@ -109,6 +141,7 @@ export default async function AdminTogaPage(props: PageProps) {
     <TogaClientWrapper
       initialTab={tab}
       canScan={canScan}
+      isScanOnly={isScanOnly}
       rekapControlsNode={
         <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
           <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 sm:h-9 flex-1 min-w-0">
