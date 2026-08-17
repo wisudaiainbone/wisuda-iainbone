@@ -4,10 +4,13 @@ import { supabase } from '@/lib/supabase';
 import { redis } from '@/lib/redis';
 import { getAdminSession } from '@/actions/adminAuth';
 import { getLatestPeriode } from '@/actions/periode';
+import { cookies } from 'next/headers';
 
 export async function warmUpTogaCache() {
   const session = await getAdminSession();
-  if (!session) return { success: false, error: 'Unauthorized' };
+  const cookieStore = await cookies();
+  const togaScanToken = cookieStore.get('toga_scan_token')?.value;
+  if (!session && !togaScanToken) return { success: false, error: 'Unauthorized' };
 
   try {
     const start = Date.now();
@@ -62,7 +65,9 @@ export async function warmUpTogaCache() {
 
 export async function warmUpUndanganCache() {
   const session = await getAdminSession();
-  if (!session) return { success: false, error: 'Unauthorized' };
+  const cookieStore = await cookies();
+  const absensiToken = cookieStore.get('absensi_token')?.value;
+  if (!session && !absensiToken) return { success: false, error: 'Unauthorized' };
 
   try {
     const start = Date.now();
