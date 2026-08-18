@@ -105,27 +105,21 @@ export default function PrestasiProdiView({
     return a.prodi.localeCompare(b.prodi);
   });
 
-  // Badge label untuk prestasi_prodi
-  const getPrestasiProdiLabel = (prestasiProdi: string | null) => {
-    if (!prestasiProdi) return null;
-    const parts = prestasiProdi.split(',').map(s => s.trim()).filter(Boolean);
+  // Badge label berdasarkan posisi (idx) — tidak bergantung pada field DB
+  const getPositionBadge = (idx: number) => {
+    const labels = ['Kesatu', 'Kedua', 'Ketiga'];
+    const label = labels[idx];
+    if (!label) return null;
+    const colorClass =
+      idx === 0
+        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700'
+        : idx === 1
+          ? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+          : 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 border border-orange-200 dark:border-orange-700';
     return (
-      <div className="flex flex-wrap items-center gap-1 mt-1">
-        {parts.map((p, i) => (
-          <span
-            key={i}
-            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-              p === 'Kesatu'
-                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700'
-                : p === 'Kedua'
-                  ? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
-                  : 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 border border-orange-200 dark:border-orange-700'
-            }`}
-          >
-            {p}
-          </span>
-        ))}
-      </div>
+      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${colorClass}`}>
+        {label}
+      </span>
     );
   };
 
@@ -235,7 +229,7 @@ export default function PrestasiProdiView({
                               {formatDateStr(w.tanggal_yudisium)}
                             </td>
                             <td className="px-5 py-4">
-                              {getPrestasiProdiLabel(w.prestasi_prodi)}
+                              {getPositionBadge(idx)}
                             </td>
                             {role !== 'admin_unit' ? (
                               <td className="px-5 py-4 text-right">
