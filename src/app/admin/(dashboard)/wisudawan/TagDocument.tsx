@@ -19,6 +19,7 @@ export type TagData = {
   prodiSingkat: string;
   fakultasSingkat: string;
   nomorUrut: number;
+  color?: string;
 };
 
 type Props = {
@@ -54,7 +55,6 @@ const styles = StyleSheet.create({
   // --- KIRI (Maroon) ---
   leftPanel: {
     width: "35%", // Lebar area kiri
-    backgroundColor: "#8c2e2e", // Warna merah maroon (disesuaikan dengan gambar)
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -136,7 +136,7 @@ export default function TagDocument({ data, periode, logoBase64 }: Props) {
             <View style={styles.labelBox}>
               
               {/* KOLOM KIRI */}
-              <View style={styles.leftPanel}>
+              <View style={[styles.leftPanel, { backgroundColor: item.color || "#8c2e2e" }]}>
                 <Text style={styles.nomorUrutText}>{String(item.nomorUrut).padStart(3, "0")}</Text>
                 <Text style={styles.fakultasProdiText}>
                   {item.fakultasSingkat} - {item.prodiSingkat}

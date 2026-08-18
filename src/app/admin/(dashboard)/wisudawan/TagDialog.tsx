@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Tag, Loader2, X, Download } from "lucide-react";
 import { getFakultasData } from "@/lib/fakultas";
+import { getAllSettingsAdmin } from "@/actions/settings";
 import TagDocument, { TagData } from "./TagDocument";
 import { pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
@@ -36,6 +37,30 @@ export default function TagDialog({ data, disabled }: Props) {
       // Urutkan berdasarkan nomor urut (yang secara implisit sudah mengurutkan prodi jika generate nomor benar)
       const sortedData = [...wisudawanTerdaftar].sort((a, b) => (a.urut || 0) - (b.urut || 0));
 
+      // Ambil warna tema dari pengaturan
+      let settings: any[] = [];
+      try {
+        settings = await getAllSettingsAdmin();
+      } catch (e) {
+        console.error("Gagal mengambil pengaturan warna tema", e);
+      }
+
+      const getFakultasColor = (nama: string) => {
+        const n = (nama || "").toLowerCase();
+        let key = '';
+        if (n.includes('syariah')) key = 'slide_frame_fak1_warna';
+        else if (n.includes('tarbiyah')) key = 'slide_frame_fak2_warna';
+        else if (n.includes('ekonomi') || n.includes('bisnis')) key = 'slide_frame_fak3_warna';
+        else if (n.includes('ushuluddin') || n.includes('dakwah')) key = 'slide_frame_fak4_warna';
+        else if (n.includes('pasca')) key = 'slide_frame_fak5_warna';
+        
+        if (key) {
+          const setting = settings.find(s => s.key === key);
+          if (setting && setting.value) return setting.value;
+        }
+        return '#8c2e2e'; // default maroon
+      };
+
       const tagDataList: TagData[] = sortedData.map((w) => {
         const fakData = getFakultasData(w.fakultas);
         return {
@@ -44,6 +69,7 @@ export default function TagDialog({ data, disabled }: Props) {
           prodiSingkat: w.prodi_singkat || w.prodi || "-",
           fakultasSingkat: fakData.singkatan,
           nomorUrut: w.urut || 0,
+          color: getFakultasColor(w.fakultas),
         };
       });
 
