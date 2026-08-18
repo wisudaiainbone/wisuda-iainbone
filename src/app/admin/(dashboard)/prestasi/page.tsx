@@ -8,6 +8,7 @@ import Link from "next/link";
 import PrestasiAkademikView from "./PrestasiAkademikView";
 import PrestasiProdiView from "./PrestasiProdiView";
 import ExportPrestasiButton from "./ExportPrestasiButton";
+import ExportPrestasiProdiButton from "./ExportPrestasiProdiButton";
 import GeneratePrestasiButton from "./GeneratePrestasiButton";
 import GeneratePrestasiProdiButton from "./GeneratePrestasiProdiButton";
 import PrintPrestasiButton from "./PrintPrestasiButton";
@@ -134,6 +135,7 @@ export default async function AdminPrestasiPage(props: PageProps) {
       prodiActionButtonsNode={
         adminSession?.role !== 'admin_unit' ? (
           <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
+            <ExportPrestasiProdiButton data={targetWisudawan} overrides={overrides} periode={filterPeriode} />
             <GeneratePrestasiProdiButton periode={filterPeriode} isGenerated={isGeneratedProdi} />
             <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
             <PrintPrestasiButton
