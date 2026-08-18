@@ -94,7 +94,7 @@ export default function ExportPrestasiButton({ data, overrides, periode }: Props
         const sheetAkademikData: any[] = [];
         if (bestOverall) {
           sheetAkademikData.push({
-            "NAMA GELAR": bestOverall.nama_gelar || bestOverall.nama_mahasiswa,
+            "NAMA GELAR": String(bestOverall.nama_gelar || bestOverall.nama_mahasiswa || "").toUpperCase(),
             "NIM": bestOverall.nim,
             "IPK": formatIpkForExcel(bestOverall.ipk),
             "TGL YUDISIUM": bestOverall.tanggal_yudisium || "-",
@@ -108,7 +108,7 @@ export default function ExportPrestasiButton({ data, overrides, periode }: Props
         topFakultas.forEach(f => {
           f.top3.forEach((w, idx) => {
             sheetAkademikData.push({
-              "NAMA GELAR": w.nama_gelar || w.nama_mahasiswa,
+              "NAMA GELAR": String(w.nama_gelar || w.nama_mahasiswa || "").toUpperCase(),
               "NIM": w.nim,
               "IPK": formatIpkForExcel(w.ipk),
               "TGL YUDISIUM": w.tanggal_yudisium || "-",
@@ -125,7 +125,7 @@ export default function ExportPrestasiButton({ data, overrides, periode }: Props
         const sheetOrganisasiData = parsedData
           .filter(w => w.prestasi_org && w.prestasi_org.trim() !== '' && w.prestasi_org.trim() !== '-')
           .map(w => ({
-            "NAMA GELAR": w.nama_gelar || w.nama_mahasiswa,
+            "NAMA GELAR": String(w.nama_gelar || w.nama_mahasiswa || "").toUpperCase(),
             "NIM": w.nim,
             "FAKULTAS": w.fakultas,
             "PRODI": w.prodi,

@@ -92,7 +92,7 @@ export default function ExportPrestasiProdiButton({ data, overrides, periode }: 
               "FAKULTAS": fakultas,
               "PROGRAM STUDI": prodi,
               "SEBUTAN": getSebutan(idx),
-              "NAMA GELAR": w.nama_gelar || w.nama_mahasiswa,
+              "NAMA GELAR": String(w.nama_gelar || w.nama_mahasiswa || "").toUpperCase(),
               "NIM": w.nim,
               "IPK": formatIpkForExcel(w.ipk),
               "TGL YUDISIUM": w.tanggal_yudisium || "-",
