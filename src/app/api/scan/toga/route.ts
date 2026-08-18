@@ -17,7 +17,21 @@ function getMakassarTime() {
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    const togaScanToken = req.cookies.get('toga_scan_token')?.value;
+
+    let isAuthorized = false;
+    if (session) {
+      isAuthorized = true;
+    } else if (togaScanToken) {
+      // Validasi toga scan token berdasarkan pengaturan
+      const { getSetting } = await import('@/actions/settings');
+      const allowTogaScanLogin = await getSetting('allow_toga_scan_login', 'true', true);
+      if (allowTogaScanLogin === 'true') {
+        isAuthorized = true;
+      }
+    }
+
+    if (!isAuthorized) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
