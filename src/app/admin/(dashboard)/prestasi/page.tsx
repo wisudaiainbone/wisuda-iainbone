@@ -110,44 +110,44 @@ export default async function AdminPrestasiPage(props: PageProps) {
               {activePeriodes.length === 0 && <option value="">Tidak ada periode aktif</option>}
             </select>
           </div>
-
-          {/* Export XLSX Button */}
-          <div className="shrink-0 flex h-10">
-            <ExportPrestasiButton data={targetWisudawan} overrides={overrides} periode={filterPeriode} />
-          </div>
         </div>
       }
       akademikActionButtonsNode={
-        adminSession?.role !== 'admin_unit' ? (
-          <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
-            <GeneratePrestasiButton periode={filterPeriode} isGenerated={isGenerated} />
-            <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
-            <PrintPrestasiButton 
-              data={targetWisudawan} 
-              periode={filterPeriode} 
-              settings={certSettings} 
-              tempatWisuda={tempatWisuda} 
-              tanggalWisuda={tanggalWisuda} 
-            />
-          </div>
-        ) : undefined
+        <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
+          <ExportPrestasiButton data={targetWisudawan} overrides={overrides} periode={filterPeriode} />
+          {adminSession?.role !== 'admin_unit' && (
+            <>
+              <GeneratePrestasiButton periode={filterPeriode} isGenerated={isGenerated} />
+              <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
+              <PrintPrestasiButton 
+                data={targetWisudawan} 
+                periode={filterPeriode} 
+                settings={certSettings} 
+                tempatWisuda={tempatWisuda} 
+                tanggalWisuda={tanggalWisuda} 
+              />
+            </>
+          )}
+        </div>
       }
       prodiActionButtonsNode={
-        adminSession?.role !== 'admin_unit' ? (
-          <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
-            <ExportPrestasiProdiButton data={targetWisudawan} overrides={overrides} periode={filterPeriode} />
-            <GeneratePrestasiProdiButton periode={filterPeriode} isGenerated={isGeneratedProdi} />
-            <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
-            <PrintPrestasiButton
-              data={targetWisudawan}
-              periode={filterPeriode}
-              settings={certSettings}
-              tempatWisuda={tempatWisuda}
-              tanggalWisuda={tanggalWisuda}
-              mode="prodi"
-            />
-          </div>
-        ) : undefined
+        <div className="flex flex-row flex-wrap items-stretch gap-2 w-full sm:w-auto mt-1 sm:mt-0 [&>*]:flex-auto [&>*]:sm:flex-none">
+          <ExportPrestasiProdiButton data={targetWisudawan} overrides={overrides} periode={filterPeriode} />
+          {adminSession?.role !== 'admin_unit' && (
+            <>
+              <GeneratePrestasiProdiButton periode={filterPeriode} isGenerated={isGeneratedProdi} />
+              <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
+              <PrintPrestasiButton
+                data={targetWisudawan}
+                periode={filterPeriode}
+                settings={certSettings}
+                tempatWisuda={tempatWisuda}
+                tanggalWisuda={tanggalWisuda}
+                mode="prodi"
+              />
+            </>
+          )}
+        </div>
       }
       akademikContentNode={
         <PrestasiAkademikView
