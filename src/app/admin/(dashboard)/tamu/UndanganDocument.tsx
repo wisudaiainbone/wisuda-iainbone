@@ -34,6 +34,7 @@ type Props = {
     nama: string;
     nip: string;
     acara: string;
+    tempat: string;
   };
   periode: string;
 };
@@ -318,7 +319,7 @@ export default function UndanganDocument({ data, settings, periode }: Props) {
                 <View style={{ marginBottom: 10, marginTop: 15, alignItems: "center" }}>
                   <Text style={styles.infoRight}>Pelaksanaan : {settings.tanggal}</Text>
                   <Text style={styles.infoRight}>Waktu : {tamu.sesi === 'Sesi Satu' ? '08:00 WITA - Selesai' : '13:00 WITA - Selesai'} ({tamu.sesi})</Text>
-                  <Text style={styles.infoRight}>Tempat : Gedung Serbaguna IAIN Bone</Text>
+                  <Text style={styles.infoRight}>Tempat : {settings.tempat || "Gedung Serbaguna IAIN Bone"}</Text>
                 </View>
 
                 <View style={styles.tujuanBlockRight}>
@@ -366,7 +367,7 @@ export default function UndanganDocument({ data, settings, periode }: Props) {
                 </View>
                 <View style={styles.suratJadwalRow}>
                   <Text style={styles.suratJadwalLabel}>Tempat</Text>
-                  <Text style={styles.suratJadwalValue}>: Gedung Serbaguna IAIN Bone</Text>
+                  <Text style={styles.suratJadwalValue}>: {settings.tempat || "Gedung Serbaguna IAIN Bone"}</Text>
                 </View>
 
                 <Text style={{ fontFamily: "Times-Roman", fontSize: 12, textAlign: "center", marginTop: 15 }}>

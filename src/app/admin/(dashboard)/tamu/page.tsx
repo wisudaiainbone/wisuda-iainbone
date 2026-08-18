@@ -75,7 +75,8 @@ export default async function AdminTamuPage(props: PageProps) {
     jabatan: getVal('tamu_jabatan', 'Rektor'),
     nama: getVal('tamu_nama', ''),
     nip: getVal('tamu_nip', ''),
-    acara: getVal('tamu_acara', '')
+    acara: getVal('tamu_acara', ''),
+    tempat: getVal('tamu_tempat', '') || activePeriode?.tempat_pelaksanaan || 'Gedung Serbaguna IAIN Bone'
   };
 
   return (

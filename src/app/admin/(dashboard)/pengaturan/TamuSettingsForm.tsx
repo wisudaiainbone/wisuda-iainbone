@@ -18,6 +18,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
   const [tamuNama, setTamuNama] = useState(initialData?.tamu_nama || "");
   const [tamuNip, setTamuNip] = useState(initialData?.tamu_nip || "");
   const [tamuAcara, setTamuAcara] = useState(initialData?.tamu_acara || "");
+  const [tamuTempat, setTamuTempat] = useState(initialData?.tamu_tempat || "");
   const [tamuVipList, setTamuVipList] = useState(initialData?.tamu_vip_list || "");
 
   const [tamuBgDepanUrl, setTamuBgDepanUrl] = useState(initialData?.tamu_bg_depan_url || "");
@@ -45,6 +46,7 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
         updateSetting('tamu_nama', tamuNama),
         updateSetting('tamu_nip', tamuNip),
         updateSetting('tamu_acara', tamuAcara),
+        updateSetting('tamu_tempat', tamuTempat),
         updateSetting('tamu_vip_list', tamuVipList),
         updateSetting('tamu_bg_depan_url', tamuBgDepanUrl),
         updateSetting('tamu_bg_belakang_url', tamuBgBelakangUrl),
@@ -319,6 +321,21 @@ export default function TamuSettingsForm({ initialData }: { initialData?: Record
           </div>
         </div>
 
+        <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
+          <div className="flex-1">
+            <h3 className="text-sm font-bold text-[var(--color-text)]">Tempat Acara (Opsional)</h3>
+            <p className="text-xs text-[var(--color-text-subtle)] mt-1">Kosongkan untuk menggunakan tempat dari pengaturan Periode aktif</p>
+          </div>
+          <div className="w-full sm:w-80 shrink-0">
+            <input
+              type="text"
+              value={tamuTempat}
+              onChange={(e) => setTamuTempat(e.target.value)}
+              className="w-full px-4 py-2.5 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all"
+              placeholder="Contoh: Gedung Serbaguna IAIN Bone"
+            />
+          </div>
+        </div>
         <div className="px-6 py-4 flex flex-col gap-4 hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
           <div>
             <h3 className="text-sm font-bold text-[var(--color-text)]">Susunan Acara (Halaman 2)</h3>
