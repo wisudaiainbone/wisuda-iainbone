@@ -531,29 +531,27 @@ export default function AdminPengaturanPage() {
               </label>
 
               {/* Bypass Survei Undangan */}
-              {showUndanganInfo && (
-                <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors bg-slate-50/50 dark:bg-slate-900/20 border-t border-[var(--color-border)]">
-                  <div className="flex-1 pl-4 border-l-2 border-emerald-500/30">
-                    <h2 className="text-sm font-bold text-[var(--color-text)]">
-                      Bypass Syarat Survei (Tampilkan ke Semua)
-                    </h2>
-                    <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
-                      Jika diaktifkan, E-Undangan akan ditampilkan kepada <strong>seluruh wisudawan</strong> terlepas dari apakah mereka sudah mengisi survei atau belum. Jika dimatikan, E-Undangan hanya muncul bagi yang sudah mengisi survei.
-                    </p>
+              <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">
+                <div className="flex-1 pl-4 border-l-2 border-violet-400/50">
+                  <h2 className="text-sm font-bold text-[var(--color-text)]">
+                    Bypass Undangan (Tampilkan ke Semua)
+                  </h2>
+                  <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
+                    Jika diaktifkan, E-Undangan dan QR Code akan ditampilkan kepada <strong>seluruh wisudawan</strong> meskipun belum mengisi survei. Jika dimatikan, E-Undangan hanya muncul bagi wisudawan yang sudah mengisi survei.
+                  </p>
+                </div>
+                <div className="flex items-center justify-start shrink-0">
+                  <input
+                    type="checkbox"
+                    className="sr-only"
+                    checked={bypassEUndangan}
+                    onChange={(e) => setBypassEUndangan(e.target.checked)}
+                  />
+                  <div className={`relative w-12 h-6 rounded-full transition-colors ${bypassEUndangan ? 'bg-violet-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${bypassEUndangan ? 'translate-x-6' : 'translate-x-0'}`}></div>
                   </div>
-                  <div className="flex items-center justify-start shrink-0">
-                    <input
-                      type="checkbox"
-                      className="sr-only"
-                      checked={bypassEUndangan}
-                      onChange={(e) => setBypassEUndangan(e.target.checked)}
-                    />
-                    <div className={`relative w-12 h-6 rounded-full transition-colors ${bypassEUndangan ? 'bg-violet-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                      <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${bypassEUndangan ? 'translate-x-6' : 'translate-x-0'}`}></div>
-                    </div>
-                  </div>
-                </label>
-              )}
+                </div>
+              </label>
 
 
               {/* Izinkan Perbaikan Data */}
