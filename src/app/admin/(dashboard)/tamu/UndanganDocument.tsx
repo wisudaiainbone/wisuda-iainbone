@@ -320,8 +320,8 @@ export default function UndanganDocument({ data, settings, periode }: Props) {
                 <Text style={styles.periodeRight}>{periode}</Text>
 
                 <View style={{ marginBottom: 10, marginTop: 15, alignItems: "center" }}>
-                  <Text style={styles.infoRight}>Pelaksanaan : {settings.tanggal}</Text>
-                  <Text style={styles.infoRight}>Waktu : {tamu.sesi === 'Sesi Satu' ? '08:00 WITA - Selesai' : '13:00 WITA - Selesai'} ({tamu.sesi})</Text>
+                  <Text style={styles.infoRight}>Pelaksanaan : {settings.tanggal_pelaksanaan || "Belum Ditentukan"}</Text>
+                  <Text style={styles.infoRight}>Waktu : {tamu.sesi === 'Sesi Satu' ? (settings.waktu_sesi_1 || '08:00 WITA - Selesai') : (settings.waktu_sesi_2 || '13:00 WITA - Selesai')} ({tamu.sesi})</Text>
                   <Text style={styles.infoRight}>Tempat : {settings.tempat || "Gedung Serbaguna IAIN Bone"}</Text>
                 </View>
 
