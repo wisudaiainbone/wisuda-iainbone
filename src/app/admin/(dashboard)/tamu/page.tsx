@@ -76,7 +76,10 @@ export default async function AdminTamuPage(props: PageProps) {
     nama: getVal('tamu_nama', ''),
     nip: getVal('tamu_nip', ''),
     acara: getVal('tamu_acara', ''),
-    tempat: getVal('tamu_tempat', '') || activePeriode?.tempat_pelaksanaan || 'Gedung Serbaguna IAIN Bone'
+    tempat: getVal('tamu_tempat', '') || activePeriode?.tempat_pelaksanaan || 'Gedung Serbaguna IAIN Bone',
+    tanggal_pelaksanaan: activePeriode?.tanggal_pelaksanaan || '',
+    waktu_sesi_1: activePeriode?.waktu_sesi_1 || '08:00 WITA - Selesai',
+    waktu_sesi_2: activePeriode?.waktu_sesi_2 || '13:00 WITA - Selesai'
   };
 
   return (

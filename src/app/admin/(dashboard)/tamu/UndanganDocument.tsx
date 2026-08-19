@@ -35,6 +35,9 @@ type Props = {
     nip: string;
     acara: string;
     tempat: string;
+    tanggal_pelaksanaan?: string;
+    waktu_sesi_1?: string;
+    waktu_sesi_2?: string;
   };
   periode: string;
 };
@@ -359,11 +362,11 @@ export default function UndanganDocument({ data, settings, periode }: Props) {
 
                 <View style={styles.suratJadwalRow}>
                   <Text style={styles.suratJadwalLabel}>Hari/Tanggal</Text>
-                  <Text style={styles.suratJadwalValue}>: {settings.tanggal}</Text>
+                  <Text style={styles.suratJadwalValue}>: {settings.tanggal_pelaksanaan || "Belum Ditentukan"}</Text>
                 </View>
                 <View style={styles.suratJadwalRow}>
                   <Text style={styles.suratJadwalLabel}>Waktu</Text>
-                  <Text style={styles.suratJadwalValue}>: {tamu.sesi === 'Sesi Satu' ? '08:00 WITA - Selesai' : '13:00 WITA - Selesai'}</Text>
+                  <Text style={styles.suratJadwalValue}>: {tamu.sesi === 'Sesi Satu' ? (settings.waktu_sesi_1 || '08:00 WITA - Selesai') : (settings.waktu_sesi_2 || '13:00 WITA - Selesai')}</Text>
                 </View>
                 <View style={styles.suratJadwalRow}>
                   <Text style={styles.suratJadwalLabel}>Tempat</Text>
