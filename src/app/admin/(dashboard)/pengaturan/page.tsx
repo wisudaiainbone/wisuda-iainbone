@@ -17,6 +17,7 @@ export default function AdminPengaturanPage() {
   const [defaultPassword, setDefaultPassword] = useState("");
   const [allowEditToga, setAllowEditToga] = useState(true);
   const [allowEditProfile, setAllowEditProfile] = useState(true);
+  const [showTogaInfo, setShowTogaInfo] = useState(true);
   const [showUndanganInfo, setShowUndanganInfo] = useState(true);
   const [bypassEUndangan, setBypassEUndangan] = useState(false);
   const [allowPerbaikan, setAllowPerbaikan] = useState(true);
