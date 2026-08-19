@@ -155,3 +155,104 @@ export async function deleteAkunDummy() {
   }
 }
 
+// ==========================================
+// VALIDASI SURVEI
+// ==========================================
+
+/**
+ * Terapkan validasi survei secara replace-total:
+ * 1. Reset kolom `survei` menjadi NULL/kosong untuk semua wisudawan di periode aktif
+ * 2. Set `survei = 'TRUE'` untuk NIM yang ada di nimList
+ * 
+ * Returns: { processed, notFound, total }
+ */
+export async function applySurveiValidation(nimList: string[]): Promise<{
+  success: boolean;
+  processed?: number;
+  notFound?: string[];
+  total?: number;
+  error?: string;
+}> {
+  try {
+    const supabaseAdmin = await createSupabaseAdminClient();
+
+    // Ambil periode aktif
+    const { data: periodeAktif } = await supabaseAdmin
+      .from('periode_wisuda')
+      .select('nama_periode')
+      .eq('status', 'Sedang Dibuka')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (!periodeAktif) {
+      return { success: false, error: 'Tidak ada periode wisuda yang sedang aktif.' };
+    }
+
+    const namaPeriode = periodeAktif.nama_periode;
+
+    // Step 1: Reset semua survei untuk periode aktif
+    const { error: resetError } = await supabaseAdmin
+      .from('wisudawan')
+      .update({ survei: null })
+      .eq('periode', namaPeriode)
+      .neq('nim', 'DUMMY999');
+
+    if (resetError) {
+      return { success: false, error: `Gagal reset survei: ${resetError.message}` };
+    }
+
+    if (nimList.length === 0) {
+      revalidatePath('/admin');
+      revalidatePath('/admin/wisudawan');
+      return { success: true, processed: 0, notFound: [], total: 0 };
+    }
+
+    // Step 2: Ambil NIM yang ada di DB periode aktif
+    const { data: existingRows, error: fetchError } = await supabaseAdmin
+      .from('wisudawan')
+      .select('nim')
+      .eq('periode', namaPeriode)
+      .in('nim', nimList);
+
+    if (fetchError) {
+      return { success: false, error: `Gagal membaca data wisudawan: ${fetchError.message}` };
+    }
+
+    const foundNims = new Set((existingRows || []).map((r: any) => r.nim));
+    const notFound = nimList.filter(n => !foundNims.has(n));
+
+    if (foundNims.size > 0) {
+      // Step 3: Update survei = 'TRUE' untuk NIM yang ditemukan
+      const { error: updateError } = await supabaseAdmin
+        .from('wisudawan')
+        .update({ survei: 'TRUE' })
+        .eq('periode', namaPeriode)
+        .in('nim', Array.from(foundNims));
+
+      if (updateError) {
+        return { success: false, error: `Gagal update survei: ${updateError.message}` };
+      }
+    }
+
+    // Invalidate cache
+    try {
+      const { redis: redisClient } = await import('@/lib/redis');
+      const pipeline = redisClient.pipeline();
+      Array.from(foundNims).forEach(nim => pipeline.del(`wisudawan:${nim}`));
+      await pipeline.exec();
+    } catch (_) {}
+
+    revalidatePath('/admin');
+    revalidatePath('/admin/wisudawan');
+
+    return {
+      success: true,
+      processed: foundNims.size,
+      notFound,
+      total: nimList.length,
+    };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Terjadi kesalahan tidak terduga' };
+  }
+}

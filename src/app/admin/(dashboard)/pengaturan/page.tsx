@@ -9,6 +9,7 @@ import { uploadCertBackground, uploadCertSignature, extractSupabasePath, deleteC
 import TogaSettingsForm from "./TogaSettingsForm";
 import TamuSettingsForm from "./TamuSettingsForm";
 import SlideSettingsForm from "./SlideSettingsForm";
+import SurveiValidasiForm from "./SurveiValidasiForm";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 export default function AdminPengaturanPage() {
@@ -300,6 +301,7 @@ export default function AdminPengaturanPage() {
             { id: 'toga', label: 'Toga' },
             { id: 'tamu', label: 'Tamu' },
             { id: 'slide', label: 'Slide' },
+            { id: 'survei', label: 'Survei' },
           ].map(tab => (
             <button
               key={tab.id}
@@ -1072,6 +1074,10 @@ export default function AdminPengaturanPage() {
         )}
         {activeTab === 'slide' && (
           <SlideSettingsForm initialData={allSettingsMap} />
+        )}
+
+        {activeTab === 'survei' && (
+          <SurveiValidasiForm initialData={allSettingsMap} />
         )}
       </div>
 
