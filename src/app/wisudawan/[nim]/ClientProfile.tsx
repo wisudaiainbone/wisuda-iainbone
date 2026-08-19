@@ -1783,7 +1783,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               <div className="text-center mt-2">
                 <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-0.5">Waktu dan Tempat</p>
                 <p className="text-sm font-black text-gray-900">
-                  {w["SESI"] === "Sesi 1" || w["SESI"] === "SESI 1" ? p.session1 : p.session2}
+                  {(w["SESI"]?.toLowerCase().includes('satu') || w["SESI"] === "Sesi 1" || w["SESI"] === "SESI 1") ? p.session1 : p.session2}
                 </p>
                 <p className="text-sm font-black text-gray-900">di {p.venue}, {p.location}</p>
               </div>
