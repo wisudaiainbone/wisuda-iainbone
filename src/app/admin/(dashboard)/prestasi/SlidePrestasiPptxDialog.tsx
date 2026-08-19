@@ -34,6 +34,7 @@ type ProdiItem = {
 type Props = {
   data: WisudawanRow[];
   prodiData: ProdiItem[];
+  mode?: 'akademik' | 'prodi';
 };
 
 async function fetchImageAsBase64(url: string): Promise<string | null> {
@@ -130,7 +131,7 @@ function getWarna(fakultas: string) {
   return DEFAULT_COLORS;
 }
 
-export default function SlidePrestasiPptxDialog({ data, prodiData }: Props) {
+export default function SlidePrestasiPptxDialog({ data, prodiData, mode = 'akademik' }: Props) {
   const [open, setOpen] = useState(false);
   const [selectedFakultas, setSelectedFakultas] = useState('');
   const [selectedProdi, setSelectedProdi] = useState('');
@@ -155,7 +156,11 @@ export default function SlidePrestasiPptxDialog({ data, prodiData }: Props) {
     let filtered = data.filter(w =>
       Boolean(w.terdaftar && w.terdaftar !== 'false' && w.terdaftar !== '0') &&
       w.urut != null &&
-      Boolean(w.prestasi_akd && w.prestasi_akd.trim() !== '')
+      (
+        mode === 'prodi'
+          ? Boolean((w as any).prestasi_prodi && String((w as any).prestasi_prodi).trim() !== '')
+          : Boolean(w.prestasi_akd && w.prestasi_akd.trim() !== '')
+      )
     );
 
     // Urutkan: fakultas, lalu urutan prodi di DB, lalu urut
@@ -174,7 +179,7 @@ export default function SlidePrestasiPptxDialog({ data, prodiData }: Props) {
     });
 
     return filtered;
-  }, [data, prodiData]);
+  }, [data, prodiData, mode]);
 
   const handleGenerate = async () => {
     if (targetWisudawan.length === 0) return;
@@ -377,7 +382,8 @@ export default function SlidePrestasiPptxDialog({ data, prodiData }: Props) {
         });
 
         // ─── Sebutan Prestasi ───
-        const parts = (w.prestasi_akd || '').split(',').map(s => s.trim()).filter(Boolean);
+        const prestasiField = mode === 'prodi' ? (w as any).prestasi_prodi : w.prestasi_akd;
+        const parts = (prestasiField || '').split(',').map((s: string) => s.trim()).filter(Boolean);
         let rankStr = parts[0] || '';
         let sebutanText = rankStr ? `TERBAIK ${rankStr.toUpperCase()}` : '';
         if (parts.includes("Institut")) {

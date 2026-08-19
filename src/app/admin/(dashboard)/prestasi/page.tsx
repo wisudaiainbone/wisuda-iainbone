@@ -136,7 +136,7 @@ export default async function AdminPrestasiPage(props: PageProps) {
           {adminSession?.role !== 'admin_unit' && (
             <>
               <GeneratePrestasiProdiButton periode={filterPeriode} isGenerated={isGeneratedProdi} />
-              <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} />
+              <SlidePrestasiPptxDialog data={targetWisudawan} prodiData={allProdi} mode="prodi" />
               <PrintPrestasiButton
                 data={targetWisudawan}
                 periode={filterPeriode}
