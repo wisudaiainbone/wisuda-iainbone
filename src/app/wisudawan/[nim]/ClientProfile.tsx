@@ -409,8 +409,8 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
               ...(w["STATUS"] !== "Calon Wisudawan" && w["SESI"] && w["SESI"] !== "-" && w["SESI"] !== "Belum Ditentukan" ? [
                 { label: "Sesi", value: w["SESI"] },
                 { label: "Nomor Urut", value: w["URUT"] ? `${w["URUT"]}` : "-" },
-                ...((w["SESI"] === "Sesi 1" || w["SESI"] === "SESI 1") && p.session1 ? [{ label: "Jam Sesi", value: p.session1 }] : []),
-                ...((w["SESI"] === "Sesi 2" || w["SESI"] === "SESI 2") && p.session2 ? [{ label: "Jam Sesi", value: p.session2 }] : []),
+                ...((w["SESI"]?.toLowerCase().includes('satu') || w["SESI"] === "Sesi 1" || w["SESI"] === "SESI 1") && p.session1 ? [{ label: "Jam Sesi", value: p.session1 }] : []),
+                ...((w["SESI"]?.toLowerCase().includes('dua') || w["SESI"] === "Sesi 2" || w["SESI"] === "SESI 2") && p.session2 ? [{ label: "Jam Sesi", value: p.session2 }] : []),
               ] : []),
             ].map(s => (
               <div key={s.label} className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-3 py-3 border-b border-[var(--color-border)] last:border-0">
@@ -1523,7 +1523,11 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                             <InfoRow label="Tempat" value={`${p.venue}, ${p.location}`} />
                             <InfoRow label="Sesi" value={w["SESI"]} />
                             <InfoRow label="Nomor Urut Kursi" value={`${w["URUT"]}`} />
-                            <InfoRow label="Jam Sesi" value={w["SESI"] === "Sesi 1" || w["SESI"] === "SESI 1" ? p.session1 : p.session2} />
+                            <InfoRow label="Jam Sesi" value={
+                              (w["SESI"]?.toLowerCase().includes('satu') || w["SESI"] === "Sesi 1" || w["SESI"] === "SESI 1")
+                                ? (p.session1 || '-')
+                                : (p.session2 || '-')
+                            } />
                           </div>
 
                           <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
