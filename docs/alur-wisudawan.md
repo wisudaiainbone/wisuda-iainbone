@@ -104,7 +104,7 @@ Menampilkan judul *"Wisuda Program Sarjana dan Magister [Periode] IAIN Bone"* be
 | Tab | Isi |
 |---|---|
 | **Informasi** | Pengumuman penting, Judul Skripsi/Tesis, Data Akademik, Prestasi & Organisasi |
-| **Undangan** | QR E-Undangan asli (dengan logo di tengah), detail tempat & sesi, nomor urut, tata tertib. Terkunci jika admin menonaktifkan `show_undangan_info`. Tombol **Buka E-Undangan** membuka Tiket E-Undangan digital bergaya tiket Toga |
+| **Undangan** | QR E-Undangan asli (dengan logo di tengah), detail tempat & sesi, nomor urut, tata tertib. Memiliki 3 kemungkinan tampilan tergantung pengaturan admin:<br>• 🔒 Abu-abu — `show_undangan_info = false`: "E-Undangan Belum Dapat Diakses"<br>• 🔒 Kuning — `show_undangan_info = true` + survei belum terisi + `bypass_e_undangan = false`: "Harus isi Survei Alumni"<br>• ✅ Terbuka — survei terisi (`TRUE`) ATAU `bypass_e_undangan = true`: konten undangan penuh |
 | **Toga** | Tiket Toga (QR Code Asli dengan logo), ukuran, waktu pengambilan, catatan. Terkunci jika admin menonaktifkan `show_toga_info` |
 | **Pendaftaran** | Waktu daftar, Email, TTL, Jenis Kelamin |
 | **Perbaikan** | Daftar riwayat pengajuan perbaikan data akademik beserta statusnya. Tombol ajukan muncul jika `allow_perbaikan = true` dan tidak ada pengajuan aktif |

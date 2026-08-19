@@ -98,16 +98,23 @@ Halaman Pengaturan menggunakan layout **2-kolom** (menu navigasi kiri 10% / kont
 | `allow_edit_profile` | Mengizinkan wisudawan edit data profil | `true` |
 | `allow_edit_toga` | Mengizinkan wisudawan ubah ukuran toga | `true` |
 | `show_toga_info` | Menampilkan tab & informasi toga di profil | `true` |
-| `show_undangan_info` | Menampilkan tab & informasi undangan di profil | `true` |
+| `show_undangan_info` | Menampilkan tab & informasi E-Undangan di profil. Jika `true`, E-Undangan hanya muncul bagi wisudawan yang sudah mengisi survei (kolom `survei = 'TRUE'`). Dikombinasikan dengan `bypass_e_undangan` untuk kontrol lebih rinci. | `true` |
+| `bypass_e_undangan` | Jika `true`, E-Undangan ditampilkan ke **seluruh wisudawan** tanpa memandang status survei mereka. Jika `false`, berlaku syarat survei. | `false` |
 | `allow_perbaikan` | Mengizinkan wisudawan mengajukan perbaikan data akademik | `true` |
 | `allow_absensi_login` | Membuka akses rute `/admin/kehadiran` untuk panitia lapangan tanpa login Google (menggunakan Password Default). Dapat dimatikan saat sesi presensi selesai. | `true` |
 | `allow_toga_scan_login` | Membuka akses rute `/admin/toga` (mode scan) untuk panitia toga tanpa login Google (menggunakan Password Default). Saat diakses, tampilan hanya menampilkan tab Scan saja (tanpa Rekapitulasi). | `true` |
 | `show_prestasi_card` | Menampilkan Kartu Prestasi Akademik di halaman profil publik wisudawan (hanya jika memiliki data `prestasi_akd`) | `true` |
 | `contoh_foto_url` | URL publik gambar contoh/referensi foto profil wisudawan bertoga (disimpan di Supabase `cert-assets`). Ditampilkan di halaman panduan upload profil wisudawan dengan fitur zoom (lightbox). | ` ` |
 
+> **Logika Tampilan E-Undangan**:
+> - `show_undangan_info = false` → E-Undangan **tidak muncul sama sekali** (kunci abu-abu, pesan "Belum dapat diakses")
+> - `show_undangan_info = true` + `bypass_e_undangan = false` → E-Undangan hanya muncul jika **survei wisudawan sudah `TRUE`** (kunci kuning bagi yang belum survei, dengan pesan "Harus isi Survei Alumni")
+> - `show_undangan_info = true` + `bypass_e_undangan = true` → E-Undangan muncul ke **semua wisudawan** tanpa syarat survei
+
 Di bagian bawah Menu General, terdapat fitur tambahan:
 - **Bersihkan Seluruh Cache Sistem (Upstash)**: Menghapus seluruh statistik, profil, dan temporary state secara paksa dari memori server agar disinkronkan kembali dari database asli.
 - **Manajemen Akun Uji Coba (Dummy)**: Tombol pembuat akun simulasi (`DUMMY999`) yang dapat digunakan Admin untuk mencoba alur login, setup profil, edit toga, dan menu wisudawan. Akun simulasi ini secara otomatis dieksklusi dari statistik dasbor dan tabel admin agar tidak merusak data metrik.
+
 
 #### Menu Prestasi
 Menyimpan data yang akan tercetak di sertifikat penghargaan. Dibagi menjadi dua sub-bagian:
@@ -158,6 +165,7 @@ Mengelola aset desain untuk fitur Generate Slide PPTX wisudawan.
 #### Menu Tamu
 Mengelola semua data dan aset terkait undangan tamu wisuda:
 - **Data Undangan Tamu**: Nomor surat, tanggal, jabatan/nama/NIP penandatangan, nama acara.
+- **Lokasi Acara**: Field teks untuk mengisi lokasi/venue acara yang akan tercetak di undangan tamu (contoh: `Gedung Serbaguna IAIN Bone`). Tersimpan di `app_settings` dengan key `tamu_lokasi_acara`. Jika kosong, sistem menggunakan lokasi dari data Periode aktif sebagai fallback.
 - **Gambar Latar Depan & Belakang**: Upload PNG/JPG untuk halaman depan dan belakang undangan.
 - **Tanda Tangan Digital**: Upload gambar tanda tangan PNG transparan.
 - **Susunan Acara**: Textarea multi-baris (Enter = baris baru) yang akan tercetak di halaman 2 undangan.
@@ -165,6 +173,18 @@ Mengelola semua data dan aset terkait undangan tamu wisuda:
   - 🟢 **Ekspor Label Excel**: Menghasilkan file `.xlsx` dari template `template_label_tamu.xlsx` di folder `public/`. Sheet `Daftar` diisi dengan kolom `NO` (nomor urut) dan `NAMA` (UPPERCASE). Header digenerate otomatis berlatar kuning.
   - 📕 **PDF Tamu VIP**: Menghasilkan file `.pdf` ukuran **16 cm × 19,5 cm** dengan layout 2 kolom × 5 baris (10 label per halaman). Setiap label menampilkan nama tamu di tengah (UPPERCASE, bold, font Roboto Condensed) diikuti kata **"Tempat"** di bawahnya. Tidak ada pemenggalan kata.
   - 🟣 **PDF Kursi VIP**: Identik dengan PDF Tamu VIP, namun **tanpa** kata "Tempat" — hanya nama saja. Berguna untuk label tempel di kursi tamu.
+
+#### Menu Survei (Validasi Survei)
+Fitur validasi massal untuk menandai wisudawan yang telah mengisi survei alumni:
+- **Textarea Daftar NIM**: Admin menempelkan daftar NIM (satu per baris) dari hasil ekspor survei.
+- **Simpan Daftar**: Menyimpan daftar NIM ke `app_settings` (key `survei_nim_list`) agar tidak hilang saat refresh halaman.
+- **Terapkan ke Wisudawan (Replace Total)**: Menjalankan server action `applySurveiValidation()` dengan logika *reset-then-set*:
+  1. **Reset**: Mengosongkan kolom `survei` untuk **seluruh wisudawan** di periode aktif.
+  2. **Set**: Mengisi `survei = 'TRUE'` hanya untuk NIM yang ada di daftar.
+  3. Menginvalidasi cache Redis untuk semua NIM yang terpengaruh.
+- **Ringkasan Hasil**: Setelah selesai, menampilkan berapa NIM berhasil ditandai, berapa yang tidak ditemukan di database (beserta daftarnya).
+
+> ⚠️ Operasi ini bersifat **destructive** — seluruh data survei sebelumnya di periode aktif akan direset terlebih dahulu sebelum data baru diterapkan.
 
 ### Data Wisudawan (`/admin/wisudawan`)
 Pengelolaan data wisudawan dari Supabase, dilengkapi:
