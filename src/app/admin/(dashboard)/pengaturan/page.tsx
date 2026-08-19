@@ -17,8 +17,8 @@ export default function AdminPengaturanPage() {
   const [defaultPassword, setDefaultPassword] = useState("");
   const [allowEditToga, setAllowEditToga] = useState(true);
   const [allowEditProfile, setAllowEditProfile] = useState(true);
-  const [showTogaInfo, setShowTogaInfo] = useState(true);
   const [showUndanganInfo, setShowUndanganInfo] = useState(true);
+  const [bypassEUndangan, setBypassEUndangan] = useState(false);
   const [allowPerbaikan, setAllowPerbaikan] = useState(true);
   const [showPrestasiCard, setShowPrestasiCard] = useState(true);
   const [allowAbsensiLogin, setAllowAbsensiLogin] = useState(true);
@@ -170,6 +170,7 @@ export default function AdminPengaturanPage() {
         setAllowEditProfile(getVal('allow_edit_profile', 'true') === 'true');
         setShowTogaInfo(getVal('show_toga_info', 'true') === 'true');
         setShowUndanganInfo(getVal('show_undangan_info', 'true') === 'true');
+        setBypassEUndangan(getVal('bypass_e_undangan', 'false') === 'true');
         setAllowPerbaikan(getVal('allow_perbaikan', 'true') === 'true');
         setShowPrestasiCard(getVal('show_prestasi_card', 'true') === 'true');
         setAllowAbsensiLogin(getVal('allow_absensi_login', 'true') === 'true');
@@ -240,6 +241,7 @@ export default function AdminPengaturanPage() {
     const res3 = await updateSetting('allow_edit_profile', allowEditProfile ? 'true' : 'false');
     const res4 = await updateSetting('show_toga_info', showTogaInfo.toString());
     const res5 = await updateSetting('show_undangan_info', showUndanganInfo.toString());
+    const resBypassEUndangan = await updateSetting('bypass_e_undangan', bypassEUndangan.toString());
     const res6 = await updateSetting('allow_perbaikan', allowPerbaikan.toString());
     const resPrestasi = await updateSetting('show_prestasi_card', showPrestasiCard.toString());
     const resAbsensi = await updateSetting('allow_absensi_login', allowAbsensiLogin.toString());
@@ -248,7 +250,7 @@ export default function AdminPengaturanPage() {
     const res7 = await updateSetting('contact_email', contactEmail);
     const res8 = await updateSetting('contact_wa', contactWa);
 
-    if (res1.success && res2.success && res3.success && res4.success && res5.success && res6.success && resPrestasi.success && resAbsensi.success && resTogaScan.success && resDelete.success && res7.success && res8.success) {
+    if (res1.success && res2.success && res3.success && res4.success && res5.success && resBypassEUndangan.success && res6.success && resPrestasi.success && resAbsensi.success && resTogaScan.success && resDelete.success && res7.success && res8.success) {
       showToast("Pengaturan berhasil diperbarui!", "success");
     } else {
       showToast(res1.error || res2.error || res3.error || "Gagal memperbarui pengaturan.", "error");
@@ -526,6 +528,32 @@ export default function AdminPengaturanPage() {
                   </div>
                 </div>
               </label>
+
+              {/* Bypass Survei Undangan */}
+              {showUndanganInfo && (
+                <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors bg-slate-50/50 dark:bg-slate-900/20 border-t border-[var(--color-border)]">
+                  <div className="flex-1 pl-4 border-l-2 border-emerald-500/30">
+                    <h2 className="text-sm font-bold text-[var(--color-text)]">
+                      Bypass Syarat Survei (Tampilkan ke Semua)
+                    </h2>
+                    <p className="text-xs text-[var(--color-text-subtle)] mt-1.5 leading-relaxed">
+                      Jika diaktifkan, E-Undangan akan ditampilkan kepada <strong>seluruh wisudawan</strong> terlepas dari apakah mereka sudah mengisi survei atau belum. Jika dimatikan, E-Undangan hanya muncul bagi yang sudah mengisi survei.
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-start shrink-0">
+                    <input
+                      type="checkbox"
+                      className="sr-only"
+                      checked={bypassEUndangan}
+                      onChange={(e) => setBypassEUndangan(e.target.checked)}
+                    />
+                    <div className={`relative w-12 h-6 rounded-full transition-colors ${bypassEUndangan ? 'bg-violet-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                      <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${bypassEUndangan ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    </div>
+                  </div>
+                </label>
+              )}
+
 
               {/* Izinkan Perbaikan Data */}
               <label className="px-6 py-4 flex flex-col items-start sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 cursor-pointer hover:bg-[var(--color-bg-secondary)]/50 transition-colors border-t border-[var(--color-border)]">

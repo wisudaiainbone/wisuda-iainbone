@@ -125,7 +125,7 @@ function StatBox({ label, value, sub }: { label: string; value: string; sub?: st
 }
 
 /* ── Page ──────────────────────────────────── */
-export default function ClientProfile({ nim, w: initialW, activePeriode, allowEditToga = true, allowEditProfile = true, showTogaInfo = true, showUndanganInfo = true, allowPerbaikan = true, showPrestasiCard = false, contohFotoUrl }: { nim: string, w: W, activePeriode: any, allowEditToga?: boolean, allowEditProfile?: boolean, showTogaInfo?: boolean, showUndanganInfo?: boolean, allowPerbaikan?: boolean, showPrestasiCard?: boolean, contohFotoUrl?: string }) {
+export default function ClientProfile({ nim, w: initialW, activePeriode, allowEditToga = true, allowEditProfile = true, showTogaInfo = true, showUndanganInfo = true, bypassEUndangan = false, allowPerbaikan = true, showPrestasiCard = false, contohFotoUrl }: { nim: string, w: W, activePeriode: any, allowEditToga?: boolean, allowEditProfile?: boolean, showTogaInfo?: boolean, showUndanganInfo?: boolean, bypassEUndangan?: boolean, allowPerbaikan?: boolean, showPrestasiCard?: boolean, contohFotoUrl?: string }) {
   const [w, setW] = useState<W>(initialW);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -155,6 +155,9 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
   const [isHintOpen, setIsHintOpen] = useState(true);
 
   const router = useRouter();
+
+  const isSurveiFilled = !!w["SURVEI"] && String(w["SURVEI"]).toUpperCase() === "TRUE";
+  const shouldShowUndangan = showUndanganInfo && (isSurveiFilled || bypassEUndangan);
 
   const handleLogout = async () => {
     await logoutWisudawan();
@@ -425,7 +428,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                 {p.hint_pendaftaran}
               </div>
             )}
-            {w["STATUS"] !== "Calon Wisudawan" && showUndanganInfo && (
+            {w["STATUS"] !== "Calon Wisudawan" && shouldShowUndangan && (
               <button
                 onClick={() => setIsUndanganOpen(true)}
                 className="flex items-center justify-center gap-2 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-sm font-bold transition-all w-full"
@@ -631,7 +634,7 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                       )}
 
                       {/* QR Undangan */}
-                      {showUndanganInfo && (
+                      {shouldShowUndangan && (
                         <div
                           className="hidden md:flex flex-1 sm:flex-none flex-col items-center gap-2 p-4 bg-rose-50 dark:bg-rose-900/20 border border-[var(--color-border)] rounded-xl text-center cursor-pointer hover:border-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/40 transition-all sm:w-[110px]"
                           onClick={() => setIsUndanganOpen(true)}
@@ -1468,6 +1471,18 @@ export default function ClientProfile({ nim, w: initialW, activePeriode, allowEd
                         <h3 className="text-xl font-bold font-[var(--font-outfit)] text-[var(--color-text)]">E-Undangan Belum Dapat Diakses</h3>
                         <p className="text-sm text-[var(--color-text-muted)] max-w-sm mt-2 leading-relaxed mx-auto">
                           Panitia belum membuka akses untuk E-Undangan dan tata tertib acara. Silakan periksa kembali nanti.
+                        </p>
+                      </div>
+                    </Card>
+                  ) : !shouldShowUndangan ? (
+                    <Card className="py-16 px-6 flex flex-col items-center justify-center text-center gap-4">
+                      <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/50 border border-amber-200 dark:border-amber-800/50 rounded-full flex items-center justify-center mb-2">
+                        <Lock className="w-8 h-8 text-amber-500 dark:text-amber-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold font-[var(--font-outfit)] text-[var(--color-text)]">Akses E-Undangan Dikunci</h3>
+                        <p className="text-sm text-[var(--color-text-muted)] max-w-md mt-2 leading-relaxed mx-auto">
+                          Anda harus <strong>mengisi Survei Alumni</strong> terlebih dahulu untuk dapat mengakses E-Undangan dan informasi pelaksanaan wisuda.
                         </p>
                       </div>
                     </Card>

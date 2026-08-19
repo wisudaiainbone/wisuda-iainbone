@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: Promise<{ nim: string }
     redirect(`/wisudawan/${session.nim}`);
   }
 
-  const [data, activePeriode, allowEditTogaSetting, allowEditProfileSetting, showTogaInfoSetting, showUndanganInfoSetting, allowPerbaikanSetting, showPrestasiCardSetting, contohFotoUrlSetting] = await Promise.all([
+  const [data, activePeriode, allowEditTogaSetting, allowEditProfileSetting, showTogaInfoSetting, showUndanganInfoSetting, allowPerbaikanSetting, showPrestasiCardSetting, contohFotoUrlSetting, bypassEUndanganSetting] = await Promise.all([
     getWisudawanByNim(decodedNim),
     getActivePeriode(),
     getSetting('allow_edit_toga', 'true', true),
@@ -35,7 +35,8 @@ export default async function Page({ params }: { params: Promise<{ nim: string }
     getSetting('show_undangan_info', 'true', true),
     getSetting('allow_perbaikan', 'true', true),
     getSetting('show_prestasi_card', 'true', true),
-    getSetting('contoh_foto_url', '', true)
+    getSetting('contoh_foto_url', '', true),
+    getSetting('bypass_e_undangan', 'false', true)
   ]);
 
   if (!data) {
@@ -48,8 +49,9 @@ export default async function Page({ params }: { params: Promise<{ nim: string }
   const showUndanganInfo = showUndanganInfoSetting === 'true';
   const allowPerbaikan = allowPerbaikanSetting === 'true';
   const showPrestasiCard = showPrestasiCardSetting === 'true';
+  const bypassEUndangan = bypassEUndanganSetting === 'true';
   const contohFotoUrl = contohFotoUrlSetting;
 
-  return <ClientProfile nim={nim} w={data as any} activePeriode={activePeriode} allowEditToga={allowEditToga} allowEditProfile={allowEditProfile} showTogaInfo={showTogaInfo} showUndanganInfo={showUndanganInfo} allowPerbaikan={allowPerbaikan} showPrestasiCard={showPrestasiCard} contohFotoUrl={contohFotoUrl as string} />;
+  return <ClientProfile nim={nim} w={data as any} activePeriode={activePeriode} allowEditToga={allowEditToga} allowEditProfile={allowEditProfile} showTogaInfo={showTogaInfo} showUndanganInfo={showUndanganInfo} bypassEUndangan={bypassEUndangan} allowPerbaikan={allowPerbaikan} showPrestasiCard={showPrestasiCard} contohFotoUrl={contohFotoUrl as string} />;
 }
 
