@@ -5,6 +5,8 @@ import { FileSpreadsheet, Printer, Loader2, Filter } from "lucide-react";
 import { pdf } from "@react-pdf/renderer";
 import UndanganDocument, { TamuItem } from "./UndanganDocument";
 import { useToast } from "@/components/ui/Toast";
+import { clearSemuaTamu } from "@/actions/tamu";
+import { Trash2 } from "lucide-react";
 import * as XLSX from "xlsx";
 
 type Props = {
@@ -18,6 +20,7 @@ export default function TamuHeaderActions({ data, settings, activePeriodes, curr
   const { showToast } = useToast();
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   const generatePDF = async () => {
     if (data.length === 0) {
@@ -76,6 +79,19 @@ export default function TamuHeaderActions({ data, settings, activePeriodes, curr
     }
   };
 
+  const handleClear = async () => {
+    if (!confirm("PERHATIAN: Anda yakin ingin MENGHAPUS SEMUA DATA TAMU? Tindakan ini tidak bisa dibatalkan.")) return;
+    setIsClearing(true);
+    const res = await clearSemuaTamu();
+    setIsClearing(false);
+    if (res.success) {
+      showToast("Daftar Tamu berhasil dibersihkan.", "success");
+      window.location.reload();
+    } else {
+      showToast(res.error || "Gagal membersihkan data tamu", "error");
+    }
+  };
+
   return (
     <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
       <div className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 h-10 sm:h-9 flex-1 min-w-0">
@@ -111,6 +127,16 @@ export default function TamuHeaderActions({ data, settings, activePeriodes, curr
         >
           {isExporting ? <Loader2 size={16} className="animate-spin shrink-0" /> : <FileSpreadsheet size={16} className="shrink-0" />}
           <span className="hidden sm:inline">{isExporting ? 'Mengekspor...' : 'Export'}</span>
+        </button>
+
+        <button
+          onClick={handleClear}
+          disabled={isClearing || data.length === 0}
+          title="Bersihkan Daftar Tamu"
+          className="flex items-center justify-center w-10 sm:w-auto gap-1.5 px-0 sm:px-4 h-full rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-normal sm:font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        >
+          {isClearing ? <Loader2 size={16} className="animate-spin shrink-0" /> : <Trash2 size={16} className="shrink-0" />}
+          <span className="hidden sm:inline">{isClearing ? 'Membersihkan...' : 'Bersihkan Data'}</span>
         </button>
       </div>
     </div>

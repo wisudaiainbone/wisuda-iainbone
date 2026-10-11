@@ -44,6 +44,7 @@ Primary key: `nim`. Menyimpan seluruh data profil wisudawan.
 | `password` | TEXT | NULL = pakai default; `$sha256$salt$hash` = password kustom ter-hash |
 | `id_wisuda` | TEXT | Format: `[PERIODE]_[TAHUN]_[URUTAN-3-DIGIT]_[NIM]` |
 | `status` | TEXT | `'Calon Wisudawan'`, `'Terdaftar'`, atau `'Dihapus'` (soft delete — data tidak dihapus, hanya disembunyikan) |
+| `status_periode` | TEXT | Penanda status rekap periode — `'Aktif'` (default) atau `'Selesai'` (di-set otomatis saat periode ditutup). Status wisudawan di kolom `status` tetap tidak berubah agar rekam jejak terjaga. |
 | `log_status` | JSONB | Array rekaman perubahan status (append-only, tidak pernah ditimpa) |
 | `tanggal_yudisium` | DATE | Format baku `YYYY-MM-DD` |
 | `toga` | TEXT | Ukuran toga (S/M/L/XL/XXL) |
@@ -63,7 +64,8 @@ Primary key: `nim`. Menyimpan seluruh data profil wisudawan.
 [
   { "timestamp": "2026-06-01 08:00:00", "status": "Calon Wisudawan", "catatan": "Data diimpor oleh Admin" },
   { "timestamp": "2026-06-13 20:30:00", "status": "Terdaftar", "catatan": "Pendaftaran dikonfirmasi oleh wisudawan via portal" },
-  { "timestamp": "2026-06-14 10:00:00", "status": "Reset Password", "catatan": "Password direset ke default oleh Admin" }
+  { "timestamp": "2026-06-14 10:00:00", "status": "Reset Password", "catatan": "Password direset ke default oleh Admin" },
+  { "timestamp": "2026-10-01 08:00:00", "status": "Periode Selesai", "catatan": "Periode diselesaikan — data ditandai selesai oleh sistem" }
 ]
 ```
 
@@ -268,6 +270,18 @@ Menyimpan daftar tamu undangan eksternal untuk acara wisuda.
      ALTER TABLE periode_wisuda
      ADD COLUMN IF NOT EXISTS kuota_per_fakultas jsonb DEFAULT '{}'::jsonb;
      ```
+   - Kolom `status_periode` untuk wisudawan (jalankan manual):
+     ```sql
+     -- Tambah kolom status_periode (default 'Aktif')
+     ALTER TABLE wisudawan
+     ADD COLUMN IF NOT EXISTS status_periode TEXT DEFAULT 'Aktif';
+
+     -- (Opsional) Jika ada data wisudawan yang terlanjur berstatus 'Arsip'
+     -- dari versi sebelumnya, kembalikan ke 'Terdaftar'
+     UPDATE wisudawan
+     SET status = 'Terdaftar'
+     WHERE status = 'Arsip';
+     ```
 3. Salin kredensial ke `.env.local`:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -307,10 +321,46 @@ Menyimpan daftar tamu undangan eksternal untuk acara wisuda.
 1. Buka [Google Apps Script](https://script.google.com/) dan buat proyek baru.
 2. Salin *source code* dari file `gas_script.gs` ke editor tersebut.
 3. Masuk ke **Project Settings** → **Script Properties**, tambahkan:
-   - `UPLOAD_FOLDER_ID`: ID folder Google Drive untuk foto dan ijazah.
-   - `SPREADSHEET_ID`: ID Google Spreadsheet untuk ekspor data.
+   - `UPLOAD_FOLDER_ID`: ID folder Google Drive untuk upload umum.
+   - `FOTO_FOLDER_ID`: ID **Root Folder** Google Drive untuk foto profil wisudawan (saat ini: `1sn6ppXqet2yPHChsHUjM9Ta-BzSFpWCq`). Jika tidak diset, fallback ke `UPLOAD_FOLDER_ID`.
+   - `SPREADSHEET_ID`: ID Google Spreadsheet untuk ekspor data arsip.
 4. Klik **Deploy → New Deployment** → pilih **Web App** → Akses: **Anyone**.
 5. Salin *Web App URL* ke `.env.local` sebagai `NEXT_PUBLIC_GAS_WEBAPP_URL`.
+
+#### Struktur Folder Google Drive (Foto Wisudawan)
+
+Mulai versi ini, foto wisudawan disimpan dalam **hierarki bertingkat** di dalam Root Folder:
+
+```
+Root Folder (FOTO_FOLDER_ID)
+└── Wisuda_[Tahun]_[Periode Bersih]     ← Folder Induk per Periode
+    └── Foto_[Nama Periode Lengkap]     ← Subfolder Foto
+        └── FOTO_[timestamp]_[KODE_FAK]_[NIM].jpg
+```
+
+**Contoh** untuk `periode = "Angkatan XVII Tahun 2026"`:
+```
+Root Folder
+└── Wisuda_2026_Angkatan XVII
+    └── Foto_Angkatan XVII Tahun 2026
+        └── FOTO_1749820803456_FEBI_612062020120.jpg
+```
+
+> **Logika Ekstraksi Tahun (GAS)**: Script secara otomatis mengekstrak 4 digit angka tahun (`20xx`) dari nama periode menggunakan Regex, lalu menghapus kata "Tahun [Tahun]" untuk menghasilkan nama folder induk yang bersih dan ringkas.
+
+#### Actions yang Didukung GAS (`doPost`)
+
+| Action | Keterangan |
+|---|---|
+| `upload_foto` | Upload foto profil wisudawan ke subfolder `Foto_[Periode]` di dalam `Wisuda_[Tahun]_[Periode]`. Hapus foto lama jika ada. |
+| `upload` | Upload file umum (PDF, dll.) ke folder `UPLOAD_FOLDER_ID`. |
+| `delete_file` | Hapus file dari Google Drive berdasarkan `file_id`. |
+| `export_sheet` | Tulis baris data ke tab tertentu di Spreadsheet (`SPREADSHEET_ID`). Mendukung `overwrite` (hapus isi lama) dan append ke baris terakhir. Digunakan oleh fitur Arsip Periode (chunked 200 baris). |
+| `export_statistik_horizontal` | Tulis data statistik secara horizontal ke tab `Statistik`. Label di kolom A, setiap periode menambah kolom baru ke kanan. |
+| `send_otp_email` | Kirim email OTP reset password ke wisudawan via `MailApp.sendEmail()` menggunakan akun Gmail institusi. |
+| `save_ringkasan_periode` | Simpan/update baris ringkasan (Nama Periode, Total Wisudawan, Terdaftar, Tanggal Arsip, Status) ke sheet **`Ringkasan Periode`** sebagai backup historis saat `arsipakanPeriode` dijalankan. |
+| `read_ringkasan_periode` | Baca seluruh atau satu baris dari sheet `Ringkasan Periode`. Digunakan sebagai cadangan jika `read_statistik_all` tidak tersedia. |
+| `read_statistik_all` | Baca tab `Statistik` dan kembalikan nilai baris `Total Wisudawan Aktif` untuk setiap kolom periode sebagai `Record<nama_periode, {total, terdaftar}>`. Digunakan oleh `getAllPeriode()` untuk mengisi kolom Total & Terdaftar pada periode berstatus `Selesai` yang datanya sudah dihapus dari Supabase. |
 
 ---
 

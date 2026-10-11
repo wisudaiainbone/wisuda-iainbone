@@ -23,7 +23,13 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 export function useToast() {
   const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error("useToast must be used within <ToastProvider>");
+  if (!ctx) {
+    if (typeof window === "undefined") {
+      // Fallback saat SSR agar tidak error
+      return { showToast: () => {} } as ToastContextValue;
+    }
+    throw new Error("useToast must be used within <ToastProvider>");
+  }
   return ctx;
 }
 

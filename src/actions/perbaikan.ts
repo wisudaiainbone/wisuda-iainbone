@@ -217,3 +217,89 @@ export async function getPendingPerbaikanCount(): Promise<number> {
   }
 }
 
+
+/**
+ * (Admin Superadmin/Institut) Arsipkan semua data perbaikan periode aktif:
+ * 1. Export ke Google Sheets tab "Perbaikan" (append, bukan overwrite)
+ * 2. Hapus semua record dari perbaikan_data untuk periode tersebut
+ */
+export async function arsipkanPerbaikan(namaPeriode: string): Promise<{
+  success: boolean;
+  exported?: number;
+  error?: string;
+}> {
+  try {
+    const session = await getAdminSession();
+    if (!session || !['superadmin', 'admin_institut'].includes(session.role)) {
+      return { success: false, error: 'Akses ditolak.' };
+    }
+
+    const supabase = await createSupabaseAdminClient();
+
+    // 1. Ambil semua perbaikan untuk periode ini (join ke wisudawan via nim)
+    const { data: allPerbaikan, error: fetchErr } = await supabase
+      .from('perbaikan_data')
+      .select(`
+        id, nim, detail_perbaikan, status, catatan_admin, created_at, updated_at,
+        wisudawan!inner(nama_mahasiswa, fakultas, prodi, periode)
+      `)
+      .eq('wisudawan.periode', namaPeriode)
+      .order('created_at', { ascending: true });
+
+    if (fetchErr) return { success: false, error: fetchErr.message };
+    if (!allPerbaikan || allPerbaikan.length === 0) {
+      return { success: false, error: 'Tidak ada data perbaikan untuk periode ini.' };
+    }
+
+    // 2. Kirim ke Google Sheets (tab "Perbaikan", append)
+    const gasUrl = process.env.NEXT_PUBLIC_GAS_WEBAPP_URL;
+    if (!gasUrl) return { success: false, error: 'GAS URL tidak dikonfigurasi.' };
+
+    const headers = [['PERIODE', 'NIM', 'NAMA', 'FAKULTAS', 'PRODI', 'DETAIL PERBAIKAN', 'STATUS', 'CATATAN ADMIN', 'TANGGAL PENGAJUAN', 'TANGGAL UPDATE']];
+    const rows = allPerbaikan.map((p: any) => [
+      namaPeriode,
+      p.nim,
+      p.wisudawan?.nama_mahasiswa ?? '',
+      p.wisudawan?.fakultas ?? '',
+      p.wisudawan?.prodi ?? '',
+      p.detail_perbaikan,
+      p.status,
+      p.catatan_admin ?? '',
+      new Date(p.created_at).toLocaleString('id-ID'),
+      new Date(p.updated_at).toLocaleString('id-ID'),
+    ]);
+
+    const body = {
+      action: 'export_sheet',
+      sheet_name: 'Perbaikan',
+      rows: [...headers, ...rows],
+      overwrite: false, // append ke bawah
+    };
+
+    const res = await fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const json = await res.json();
+    if (json.status !== 'success') {
+      return { success: false, error: json.message ?? 'GAS error saat ekspor.' };
+    }
+
+    // 3. Hapus semua record perbaikan periode ini dari DB
+    const ids = allPerbaikan.map((p: any) => p.id);
+    const { error: delErr } = await supabase
+      .from('perbaikan_data')
+      .delete()
+      .in('id', ids);
+
+    if (delErr) {
+      return { success: false, error: `Data tereksport tapi gagal dihapus: ${delErr.message}` };
+    }
+
+    revalidatePath('/admin/perbaikan');
+    return { success: true, exported: allPerbaikan.length };
+  } catch (err: any) {
+    return { success: false, error: err.message ?? 'Terjadi kesalahan.' };
+  }
+}

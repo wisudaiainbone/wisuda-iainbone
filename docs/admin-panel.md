@@ -75,7 +75,46 @@ Halaman utama yang pertama kali dilihat oleh Admin, menyediakan ringkasan analit
 - **Export XLSX**: Tombol khusus yang akan meng-export seluruh metrik ke dalam **12 buah Sheet Excel** (mencakup tingkat Fakultas dan rincian per Prodi).
 - **Berdasarkan Terdaftar**: Seluruh metrik (kecuali total pendaftar awal) dihitung eksklusif hanya untuk wisudawan dengan status "Terdaftar".
 
-### Pengaturan Periode (`/admin/pengaturan`)
+### Pengaturan Periode (`/admin/periode`)
+Halaman manajemen daftar semua periode wisuda. Setiap periode ditampilkan dalam tabel dengan kolom Periode, Tahun, Kuota, Total, Terdaftar, Status, dan Aksi.
+
+- **Status Periode**: `Sedang Dibuka` | `Akan Datang` | `Ditutup` | `Selesai`
+- **Kolom Total & Terdaftar**: Untuk periode berstatus `Sedang Dibuka` / `Ditutup`, angka dihitung langsung dari Supabase. Untuk periode berstatus **`Selesai`** yang datanya sudah dibersihkan dari Supabase, angka dibaca secara otomatis dari baris **`Total Wisudawan Aktif`** di tab **`Statistik`** Google Sheets (via action `read_statistik_all` GAS).
+- **Tombol Aksi per Baris**:
+  - ✏️ **Edit** (hijau) — ubah pengaturan periode.
+  - 📦 **Arsip** (kuning, *hanya saat Selesai*) — ekspor data ke Google Sheets. Saat dijalankan, juga menyimpan angka Total & Terdaftar snapshot ke sheet `Ringkasan Periode` untuk backup.
+  - 👤 **Bersihkan Wisudawan** (oranye, ikon `UserX`, *hanya saat Selesai*) — menghapus **seluruh baris data wisudawan** di tabel `wisudawan` yang kolom `periode`-nya cocok dengan periode ini dari Supabase. Dialog konfirmasi modal tampil rata-tengah sebelum dieksekusi. Tombol ini dibedakan secara visual (oranye) dari tombol Hapus Periode (merah) untuk mencegah human error.
+  - 🗑️ **Hapus** (merah) — hapus seluruh data periode beserta metadatanya.
+- **Mengklik nama periode berstatus Selesai** akan mengarahkan ke halaman Arsip periode tersebut (`/admin/arsip/[periodeId]`).
+
+#### Proses Menyelesaikan Periode
+Ketika status periode diubah menjadi **Selesai** (via form Edit Periode), sistem secara otomatis:
+1. Menyimpan perubahan status periode ke database.
+2. Menjalankan `arsipakanPeriode()` yang:
+   a. Menghitung Total dan Terdaftar wisudawan pada saat itu, lalu menyimpannya ke sheet **`Ringkasan Periode`** di Google Sheets (action `save_ringkasan_periode`) sebagai cadangan historis.
+   b. Mengubah kolom `status_periode` seluruh wisudawan di periode tersebut menjadi **`'Selesai'`** (status asli seperti `'Terdaftar'` tetap tidak berubah).
+   c. Mencatat entri log baru `{ status: 'Periode Selesai' }` ke `log_status` masing-masing wisudawan.
+   d. Menginvalidasi cache Redis massal untuk NIM-NIM yang terpengaruh.
+
+### Halaman Arsip Periode (`/admin/arsip/[periodeId]`)
+Halaman *read-only* untuk meninjau data historis periode yang telah selesai. Hanya dapat diakses oleh `superadmin` dan `admin_institut`. Berisi 4 sub-halaman:
+
+| Sub-halaman | Rute | Keterangan |
+|---|---|---|
+| Data Wisudawan | `/wisudawan` | Tabel lengkap 36 kolom dengan filter Fakultas, Prodi, Sesi |
+| Data Toga | `/toga` | Rekapitulasi distribusi ukuran toga per Fakultas |
+| Prestasi | `/prestasi` | Daftar wisudawan berprestasi akademik & prodi |
+| Statistik | `/statistik` | Ringkasan analitik: distribusi Fakultas, Prodi, IPK, Toga, Kehadiran |
+
+#### Tombol Arsip ke Google Sheets
+Tombol **Arsip** (amber) di halaman `/admin/periode` memulai proses migrasi data ke Google Sheets:
+1. Mengambil seluruh data wisudawan periode tersebut dari Supabase.
+2. Mengirimnya ke Google Apps Script (`action: export_sheet`) secara **bertahap (chunk 200 baris)** agar tidak melebihi batas request GAS.
+3. Menghasilkan dua tab di Spreadsheet:
+   - **Wisudawan** — 36 kolom data lengkap (termasuk kolom `STATUS PERIODE`).
+   - **Statistik** — ringkasan angka distribusi Fakultas, Prodi, dan lain-lain.
+
+### Pengaturan Periode Aktif (`/admin/pengaturan`)
 Pengelolaan periode wisuda aktif, membaca dari tabel `periode_wisuda`:
 - **Nama Periode & Status**: Kedua field ditampilkan sejajar dalam satu baris (grid 2 kolom).
 - **Kuota Per Fakultas**: Input kuota diisi per-fakultas (5 baris: FSHI, FT, FUD, FEBI, Pascasarjana). Kolom **Total Kuota** dihitung otomatis (readonly) dari penjumlahan seluruh kuota fakultas — tidak ada input kuota manual lagi.
@@ -187,7 +226,9 @@ Fitur validasi massal untuk menandai wisudawan yang telah mengisi survei alumni:
 > ⚠️ Operasi ini bersifat **destructive** — seluruh data survei sebelumnya di periode aktif akan direset terlebih dahulu sebelum data baru diterapkan.
 
 ### Data Wisudawan (`/admin/wisudawan`)
-Pengelolaan data wisudawan dari Supabase, dilengkapi:
+Pengelolaan data wisudawan dari Supabase. **Hanya menampilkan wisudawan dengan `status_periode = 'Sedang Dibuka'` (periode aktif)** — data lama dari periode sebelumnya tidak ikut muncul.
+
+> Saat admin mengimpor batch wisudawan baru, kolom `status_periode` otomatis diisi `'Sedang Dibuka'` sesuai status periode aktif saat itu.
 - **Toolbar Terpadu & Responsif Mobile**: Kolom pencarian dan semua tombol aksi (Tambah, Export, Sesi, Nomor, Daftar, Label, Slide, Album) berada dalam satu baris sejajar (`h-10`) di desktop. Di perangkat *mobile*, deretan tombol berubah gaya menjadi **Tag Cloud** mungil yang padat (hanya menampilkan ikon tanpa teks).
   - **Cascading Disable Logic**: Tombol di-disable secara berurutan untuk mencegah human error: `Sesi` (hanya aktif saat periode **Sedang Dibuka**) → `Nomor` (hanya aktif jika Sesi sudah terisi semua) → `Daftar`, `Label`, `Slide`, `Album` (hanya aktif jika Nomor urut sudah di-generate).
 - **Pencarian Real-time**: Cari berdasarkan NIM atau Nama. Tombol Reset (✕) muncul otomatis saat ada filter aktif.
@@ -302,7 +343,7 @@ Modul pemindai QR untuk mencatat pengambilan toga. Lihat bagian **[Scan QR Toga 
 - **Hapus admin** secara permanen.
 
 ### Perbaikan Data Wisudawan (`/admin/perbaikan`)
-Halaman pengelolaan semua pengajuan perbaikan data akademik yang diajukan wisudawan.
+Halaman pengelolaan semua pengajuan perbaikan data akademik yang diajukan wisudawan dari **seluruh periode** (tidak dibatasi periode aktif saja).
 - **Filter Status**: Tab filter *Semua*, *Proses*, *Diterima*, *Ditolak* disertai hitungan.
 - **Pencarian**: Cari berdasarkan NIM atau nama wisudawan.
 - **Card per Pengajuan**: Menampilkan identitas wisudawan, status badge, timestamp, dan isi detail pengajuan.
@@ -310,8 +351,9 @@ Halaman pengelolaan semua pengajuan perbaikan data akademik yang diajukan wisuda
   - ✅ **Terima**: Ubah status menjadi `diterima`, opsional isi catatan admin.
   - ❌ **Tolak**: Ubah status menjadi `ditolak`, opsional isi catatan admin.
 - Catatan admin yang diisi akan tampil di sisi wisudawan pada riwayat pengajuan mereka.
-
-> ⚠️ Halaman ini menampilkan pengajuan dari seluruh wisudawan. Perubahan data aktual di tabel `wisudawan` masih harus dilakukan secara manual oleh Admin melalui form Edit Data Wisudawan.
+- **Tombol "Arsipkan Perbaikan"** *(amber, selalu tampil)*: Mengekspor seluruh data perbaikan periode terpilih ke tab **`Perbaikan`** di Google Sheets (append ke baris paling bawah, tidak menimpa data lama), lalu menghapus data dari DB agar tabel bersih untuk periode berikutnya.
+  - `arsipkanPerbaikan(namaPeriode)` — mengambil semua record perbaikan + join wisudawan, format ke array kolom, kirim ke GAS `action: append_perbaikan`, lalu `DELETE` dari `perbaikan_data`.
+  - Hanya bisa dijalankan oleh `superadmin` dan `admin_institut`.
 
 ### Prestasi Akademik & Prodi (`/admin/prestasi`)
 Halaman peringkat otomatis wisudawan berprestasi dengan dua tab utama: **Prestasi Akademik** (per Fakultas) dan **Prestasi Prodi** (per Program Studi).
@@ -345,6 +387,7 @@ Halaman referensi cepat yang menampilkan informasi publik wisuda untuk semua per
 ### Tamu VIP (`/admin/tamu`)
 Halaman manajemen tamu undangan VIP eksternal. Tersedia 2 fungsionalitas utama:
 - **Daftar Tamu**: Menambah, mengedit, menghapus, serta melihat daftar tamu secara *real-time*. Mendukung fitur **Export Excel** dan **Cetak Undangan Massal (Generate PDF)** yang berisi Nomor, Nama, Jabatan, QR Code unik, dan tata tertib, yang disesuaikan formatnya dari menu Pengaturan.
+- **Tombol "Bersihkan Daftar Tamu"** *(merah, di header halaman)*: Menghapus **seluruh data tamu** dari database sekaligus untuk mempersiapkan pendataan tamu periode wisuda baru. Hanya bisa dijalankan oleh `superadmin` dan `admin_institut`. Menggunakan konfirmasi dialog sebelum dieksekusi.
 - **Scan Kehadiran**: Pindai QR Code tiket undangan tamu menggunakan kamera secara langsung atau pencarian ID manual. Dilengkapi layout floating navigation untuk berpindah antara scan Tamu VIP dan Scan Wisuda di perangkat mobile.
 
 ### Scan QR Toga & Kehadiran
@@ -358,10 +401,11 @@ Digunakan ~5 hari sebelum wisuda untuk mencatat pengambilan toga.
 - **Validasi**:
   - Tolak jika ukuran toga belum diisi (`toga_not_filled`).
   - Tolak jika wisudawan sudah pernah mengambil toga (`already_taken`).
-- **Tombol "Cache" (ikon Database)**: Wajib diklik sebelum sesi scan dimulai untuk menarik data ke Redis.
+- **Tombol "Cache" (ikon Database, biru)**: Wajib diklik sebelum sesi scan dimulai untuk menarik data ke Redis.
+- **Tombol "Bersihkan Cache" (ikon Tempat Sampah, merah)**: Menghapus seluruh data cache scan toga dari Redis. Wajib dilakukan saat berganti ke periode baru agar data lama tidak ikut terbaca oleh scanner.
 - **Input NIM Manual**: Ketik NIM langsung di kolom pencarian (tampil saat kamera aktif) lalu tekan Enter atau ikon 🔍 untuk proses kehadiran tanpa QR.
 - **Layout Dua Kolom (Desktop)**: Saat dibuka di PC/Laptop, tampilan terbagi:
-  - **Kolom Kiri**: Area kamera full-height dengan tombol kendali (Cache / Scan, atau input NIM / Off).
+  - **Kolom Kiri**: Area kamera full-height dengan tombol kendali (Cache / Bersihkan / Scan, atau input NIM / Off).
   - **Kolom Kanan**: Tabel riwayat scan toga terbaru (Waktu, NIM, Nama, Prodi) yang diperbarui real-time.
 
 #### Scan Kehadiran (`/admin/kehadiran`)
@@ -370,7 +414,8 @@ Digunakan pada hari wisuda untuk mencatat kehadiran.
 - **Validasi Format**: Wajib berawalan `UND_`. Jika tidak, akan ditolak (menghindari salah scan tiket lain).
 - **Validasi Sesi**: Admin memilih "Sesi Aktif" (tombol bulat 1 atau 2). Sistem menolak wisudawan yang sesinya tidak sesuai.
 - **Validasi Double-scan**: Tolak jika wisudawan sudah tercatat hadir.
-- **Tombol "Cache"**: Wajib diklik sebelum sesi scan dimulai.
+- **Tombol "Cache" (biru)**: Wajib diklik sebelum sesi scan dimulai.
+- **Tombol "Bersihkan Cache" (merah)**: Menghapus seluruh data cache undangan dari Redis. Wajib dilakukan saat berganti ke periode baru.
 - **Input NIM Manual**: Ketik NIM langsung di kolom pencarian.
 - **Badge Info Bawah Tengah**: Menampilkan Sesi aktif dan jumlah data cache beserta **waktu cache terakhir diambil** (contoh: `5 data • 12:00`).
 - **Layout Dua Kolom (Desktop)**: Tampilan terbagi:
@@ -465,10 +510,15 @@ Klik **"Buat Superadmin"**. Setelah selesai, Anda bisa langsung login dengan Goo
 | `sesi.ts` | Penetapan Sesi per Fakultas; update massal `wisudawan.sesi` & `prodi.sesi`; invalidate cache NIM massal via Redis Pipeline |
 | `prodi.ts` | CRUD master data prodi; `updateProdiOrder` — batch update kolom `urutan` untuk drag-and-drop |
 | `nomorUndangan.ts` | Generate nomor urut & ID undangan (format `UND_[Periode]_[Sesi]_[Urut]_[NIM]`); reset `urut`/`id_undangan`/`qr_undangan`; batch update + invalidasi Redis Pipeline massal |
-| `scanCache.ts` | `warmUpTogaCache` (auth: NextAuth session atau cookie `toga_scan_token`) & `warmUpUndanganCache` (auth: NextAuth session atau cookie `absensi_token`) — pipeline Redis warm-up dari Supabase; `getScanMeta` — baca status cache |
+| `scanCache.ts` | `warmUpTogaCache`, `warmUpUndanganCache`, `warmUpTamuCache` — pipeline Redis warm-up dari Supabase; `clearScanCache(type)` — hapus seluruh kunci cache scan dari Redis (untuk ganti periode); `getScanMeta` — baca status cache |
 | `scanHistory.ts` | `getRecentScans` — fetch 20 data scan kehadiran/toga terbaru dari Supabase untuk kolom riwayat di desktop |
 | `prestasiOverrides.ts` | `generatePrestasi` / `generatePrestasiProdi` (hitung ulang + reset override); `setPrestasiOverride` / `removePrestasiOverride` (override manual); `syncPrestasiAkdToDb` / `syncPrestasiProdiToDb` (batch update kolom `prestasi_akd` / `prestasi_prodi` ke Supabase) |
-| `wisudawan.ts` | Termasuk `deleteWisudawan` (soft delete → status `'Dihapus'`); `restoreWisudawan` / `restoreWisudawanBulk` (pulihkan ke `'Calon Wisudawan'`); `hardDeleteWisudawan` / `hardDeleteWisudawanBulk` (hapus permanen, khusus superadmin) |
+| `wisudawan.ts` | Termasuk `deleteWisudawan` (soft delete → status `'Dihapus'`); `restoreWisudawan` / `restoreWisudawanBulk` (pulihkan ke `'Calon Wisudawan'`); `hardDeleteWisudawan` / `hardDeleteWisudawanBulk` (hapus permanen, khusus superadmin); `cleanWisudawanPeriode(namaPeriode)` — hapus **seluruh baris** wisudawan dari tabel berdasarkan kolom `periode` (untuk bersihkan Supabase setelah arsip ke Google Sheets) |
+| `tamu.ts` | CRUD data tamu VIP; `scanTamu` — catat kehadiran tamu; `clearSemuaTamu` — hapus semua data tamu (khusus superadmin & admin_institut, untuk reset periode baru) |
+| `arsip.ts` | `arsipakanPeriode` — set `status_periode='Selesai'` pada seluruh wisudawan periode + simpan snapshot Total/Terdaftar ke sheet `Ringkasan Periode` via GAS; `getArsipWisudawan` / `getArsipStatistik` — data halaman Arsip; `migrasiChunkKeGSheets` / `migrasiStatistikKeGSheets` — ekspor ke Google Sheets via GAS |
+| `perbaikan.ts` | CRUD pengajuan perbaikan; `arsipkanPerbaikan(namaPeriode)` — ekspor ke GAS tab Perbaikan (append) lalu hapus dari DB; `getPendingPerbaikanCount` — badge notif sidebar |
+| `arsipUtils.ts` *(lib)* | Tipe `ArsipWisudawan`, konstanta `ARSIP_HEADERS` (36 kolom), dan fungsi `mapRowToColumns` — helper mapping data ke array kolom ekspor |
+| `resetPassword.ts` | `requestPasswordReset` — kirim OTP via GAS; `verifyResetOtp` — validasi OTP dari Redis; `resetPasswordWithOtp` — simpan password baru (hash SHA-256); semua dengan rate limiting via Upstash |
 
 ---
 

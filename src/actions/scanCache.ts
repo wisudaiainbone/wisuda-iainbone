@@ -176,3 +176,39 @@ export async function getScanMeta(type: 'toga' | 'undangan' | 'tamu') {
     return null;
   }
 }
+
+export async function clearScanCache(type: 'toga' | 'undangan' | 'tamu') {
+  const session = await getAdminSession();
+  if (!session || !['superadmin', 'admin_institut', 'admin_unit', 'admin_absensi'].includes(session.role ?? '')) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  try {
+    // Cari semua kunci yang berkaitan dengan tipe scan tersebut
+    let cursor = '0';
+    let keys: string[] = [];
+    do {
+      // redis.scan pada upstash menggunakan format { cursor, keys }
+      const res = await redis.scan(cursor, { match: `scan:${type}:*`, count: 1000 });
+      cursor = res[0];
+      if (res[1] && res[1].length > 0) {
+        keys = keys.concat(res[1]);
+      }
+    } while (cursor !== '0');
+
+    // Hapus meta data-nya
+    keys.push(`scan:meta:${type}`);
+
+    if (keys.length > 0) {
+      // Hapus dalam pipeline
+      const pipeline = redis.pipeline();
+      keys.forEach((k) => pipeline.del(k));
+      await pipeline.exec();
+    }
+
+    return { success: true, deletedCount: keys.length };
+  } catch (err: any) {
+    console.error(`Error clearing scan cache for ${type}:`, err);
+    return { success: false, error: err.message };
+  }
+}

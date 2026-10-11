@@ -198,7 +198,7 @@ export default function AuthPage() {
           </form>
 
           {/* Check NIM Feature */}
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col gap-2">
             <button
               type="button"
               onClick={() => { setShowCheckModal(true); setCheckResult(null); setCheckNim(""); }}
@@ -206,6 +206,12 @@ export default function AuthPage() {
             >
               Cek Status Pendaftaran kamu
             </button>
+            <Link
+              href="/auth/lupa-password"
+              className="w-full py-2.5 px-4 rounded-xl border border-[var(--color-border)] bg-transparent text-[var(--color-text-muted)] text-sm font-medium hover:text-[var(--color-text)] hover:bg-[var(--color-surface)] transition-colors flex items-center justify-center gap-2"
+            >
+              Lupa Password?
+            </Link>
           </div>
 
           {/* Footer Card */}

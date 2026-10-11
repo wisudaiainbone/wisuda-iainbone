@@ -72,6 +72,7 @@ export const ROLE_ALLOWED_ROUTES: Record<AdminRole, string[]> = {
     '/admin/perbaikan',
     '/admin/kehadiran',
     '/admin/fakultas',
+    '/admin/arsip',
   ],
 
   admin_unit: [
@@ -81,6 +82,7 @@ export const ROLE_ALLOWED_ROUTES: Record<AdminRole, string[]> = {
     '/admin/prestasi',
     '/admin/perbaikan',
     '/admin/informasi',
+    '/admin/arsip',
   ],
 
   admin_absensi: [
@@ -171,6 +173,14 @@ export function canManageFakultas(role: AdminRole): boolean {
  */
 export function canViewInformasi(role: AdminRole): boolean {
   return true; // semua role bisa melihat informasi wisuda
+}
+
+/**
+ * Cek apakah role dapat mengakses halaman Arsip periode selesai.
+ * Semua role admin kecuali admin_absensi bisa akses.
+ */
+export function canViewArsip(role: AdminRole): boolean {
+  return role === 'superadmin' || role === 'admin_institut' || role === 'admin_unit';
 }
 
 /**

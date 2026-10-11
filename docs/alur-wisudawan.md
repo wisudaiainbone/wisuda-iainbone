@@ -27,7 +27,42 @@ Dokumen ini menjelaskan alur lengkap yang dialami seorang wisudawan saat mengaks
 
 ---
 
-## 2. Fitur Cek Status NIM
+## 2. Fitur Lupa Password
+
+Wisudawan yang **lupa password** dapat menggunakan fitur ini di halaman `/auth/lupa-password`. Alur 3 tahap tanpa nomor langkah (tampilan bersih):
+
+```
+[Wisudawan buka /auth/lupa-password]
+       │
+       ├─ Tahap 1: Masukkan NIM
+       │         → Server Action requestPasswordReset()
+       │         → Cek NIM di DB, validasi email terdaftar
+       │         → Kirim OTP 6-digit via Google Apps Script (GAS) ke email wisudawan
+       │         → OTP disimpan di Redis (TTL: 10 menit, maks 5 percobaan)
+       │         → Email pengirim: wisudaiainbone@gmail.com
+       │
+       ├─ Tahap 2: Masukkan Kode OTP
+       │         → Server Action verifyResetOtp()
+       │         → Cocokkan OTP dari Redis
+       │         → Jika cocok: tandai sesi reset sebagai "terverifikasi"
+       │
+       └─ Tahap 3: Buat Password Baru
+                 → Server Action resetPasswordWithOtp()
+                 → Hash password baru (SHA-256 + salt)
+                 → Simpan ke DB, hapus sesi OTP dari Redis
+                 → Redirect ke /auth untuk login ulang
+```
+
+**Keamanan:**
+- Rate limiting: maks 3 permintaan OTP per 10 menit per NIM (Upstash Ratelimit).
+- OTP kadaluwarsa otomatis setelah 10 menit.
+- Maksimal 5 percobaan verifikasi salah sebelum OTP diinvalidasi.
+
+> **Catatan Teknis**: Email OTP dikirim melalui **Google Apps Script** menggunakan `MailApp.sendEmail()`, bukan layanan email pihak ketiga. Ini memungkinkan pengiriman ke email manapun (Gmail, Yahoo, dsb) menggunakan akun Gmail institusi (`wisudaiainbone@gmail.com`) tanpa biaya tambahan.
+
+---
+
+## 3. Fitur Cek Status NIM
 
 Wisudawan yang **belum tahu** apakah dirinya sudah terdaftar dapat menggunakan fitur ini **tanpa perlu login**:
 
@@ -41,7 +76,7 @@ Wisudawan yang **belum tahu** apakah dirinya sudah terdaftar dapat menggunakan f
 
 ---
 
-## 3. Sistem Password Wisudawan
+## 4. Sistem Password Wisudawan
 
 ### Password Default & Setup Akun
 Setiap mahasiswa yang diimpor oleh admin otomatis menggunakan sandi bawaan (default password). 
@@ -78,7 +113,7 @@ Admin dapat mereset password wisudawan ke **password default** langsung dari tab
 
 ---
 
-## 4. Halaman Profil Wisudawan (`/wisudawan/[nim]`)
+## 5. Halaman Profil Wisudawan (`/wisudawan/[nim]`)
 
 Setelah login dengan password kustom berhasil dan **mendapatkan JWT session cookie**, wisudawan diarahkan ke halaman profil mereka. Halaman ini sekarang diproteksi penuh oleh Middleware Next.js — akses publik langsung tanpa *cookie* akan diblokir. Seluruh pengaturan tampilan (toggle fitur) diambil **langsung dari database Supabase** tanpa melalui cache Redis agar perubahan admin langsung aktif.
 
@@ -150,7 +185,7 @@ Bagi wisudawan yang memiliki predikat prestasi akademik (terisi pada data `PREST
 
 ---
 
-## 5. Alur Penolakan NIM Tidak Aktif
+## 6. Alur Penolakan NIM Tidak Aktif
 
 Jika tidak ada periode yang berstatus `'Sedang Dibuka'` di tabel `periode_wisuda`, sistem akan mengembalikan pesan saat login:
 
@@ -158,7 +193,7 @@ Jika tidak ada periode yang berstatus `'Sedang Dibuka'` di tabel `periode_wisuda
 
 ---
 
-## 6. Alur Pengajuan Perbaikan Data Akademik
+## 7. Alur Pengajuan Perbaikan Data Akademik
 
 Fitur ini tersedia di **Tab Perbaikan** pada halaman profil wisudawan yang telah terdaftar.
 
@@ -200,7 +235,7 @@ Admin lihat daftar pengajuan
 
 ---
 
-## 7. Tampilan Halaman Publik Saat Pendaftaran Kedaluwarsa
+## 8. Tampilan Halaman Publik Saat Pendaftaran Kedaluwarsa
 
 Pada halaman utama publik (`/`), tampilan akan beradaptasi secara otomatis jika **masa pendaftaran telah lewat** (melewati rentang tanggal yang ditentukan) atau status periode diubah menjadi `'Ditutup'`:
 

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { warmUpTamuCache } from "@/actions/scanCache";
+import { warmUpTamuCache, clearScanCache } from "@/actions/scanCache";
 import { getRecentScans, getAllTamuScans } from "@/actions/scanHistory";
 import Link from "next/link";
 import { Html5Qrcode } from "html5-qrcode";
-import { Camera, CameraOff, CheckCircle2, XCircle, AlertCircle, RefreshCw, Users, Search, Database, ClipboardList, X, FileDown } from "lucide-react";
+import { Camera, CameraOff, CheckCircle2, XCircle, AlertCircle, RefreshCw, Users, Search, Database, ClipboardList, X, FileDown, Trash2 } from "lucide-react";
 
 const playBeep = () => {
   try {
@@ -47,6 +47,7 @@ const speakResult = (status: 'success' | 'warning' | 'error', errorType?: string
 export default function ScanTamuClient({ initialMeta, isPresensiOnly = false }: { initialMeta: any, isPresensiOnly?: boolean }) {
   const [meta, setMeta] = useState(initialMeta);
   const [isWarmingUp, setIsWarmingUp] = useState(false);
+  const [isClearingCache, setIsClearingCache] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [idInput, setIdInput] = useState("");
@@ -90,6 +91,19 @@ export default function ScanTamuClient({ initialMeta, isPresensiOnly = false }: 
       alert("Gagal mengambil cache: " + res.error);
     }
     setIsWarmingUp(false);
+  };
+
+  const handleClearCache = async () => {
+    if (!confirm("Yakin ingin membersihkan cache? Ini berguna saat berganti periode agar data lama tidak muncul lagi.")) return;
+    setIsClearingCache(true);
+    const res = await clearScanCache('tamu');
+    if (res.success) {
+      setMeta(null);
+      alert("Cache berhasil dibersihkan.");
+    } else {
+      alert("Gagal membersihkan cache: " + res.error);
+    }
+    setIsClearingCache(false);
   };
 
   const handleExportXlsx = async () => {
@@ -436,12 +450,21 @@ export default function ScanTamuClient({ initialMeta, isPresensiOnly = false }: 
               {/* Tombol Cache */}
               <button
                 onClick={handleWarmUp}
-                disabled={isWarmingUp}
+                disabled={isWarmingUp || isClearingCache}
                 className="flex items-center justify-center gap-2 px-4 py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-2xl font-bold text-sm transition-all active:scale-95 disabled:opacity-70"
-                title="Cache"
+                title="Muat Cache"
               >
-                <Database size={16} className={isWarmingUp ? "animate-pulse" : ""} />
-                <span className="hidden sm:inline">{isWarmingUp ? "Loading" : "Cache"}</span>
+                {isWarmingUp ? <RefreshCw size={16} className="animate-spin" /> : <Database size={16} />}
+              </button>
+
+              {/* Tombol Bersihkan Cache */}
+              <button
+                onClick={handleClearCache}
+                disabled={isWarmingUp || isClearingCache}
+                className="flex items-center justify-center gap-2 px-4 py-3.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white rounded-2xl font-bold text-sm transition-all active:scale-95 disabled:opacity-70"
+                title="Bersihkan Cache"
+              >
+                {isClearingCache ? <RefreshCw size={16} className="animate-spin" /> : <Trash2 size={16} />}
               </button>
 
               <button

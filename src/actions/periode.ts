@@ -165,14 +165,56 @@ export async function getLatestPeriode() {
   
   const wisudawanList = await getAllWisudawan();
 
+  // Cek apakah ada periode Selesai yang wisudawannya sudah di-bersihkan
+  // Jika ya, ambil ringkasan dari Google Sheets satu kali untuk semua periode Selesai
+  const periodeSelesBersih = data.filter(p => p.status === 'Selesai');
+  const ringkasanMap: Record<string, { total: number; terdaftar: number }> = {};
+  
+  if (periodeSelesBersih.length > 0) {
+    const gasUrl = process.env.NEXT_PUBLIC_GAS_WEBAPP_URL;
+    if (gasUrl) {
+      try {
+        const res = await fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'read_statistik_all' }),
+          next: { revalidate: 300 }, // cache 5 menit
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.status === 'success' && json.data) {
+            // json.data adalah Record<nama_periode, { total, terdaftar }>
+            for (const [key, val] of Object.entries(json.data)) {
+               const v = val as any;
+               ringkasanMap[key] = {
+                 total: Number(v.total) || 0,
+                 terdaftar: Number(v.terdaftar) || 0,
+               };
+            }
+          }
+        }
+      } catch (gasErr) {
+        console.warn('[getAllPeriode] Gagal baca statistik dari GAS:', gasErr);
+      }
+    }
+  }
+
   // Transform data
   const result = data.map(p => {
-    // Hitung pendaftar untuk periode spesifik ini
-    const pendaftarAktifList = wisudawanList.filter(w =>
-      w.periode === p.nama_periode &&
+    // Hitung pendaftar untuk periode spesifik ini (dari Supabase live)
+    const wisudawanPeriode = wisudawanList.filter(w => w.periode === p.nama_periode);
+    let totalPendaftar = wisudawanPeriode.length;
+    
+    const pendaftarAktifList = wisudawanPeriode.filter(w =>
       ['Terdaftar', 'Proses', 'Selesai'].includes(w.status)
     );
-    const pendaftarAktif = pendaftarAktifList.length;
+    let pendaftarAktif = pendaftarAktifList.length;
+
+    // Fallback ke ringkasan Google Sheets jika data sudah dihapus dari Supabase
+    if (totalPendaftar === 0 && p.status === 'Selesai' && ringkasanMap[p.nama_periode]) {
+      totalPendaftar = ringkasanMap[p.nama_periode].total;
+      pendaftarAktif = ringkasanMap[p.nama_periode].terdaftar;
+    }
 
     const fakultasBreakdownMap: Record<string, number> = {};
     pendaftarAktifList.forEach(w => {
@@ -197,6 +239,7 @@ export async function getLatestPeriode() {
 
     return {
       ...p,
+      totalPendaftar,
       pendaftarAktif,
       kuota_per_fakultas: kuotaPerFakultas,
       pendaftar_per_fakultas: fakultasBreakdownMap,
@@ -320,6 +363,12 @@ export async function updatePeriodePengaturan(id: string, updates: any) {
       .eq('id', id);
 
     if (error) throw error;
+
+    // Jika status diubah menjadi Selesai, trigger arsip otomatis
+    if (status === 'Selesai') {
+      const { arsipakanPeriode } = await import('@/actions/arsip');
+      await arsipakanPeriode(id, nama_periode || updates.title);
+    }
 
     // Bersihkan cache (selalu, karena kuota mungkin berubah)
     await redis.del(CACHE_KEY);

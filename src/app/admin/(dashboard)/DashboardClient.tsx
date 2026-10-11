@@ -211,9 +211,9 @@ export default function DashboardClient({ stats, periodeOptions, selectedPeriode
               onChange={e => updateParams('periode', e.target.value || undefined)}
               className="text-sm sm:text-xs font-medium bg-transparent text-[var(--color-text)] outline-none flex-1 min-w-0"
             >
-              <option value="">Semua Periode</option>
+              <option value="" className="bg-[var(--color-surface)] text-[var(--color-text)]">Semua Periode</option>
               {periodeOptions.map(p => (
-                <option key={p.id} value={p.nama}>{p.nama}</option>
+                <option key={p.id} value={p.nama} className="bg-[var(--color-surface)] text-[var(--color-text)]">{p.nama}</option>
               ))}
             </select>
           </div>

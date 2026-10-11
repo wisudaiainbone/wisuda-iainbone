@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { getAllPerbaikan, updateStatusPerbaikan, type Perbaikan, type PerbaikanStatus } from "@/actions/perbaikan";
+import { getAllPerbaikan, updateStatusPerbaikan, arsipkanPerbaikan, type Perbaikan, type PerbaikanStatus } from "@/actions/perbaikan";
+import { getActivePeriode, getAllPeriode } from "@/actions/periode";
 import {
   FileEdit, Check, X, Filter, Loader2, ChevronDown,
-  MessageSquare, Calendar, Search, AlertCircle, CheckCircle2, Clock
+  MessageSquare, Calendar, Search, AlertCircle, CheckCircle2, Clock, Archive
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -65,6 +66,12 @@ export default function AdminPerbaikanPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
 
+  // Arsip state
+  const [arsipModal, setArsipModal] = useState(false);
+  const [arsipPeriode, setArsipPeriode] = useState<{ id: string; nama_periode: string } | null>(null);
+  const [isArsipLoading, setIsArsipLoading] = useState(false);
+  const [arsipResult, setArsipResult] = useState<{ success: boolean; exported?: number; error?: string } | null>(null);
+
   const showToast = (msg: string, type: "success" | "error" = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 3000);
@@ -74,6 +81,13 @@ export default function AdminPerbaikanPage() {
     setIsLoading(true);
     const result = await getAllPerbaikan(statusFilter);
     setData(result);
+    // Ambil periode terbaru untuk keperluan arsip (bisa yang Sedang Dibuka, Ditutup, atau Selesai)
+    try {
+      const allPeriodes = await getAllPeriode();
+      if (allPeriodes && allPeriodes.length > 0) {
+        setArsipPeriode({ id: allPeriodes[0].id, nama_periode: allPeriodes[0].nama_periode });
+      }
+    } catch {}
     setIsLoading(false);
   }, [statusFilter]);
 
@@ -107,6 +121,19 @@ export default function AdminPerbaikanPage() {
       await loadData();
     } else {
       showToast(res.error || "Gagal memproses.", "error");
+    }
+  };
+
+  const handleArsipkan = async () => {
+    if (!arsipPeriode) return;
+    setIsArsipLoading(true);
+    setArsipResult(null);
+    const res = await arsipkanPerbaikan(arsipPeriode.nama_periode);
+    setIsArsipLoading(false);
+    setArsipResult(res);
+    if (res.success) {
+      showToast(`✓ ${res.exported} data perbaikan berhasil diarsipkan ke Google Sheets.`);
+      await loadData();
     }
   };
 
@@ -160,18 +187,31 @@ export default function AdminPerbaikanPage() {
           ))}
         </div>
 
-        {/* Search */}
-        <div className="relative w-full sm:w-64 ml-auto shrink-0">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-[var(--color-text-muted)]" />
+        <div className="flex items-center gap-2 ml-auto shrink-0">
+          {/* Tombol Arsipkan */}
+          {arsipPeriode && (
+            <button
+              onClick={() => { setArsipModal(true); setArsipResult(null); }}
+              className="inline-flex items-center gap-1.5 px-3 h-10 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 text-amber-700 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-800/50 transition-colors"
+            >
+              <Archive size={14} />
+              Arsipkan Perbaikan
+            </button>
+          )}
+
+          {/* Search */}
+          <div className="relative w-52 sm:w-64">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-[var(--color-text-muted)]" />
+            </div>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cari NIM atau Nama..."
+              className="w-full pl-9 pr-4 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all outline-none h-10"
+            />
           </div>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari NIM atau Nama..."
-            className="w-full pl-9 pr-4 py-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text)] focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all outline-none h-10"
-          />
         </div>
       </div>
 
@@ -370,6 +410,79 @@ export default function AdminPerbaikanPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* ── MODAL ARSIPKAN PERBAIKAN ── */}
+      {arsipModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="relative z-10 w-full max-w-md bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-2xl overflow-hidden">
+            <div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--color-border)] bg-amber-50/50 dark:bg-amber-900/10">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
+                <Archive size={20} className="text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="font-bold text-[var(--color-text)] text-base">Arsipkan Perbaikan</h2>
+                <p className="text-xs text-[var(--color-text-muted)] truncate mt-0.5">{arsipPeriode?.nama_periode}</p>
+              </div>
+              {!isArsipLoading && (
+                <button onClick={() => setArsipModal(false)} className="p-1.5 rounded-lg hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]">
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+            <div className="px-6 py-5 space-y-4">
+              {!arsipResult ? (
+                <>
+                  <p className="text-sm text-[var(--color-text)] text-left">
+                    Proses ini akan memindahkan semua data perbaikan periode <strong>{arsipPeriode?.nama_periode}</strong> ke tab <strong>Perbaikan</strong> di Google Sheets, lalu <strong>menghapus</strong> data tersebut dari database.
+                  </p>
+                  <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50">
+                    <p className="text-xs text-amber-700 dark:text-amber-400 text-left">
+                      ⚠️ Data yang sudah diarsipkan tidak dapat dikembalikan ke database. Pastikan semua pengajuan sudah ditangani.
+                    </p>
+                  </div>
+                  <div className="flex gap-3">
+                    <button onClick={() => setArsipModal(false)} className="flex-1 py-2.5 rounded-xl border border-[var(--color-border)] text-sm font-medium text-[var(--color-text-muted)] hover:bg-[var(--color-bg-secondary)] transition-colors">
+                      Batal
+                    </button>
+                    <button
+                      onClick={handleArsipkan}
+                      disabled={isArsipLoading}
+                      className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                    >
+                      {isArsipLoading ? <Loader2 size={15} className="animate-spin" /> : <Archive size={15} />}
+                      {isArsipLoading ? "Mengarsipkan..." : "Ya, Arsipkan"}
+                    </button>
+                  </div>
+                </>
+              ) : arsipResult.success ? (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 py-2">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
+                      <CheckCircle2 size={26} className="text-emerald-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-[var(--color-text)]">Arsip Berhasil!</h3>
+                      <p className="text-sm text-[var(--color-text-muted)]">{arsipResult.exported} data perbaikan telah diarsipkan.</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setArsipModal(false)} className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors">
+                    Tutup
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-900/10 border border-rose-200 dark:border-rose-800/50">
+                    <p className="text-sm text-rose-700 dark:text-rose-400">{arsipResult.error}</p>
+                  </div>
+                  <button onClick={() => setArsipModal(false)} className="w-full py-2.5 rounded-xl border border-[var(--color-border)] text-sm font-medium text-[var(--color-text-muted)] hover:bg-[var(--color-bg-secondary)] transition-colors">
+                    Tutup
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -150,7 +150,8 @@ export async function getWisudawanByNim(nim: string, skipCache: boolean = false)
 }
 
 export async function getAllWisudawan(filterOptions?: { role?: string, unitKerja?: string | null }) {
-  let query = supabase.from('wisudawan').select('*').neq('nim', 'DUMMY999');
+  // Sesuai permintaan: Menu wisudawan HANYA membaca Periode yang aktif saja
+  let query = supabase.from('wisudawan').select('*').neq('nim', 'DUMMY999').eq('status_periode', 'Sedang Dibuka');
 
   if (filterOptions?.role === 'admin_unit' && filterOptions?.unitKerja) {
     query = query.eq('fakultas', filterOptions.unitKerja);
@@ -856,6 +857,7 @@ export async function importWisudawanBatch(data: any[]) {
         terdaftar: null,
         periode: namaPeriodeAktif,
         status: 'Calon Wisudawan',
+        status_periode: 'Sedang Dibuka',
         timestamp: currentTimeMakassar,
         log_status: [initLogEntry]
       });
@@ -1336,5 +1338,38 @@ export async function setupAkunWisudawan(nim: string, email: string, toga: strin
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message || 'Terjadi kesalahan.' };
+  }
+}
+
+/**
+ * Bersihkan data wisudawan untuk periode yang sudah diarsipkan (Selesai).
+ * Fungsi ini digunakan untuk menghapus data wisudawan dari database agar bersih untuk periode berikutnya.
+ */
+export async function cleanWisudawanPeriode(namaPeriode: string) {
+  try {
+    const session = await getAdminSession();
+    if (!session || !['superadmin', 'admin_institut'].includes(session.role ?? '')) {
+      return { success: false, error: 'Tidak memiliki izin' };
+    }
+
+    const { error } = await supabase
+      .from('wisudawan')
+      .delete()
+      .eq('periode', namaPeriode);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    // Karena datanya dihapus massal, invalidasi dashboard keseluruhan agar diperbarui kembali (meski nanti fallback ke snapshot)
+    await invalidateAllDashboardCache();
+    
+    revalidatePath('/admin/periode');
+    revalidatePath('/admin');
+    revalidatePath('/admin/wisudawan');
+    
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Terjadi kesalahan saat membersihkan data.' };
   }
 }

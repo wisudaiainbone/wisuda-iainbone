@@ -124,3 +124,21 @@ export async function scanTamu(qrCode: string, targetSesi: string) {
     return { success: false, error: err.message };
   }
 }
+
+export async function clearSemuaTamu() {
+  const session = await getAdminSession();
+  if (!session || !['superadmin', 'admin_institut'].includes(session.role)) {
+    return { success: false, error: "Unauthorized. Hanya Superadmin dan Admin Institut." };
+  }
+
+  try {
+    const supabaseAdmin = await createSupabaseAdminClient();
+    const { error } = await supabaseAdmin.from("tamu").delete().neq('id', 'DUMMY');
+    if (error) throw error;
+    
+    revalidatePath("/admin/tamu");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}

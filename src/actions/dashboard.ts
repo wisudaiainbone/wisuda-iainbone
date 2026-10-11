@@ -520,6 +520,27 @@ export async function getDashboardStats(periode?: string): Promise<DashboardStat
     return getEmptyStats();
   }
 
+  // Jika data kosong tapi ini adalah filter berdasarkan periode spesifik, cek apakah ada arsip_dashboard (snapshot)
+  if (periode && (!rows || rows.length === 0)) {
+    const { data: settingData } = await supabase
+      .from('app_settings')
+      .select('value')
+      .eq('key', `arsip_dashboard_${periode}`)
+      .single();
+
+    if (settingData && settingData.value) {
+      const stats = typeof settingData.value === 'string' ? JSON.parse(settingData.value) : settingData.value;
+      
+      // Simpan ke Redis agar cepat dibaca selanjutnya
+      try {
+        await redis.set(cacheKey, JSON.stringify(stats), { ex: DASHBOARD_CACHE_TTL });
+      } catch (err) {
+        console.error('Redis set error (dashboard snapshot):', err);
+      }
+      return stats as DashboardStats;
+    }
+  }
+
   // Ambil kuota dari tabel periode_wisuda
   const { data: periodeRows } = await supabase
     .from('periode_wisuda')

@@ -1,8 +1,11 @@
 import { getAllPeriode } from "@/actions/periode";
 import { getAdminSession } from "@/actions/adminAuth";
 import Link from "next/link";
-import { Calendar, Users, Edit3, Plus, UserCheck, Activity } from "lucide-react";
+import { Calendar, Users, Edit3, Plus, UserCheck, Activity, Archive } from "lucide-react";
 import DeletePeriodeButton from "./DeletePeriodeButton";
+import ArchivePeriodeButton from "./ArchivePeriodeButton";
+import CleanPeriodeButton from "./CleanPeriodeButton";
+
 
 export default async function AdminPeriodePage() {
   const [allPeriode, session] = await Promise.all([
@@ -29,14 +32,25 @@ export default async function AdminPeriodePage() {
               return (
                 <div
                   key={periode.id}
-                  className={`relative p-5 rounded-2xl border transition-all ${periode.status === 'Sedang Dibuka'
-                    ? 'bg-emerald-50/50 border-emerald-200 dark:bg-emerald-900/10 dark:border-emerald-800/50'
-                    : 'bg-[var(--color-surface)] border-[var(--color-border)] hover:border-emerald-300 dark:hover:border-emerald-800'
-                    }`}
+                  className={`relative p-5 rounded-2xl border transition-all ${
+                    periode.status === 'Sedang Dibuka'
+                      ? 'bg-emerald-50/50 border-emerald-200 dark:bg-emerald-900/10 dark:border-emerald-800/50'
+                      : periode.status === 'Selesai'
+                      ? 'bg-slate-50/80 border-slate-300 dark:bg-slate-800/20 dark:border-slate-700'
+                      : 'bg-[var(--color-surface)] border-[var(--color-border)] hover:border-emerald-300 dark:hover:border-emerald-800'
+                  }`}
                 >
-                  {/* Badge Absolute Dihapus */}
-
-                  <h3 className="text-lg font-bold text-[var(--color-text)]">{periode.nama_periode}</h3>
+                  {/* Nama periode — klik jika Selesai */}
+                  {periode.status === 'Selesai' ? (
+                    <Link
+                      href={`/admin/arsip/${periode.id}`}
+                      className="text-lg font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors underline-offset-2 hover:underline"
+                    >
+                      {periode.nama_periode}
+                    </Link>
+                  ) : (
+                    <h3 className="text-lg font-bold text-[var(--color-text)]">{periode.nama_periode}</h3>
+                  )}
 
                   <div className="mt-3 grid grid-cols-2 gap-y-2 text-sm text-[var(--color-text-muted)]">
                     <div className="flex items-center gap-2">
@@ -69,6 +83,11 @@ export default async function AdminPeriodePage() {
                         <div className="px-2.5 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 text-xs uppercase font-bold tracking-wider rounded-full flex items-center gap-1.5">
                           Akan Datang
                         </div>
+                      ) : periode.status === 'Selesai' ? (
+                        <div className="px-2.5 py-1 bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300 text-xs uppercase font-bold tracking-wider rounded-full flex items-center gap-1.5">
+                          <Archive size={10} />
+                          Selesai
+                        </div>
                       ) : (
                         <div className="px-2.5 py-1 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 text-xs uppercase font-bold tracking-wider rounded-full flex items-center gap-1.5">
                           {periode.status}
@@ -78,14 +97,24 @@ export default async function AdminPeriodePage() {
                     <div className="flex gap-2 w-full">
                       <Link
                         href={`/admin/periode/${periode.id}`}
-                        className={`flex items-center justify-center gap-2 flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${periode.status === 'Sedang Dibuka'
-                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                          : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 dark:text-emerald-400'
-                          }`}
+                        className={`flex items-center justify-center gap-2 flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                          periode.status === 'Sedang Dibuka'
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                            : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 dark:text-emerald-400'
+                        }`}
                       >
                         <Edit3 size={16} />
                         Edit
                       </Link>
+                      {/* Tombol Arsip — hanya untuk status Selesai */}
+                      {periode.status === 'Selesai' && (
+                        <>
+                          <ArchivePeriodeButton periodeId={periode.id} namaPeriode={periode.nama_periode} />
+                          {role === 'superadmin' && (
+                            <CleanPeriodeButton namaPeriode={periode.nama_periode} />
+                          )}
+                        </>
+                      )}
                       {role === 'superadmin' && (
                         <DeletePeriodeButton id={periode.id} nama={periode.nama_periode} isActive={periode.status === 'Sedang Dibuka'} />
                       )}
@@ -117,8 +146,18 @@ export default async function AdminPeriodePage() {
                     const tahun = tahunMatch ? tahunMatch[1] : '-';
                     return (
                       <tr key={periode.id} className="hover:bg-[var(--color-bg-secondary)]/50 transition-colors">
-                        <td className="px-6 py-4 font-normal text-[var(--color-text)]">
-                          {periode.nama_periode}
+                        <td className="px-6 py-4 font-normal">
+                          {periode.status === 'Selesai' ? (
+                            <Link
+                              href={`/admin/arsip/${periode.id}`}
+                              className="font-medium text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors underline-offset-2 hover:underline flex items-center gap-1.5"
+                            >
+                              <Archive size={13} className="text-slate-400 shrink-0" />
+                              {periode.nama_periode}
+                            </Link>
+                          ) : (
+                            <span className="text-[var(--color-text)]">{periode.nama_periode}</span>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-[var(--color-text-muted)]">
                           {tahun}
@@ -145,6 +184,11 @@ export default async function AdminPeriodePage() {
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-semibold">
                               Akan Datang
                             </span>
+                          ) : periode.status === 'Selesai' ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300 text-xs font-semibold">
+                              <Archive size={10} />
+                              Selesai
+                            </span>
                           ) : (
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 text-xs font-semibold">
                               {periode.status}
@@ -160,6 +204,15 @@ export default async function AdminPeriodePage() {
                             >
                               <Edit3 size={14} />
                             </Link>
+                            {/* Tombol Arsip — hanya untuk status Selesai */}
+                            {periode.status === 'Selesai' && (
+                              <>
+                                <ArchivePeriodeButton periodeId={periode.id} namaPeriode={periode.nama_periode} />
+                                {role === 'superadmin' && (
+                                  <CleanPeriodeButton namaPeriode={periode.nama_periode} />
+                                )}
+                              </>
+                            )}
                             {role === 'superadmin' && (
                               <DeletePeriodeButton id={periode.id} nama={periode.nama_periode} isActive={periode.status === 'Sedang Dibuka'} />
                             )}
