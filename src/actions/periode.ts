@@ -276,14 +276,6 @@ export async function createPeriode(data: any) {
       ...data_pengaturan 
     } = data;
 
-    const year = new Date().getFullYear();
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let randomPart = '';
-    for (let i = 0; i < 6; i++) {
-      randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    const customId = `${year}-${randomPart}`;
-
     // Hitung kuota total dari jumlah kuota per-fakultas
     const kuotaPerFakultas: Record<string, number> = data.kuota_per_fakultas || {};
     const kuotaTotal = Object.values(kuotaPerFakultas).reduce((sum: number, val: any) => sum + (parseInt(val) || 0), 0);
@@ -291,7 +283,6 @@ export async function createPeriode(data: any) {
       const { data: inserted, error } = await supabase
         .from('periode_wisuda')
         .insert({
-          id: customId,
           nama_periode: nama_periode || data.title || 'Periode Baru',
           status: status || 'Sedang Dibuka',
           kuota: kuotaTotal,
